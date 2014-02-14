@@ -1,6 +1,6 @@
 {
   "name": "simple-actors",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Simple message based actors.",
   "author": "Jos de Jong <wjosdejong@gmail.com> (https://github.com/josdejong)",
   "keywords": [
