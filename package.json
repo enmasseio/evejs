@@ -1,0 +1,25 @@
+{
+  "name": "simple-actors",
+  "version": "0.0.1",
+  "description": "Simple message based actors.",
+  "author": "Jos de Jong <wjosdejong@gmail.com> (https://github.com/josdejong)",
+  "keywords": [
+    "actors",
+    "actor",
+    "message based"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/enmasseio/actors.git"
+  },
+  "dependencies": {
+    "node-uuid": "~1.4.1"
+  },
+  "devDependencies": {
+    "mocha": "latest"
+  },
+  "scripts": {
+    "test": "mocha test --recursive --reporter spec"
+  },
+  "main": "./index.js"
+}

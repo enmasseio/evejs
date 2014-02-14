@@ -1,21 +1,3 @@
-# actors
-
-Simple message based actors
-
-The actors send messages to each other via a message bus, and they can listen
-for message patterns.
-
-
-## Install
-
-TODO: publish the library on npm
-
-
-## Use
-
-Example usage:
-
-```js
 var actors = require('../index');
 
 var bus = new actors.MessageBus();
@@ -25,7 +7,7 @@ var bus = new actors.MessageBus();
 actor1.connect(bus);
 actor2.connect(bus);
 
-// actor1 listens for messages containing 'hi' or 'hello' (case insensitive)
+// actor 1 listens for messages containing 'hi' or 'hello' (case insensitive)
 actor1.on(/hi|hello/i, function (from, message) {
   console.log(from + ' said: ' + message);
 
@@ -33,21 +15,10 @@ actor1.on(/hi|hello/i, function (from, message) {
   this.send(from, 'Hi ' + from + ', nice to meet you!');
 });
 
-// actor2 listens for any message
+// actor 2 listens for any message
 actor2.on(/./, function (from, message) {
   console.log(from + ' said: ' + message);
 });
 
 // send a message to actor 1
 actor2.send('actor1', 'Hello actor1!');
-```
-
-## Test
-
-First install the project dependencies:
-
-    npm install
-
-Then run the tests:
-
-    npm test
