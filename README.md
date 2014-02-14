@@ -12,6 +12,8 @@ Install the module via npm:
 
     npm install simple-actors
 
+*(Please let me know if you know a better name for this library...)*
+
 
 ## Use
 
@@ -44,6 +46,74 @@ actor2.on(/./, function (from, message) {
 actor2.send('actor1', 'Hello actor1!');
 ```
 
+
+## API
+
+The library contains the following prototypes:
+
+- `actors.Actor`
+- `actors.MessageBus`
+- `actors.LocalMessageBus`
+- `actors.PubNubMessageBus`
+
+
+### Actor
+
+Constructor:
+
+```js
+var actor = new actors.Actor([id]);
+```
+
+Methods:
+
+- `Actor.send(to: String, message: String [, data: *])`
+  Send a message to an other actor.
+- `Actor.receive(from: String, message: String [, data: *])`
+  Receive a message from an actor. This method can be overloaded, but is
+  normally not needed: it is invoked by the connected message bus when a
+  message comes in.
+- `Actor.on(pattern: String | RegExp | Function, callback: Function)`
+  Register an message listener, which is triggered when a message comes in which
+  matches given pattern. The pattern can be a String (exact match), a
+  regular expression, or a test function which is invoked as `pattern(message)`
+  and must return true or false.
+- `Actor.off(pattern: String | RegExp | Function, callback: Function)`
+  Unegister a registered message listener.
+- `Actor.connect(messagebus: MessageBus [, callback: Function])`
+  Connect the actor to a message bus. The library comes with two message bus
+  implementations: `LocalMessageBus` and `PubNubMessageBus`. One can add more
+  implementations if needed. An actor can be connected to multiple message
+  busses.
+- `Actor.disconnect(messagebus: MessageBus)`
+  Disconnect the actor from a message bus.
+
+
+### MessageBus
+
+The library provideds implementations of the abstract prototype `MessageBus`:
+`LocalMessageBus` and `PubNubMessageBus`. `MessageBus` has the following API:
+
+Constructor:
+
+```js
+var bus = new MessageBus([config: Object]);
+```
+
+Methods:
+
+- `MessageBus.connect(id: String, onMessage: Function [, onConnect: Function])`
+  Connect a peer with given `id`. When a message for the peer comes in,
+  the callback function `onMessage` is invoked as `onMessage(from: String,
+  message: String [, data: *])`. An optional callback `onConnect` is triggered
+  after the connection is created.
+- `MessageBus.disconnect(id: String)`
+  Disconnect a peer with given `id`.
+- `MessageBus.send(from: String, to: String, message: String [, data: *])`
+  Send a message via the message bus.
+
+
+
 ## Test
 
 First install the project dependencies:
@@ -53,3 +123,8 @@ First install the project dependencies:
 Then run the tests:
 
     npm test
+
+
+## To do
+
+Implement a mixin pattern to turn existing objects into an actor.
