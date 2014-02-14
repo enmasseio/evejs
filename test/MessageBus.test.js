@@ -8,12 +8,12 @@ describe('LocalMessageBus', function() {
     assert.ok(bus instanceof LocalMessageBus);
   });
 
-  it('should register and unregister to LocalMessageBus', function () {
+  it('should connect and disconnect to LocalMessageBus', function () {
     var bus = new LocalMessageBus();
     var count = 0;
 
-    // register and send a message
-    bus.register('peer1', function (from, message) {
+    // connect and send a message
+    bus.connect('peer1', function (from, message) {
       assert.equal(from, 'peer2');
       assert.equal(message, 'hi there');
       count++;
@@ -22,8 +22,8 @@ describe('LocalMessageBus', function() {
     bus.send('peer2', 'peer1', 'hi there');
     assert.equal(count, 1);
 
-    // unregister
-    bus.unregister('peer1');
+    // disconnect
+    bus.disconnect('peer1');
     assert.throws (function () {
       bus.send('peer2', 'peer1', 'hi there');
     }, /Error: Peer with id peer1 not found/);
