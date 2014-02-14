@@ -8,7 +8,9 @@ for message patterns.
 
 ## Install
 
-TODO: publish the library on npm
+Install the module via npm:
+
+    npm install simple-actors
 
 
 ## Use
@@ -16,7 +18,7 @@ TODO: publish the library on npm
 Example usage:
 
 ```js
-var actors = require('../index');
+var actors = require('simple-actors');
 
 var bus = new actors.LocalMessageBus();
     actor1 = new actors.Actor('actor1');
