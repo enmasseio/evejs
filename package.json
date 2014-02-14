@@ -13,7 +13,9 @@
     "url": "git://github.com/enmasseio/actors.git"
   },
   "dependencies": {
-    "node-uuid": "~1.4.1"
+    "node-uuid": "~1.4.1",
+    "pubnub": "~3.5.48",
+    "async": "~0.2.9"
   },
   "devDependencies": {
     "mocha": "latest"

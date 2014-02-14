@@ -1,15 +1,15 @@
 var assert = require('assert'),
-    MessageBus = require('../lib/MessageBus');
+    LocalMessageBus = require('../lib/LocalMessageBus');
 
-describe('MessageBus', function() {
+describe('LocalMessageBus', function() {
 
-  it('should create a MessageBus', function () {
-    var bus = new MessageBus();
-    assert.ok(bus instanceof MessageBus);
+  it('should create a LocalMessageBus', function () {
+    var bus = new LocalMessageBus();
+    assert.ok(bus instanceof LocalMessageBus);
   });
 
-  it('should register and unregister to MessageBus', function () {
-    var bus = new MessageBus();
+  it('should register and unregister to LocalMessageBus', function () {
+    var bus = new LocalMessageBus();
     var count = 0;
 
     // register and send a message

@@ -1,6 +1,6 @@
 var assert = require('assert'),
     Actor = require('../lib/Actor'),
-    MessageBus = require('../lib/MessageBus');
+    LocalMessageBus = require('../lib/LocalMessageBus');
 
 describe('Actor', function() {
 
@@ -90,7 +90,7 @@ describe('Actor', function() {
 
   describe ('messagebus', function () {
     it('should send a message via a messagebus', function (done) {
-      var bus = new MessageBus();
+      var bus = new LocalMessageBus();
 
       var actor1 = new Actor('actor1');
       actor1.connect(bus);
@@ -106,9 +106,16 @@ describe('Actor', function() {
       actor2.send('actor1', 'hello');
     });
 
+    it('should get a callback when connected to a message bus', function (done) {
+      var bus = new LocalMessageBus();
+
+      var actor1 = new Actor('actor1');
+      actor1.connect(bus, done);
+    });
+
     it('should connect to multiple messagebusses', function (done) {
-      var bus1 = new MessageBus();
-      var bus2 = new MessageBus();
+      var bus1 = new LocalMessageBus();
+      var bus2 = new LocalMessageBus();
 
       var actor1 = new Actor('actor1');
       var actor2 = new Actor('actor2');
