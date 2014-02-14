@@ -52,7 +52,7 @@ actor2.send('actor1', 'Hello actor1!');
 The library contains the following prototypes:
 
 - `actors.Actor`
-- `actors.MessageBus`
+- `actors.MessageBus` (abstract prototype)
 - `actors.LocalMessageBus`
 - `actors.PubNubMessageBus`
 
@@ -62,7 +62,7 @@ The library contains the following prototypes:
 Constructor:
 
 ```js
-var actor = new actors.Actor([id]);
+var actor = new actors.Actor([id: String]);
 ```
 
 Methods:
@@ -92,7 +92,10 @@ Methods:
 ### MessageBus
 
 The library provideds implementations of the abstract prototype `MessageBus`:
-`LocalMessageBus` and `PubNubMessageBus`. `MessageBus` has the following API:
+`LocalMessageBus` and `PubNubMessageBus`. It is quite easy to implement a
+message bus for other messaging services.
+
+`MessageBus` has the following API:
 
 Constructor:
 
@@ -127,4 +130,4 @@ Then run the tests:
 
 ## To do
 
-Implement a mixin pattern to turn existing objects into an actor.
+- Implement a mixin pattern to turn existing objects into an actor.
