@@ -1,4 +1,4 @@
-# actors
+# simple-actors
 
 Simple message based actors
 
