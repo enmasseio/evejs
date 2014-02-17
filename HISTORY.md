@@ -2,6 +2,11 @@
 https://github.com/enmasseio/actors
 
 
+## 2014-02-17, version 1.1.0
+
+- Renamed `Actor.receive` to `Actor.onMessage`.
+
+
 ## 2014-02-14, version 1.0.0
 
 - Renamed `MessageBus.register` and `MessageBus.unregister` to

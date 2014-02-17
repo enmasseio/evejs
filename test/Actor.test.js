@@ -34,12 +34,12 @@ describe('Actor', function() {
 
       // add the listener, test if listener is triggered
       actor.on(pattern, listener);
-      actor.receive(sender, pattern);
+      actor.onMessage(sender, pattern);
       assert.equal(count, 1);
 
       // remove the listener, test if listener is not triggered anymore
       actor.off(pattern, listener);
-      actor.receive(sender, pattern);
+      actor.onMessage(sender, pattern);
       assert.equal(count, 1);
     });
 
@@ -53,7 +53,7 @@ describe('Actor', function() {
         done();
       });
 
-      actor.receive('actor2', 'hello', {name: 'actor2'});
+      actor.onMessage('actor2', 'hello', {name: 'actor2'});
     });
 
     it('should listen to messages using a regexp pattern', function (done) {
@@ -66,8 +66,8 @@ describe('Actor', function() {
         done();
       });
 
-      actor.receive('actor2', 'hi there'); // this message should be ignored
-      actor.receive('actor2', 'hello, my name is actor2');
+      actor.onMessage('actor2', 'hi there'); // this message should be ignored
+      actor.onMessage('actor2', 'hello, my name is actor2');
     });
 
     it('should listen to messages using a function pattern', function (done) {
@@ -82,8 +82,8 @@ describe('Actor', function() {
         done();
       });
 
-      actor.receive('actor2', 'hi there'); // this message should be ignored
-      actor.receive('actor2', 'hello, my name is actor2');
+      actor.onMessage('actor2', 'hi there'); // this message should be ignored
+      actor.onMessage('actor2', 'hello, my name is actor2');
     });
 
   });

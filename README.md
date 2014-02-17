@@ -69,10 +69,10 @@ Methods:
 
 - `Actor.send(to: String, message: String [, data: *])`
   Send a message to an other actor.
-- `Actor.receive(from: String, message: String [, data: *])`
-  Receive a message from an actor. This method can be overloaded, but is
-  normally not needed: it is invoked by the connected message bus when a
-  message comes in.
+- `Actor.onMessage(from: String, message: String [, data: *])`
+  Receive a message from an actor. The default implementation of this function
+  iterates over all message listeners registered via `Actor.on`. The method can
+  be overloaded if needed.
 - `Actor.on(pattern: String | RegExp | Function, callback: Function)`
   Register an message listener, which is triggered when a message comes in which
   matches given pattern. The pattern can be a String (exact match), a
