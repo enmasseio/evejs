@@ -15,6 +15,7 @@
   "dependencies": {
     "node-uuid": "~1.4.1",
     "pubnub": "~3.5.48",
+    "amqp": "~0.2.0",
     "async": "~0.2.9"
   },
   "devDependencies": {

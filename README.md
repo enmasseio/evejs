@@ -53,8 +53,10 @@ The library contains the following prototypes:
 
 - `actors.Actor`
 - `actors.MessageBus` (abstract prototype)
-- `actors.LocalMessageBus`
-- `actors.PubNubMessageBus`
+- `actors.LocalMessageBus` using a local, in process message bus.
+- `actors.PubNubMessageBus` using [PubNub](http://www.pubnub.com/).
+- `actors.AMQPMessageBus` using the [AMPQ](http://www.amqp.org/) protocol,
+  for example via [RabbitMQ](https://www.rabbitmq.com/) servers.
 
 
 ### Actor
@@ -131,3 +133,4 @@ Then run the tests:
 ## To do
 
 - Implement a mixin pattern to turn existing objects into an actor.
+- Maybe change the API to Promise based.

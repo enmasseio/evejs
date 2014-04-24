@@ -1,10 +1,9 @@
 var async = require('async'),
     actors = require('../index');
 
-var bus = new actors.PubNubMessageBus({
-      publish_key: 'demo',    // REPLACE THIS WITH YOUR PUBNUB PUBLISH KEY
-      subscribe_key: 'demo'   // REPLACE THIS WITH YOUR PUBNUB SUBSCRIBE KEY
-    });
+// example configuration: {url: 'amqp://localhost'} or {host: 'dev.rabbitmq.com'}
+//var bus = new actors.AMQPMessageBus({url: 'amqp://localhost'});
+var bus = new actors.AMQPMessageBus({host: 'dev.rabbitmq.com'});
 
 async.parallel({
   // create and connect actor1

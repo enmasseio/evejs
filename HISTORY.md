@@ -2,6 +2,11 @@
 https://github.com/enmasseio/actors
 
 
+## 2014-04-24, version 1.2.0
+
+- Implemented AMQPMessageBus.
+
+
 ## 2014-02-17, version 1.1.0
 
 - Renamed `Actor.receive` to `Actor.onMessage`.
