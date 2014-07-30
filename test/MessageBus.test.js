@@ -1,5 +1,5 @@
-var assert = require('assert'),
-    LocalMessageBus = require('../lib/LocalMessageBus');
+var assert = require('assert');
+var LocalMessageBus = require('../lib/LocalMessageBus');
 
 describe('LocalMessageBus', function() {
 

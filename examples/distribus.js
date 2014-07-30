@@ -1,12 +1,7 @@
-var async = require('async'),
-    actors = require('../index');
+var async = require('async');
+var actors = require('../index');
 
 var bus = new actors.DistribusMessageBus();
-
-// Note: to create a network with multiple distribus hosts:
-//     var bus1 = new actors.DistribusMessageBus({port: 3000});
-//     var bus2 = new actors.DistribusMessageBus({port: 3001});
-//     bus1.join('http://localhost:3001');
 
 async.parallel({
   // create and connect actor1

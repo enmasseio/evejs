@@ -1,5 +1,5 @@
-var async = require('async'),
-    actors = require('../index');
+var async = require('async');
+var actors = require('../index');
 
 var bus = new actors.PubNubMessageBus({
       publish_key: 'demo',    // REPLACE THIS WITH YOUR PUBNUB PUBLISH KEY

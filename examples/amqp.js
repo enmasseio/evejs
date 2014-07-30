@@ -1,5 +1,5 @@
-var async = require('async'),
-    actors = require('../index');
+var async = require('async');
+var actors = require('../index');
 
 // example configuration: {url: 'amqp://localhost'} or {host: 'dev.rabbitmq.com'}
 //var bus = new actors.AMQPMessageBus({url: 'amqp://localhost'});

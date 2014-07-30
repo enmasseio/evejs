@@ -1,6 +1,6 @@
-var assert = require('assert'),
-    Actor = require('../lib/Actor'),
-    LocalMessageBus = require('../lib/LocalMessageBus');
+var assert = require('assert');
+var Actor = require('../lib/Actor');
+var LocalMessageBus = require('../lib/LocalMessageBus');
 
 describe('Actor', function() {
 

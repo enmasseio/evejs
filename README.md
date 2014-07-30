@@ -103,7 +103,7 @@ message bus for other messaging services.
 Constructor:
 
 ```js
-var bus = new MessageBus([config: Object], callback);
+var bus = new MessageBus([config: Object]);
 ```
 
 Methods:

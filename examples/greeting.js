@@ -1,8 +1,8 @@
 var actors = require('../index');
 
-var bus = new actors.LocalMessageBus(),
-    actor1 = new actors.Actor('actor1'),
-    actor2 = new actors.Actor('actor2');
+var bus = new actors.LocalMessageBus();
+var actor1 = new actors.Actor('actor1');
+var actor2 = new actors.Actor('actor2');
 
 actor1.connect(bus);
 actor2.connect(bus);
