@@ -54,6 +54,7 @@ The library contains the following prototypes:
 - `actors.Actor`
 - `actors.MessageBus` (abstract prototype)
 - `actors.LocalMessageBus` using a local, in process message bus.
+- `actors.DistribusMessageBus` using [distribus](https://github.com/enmasseio/distribus).
 - `actors.PubNubMessageBus` using [PubNub](http://www.pubnub.com/).
 - `actors.AMQPMessageBus` using the [AMPQ](http://www.amqp.org/) protocol,
   for example via [RabbitMQ](https://www.rabbitmq.com/) servers.
@@ -69,25 +70,25 @@ var actor = new actors.Actor([id: String]);
 
 Methods:
 
-- `Actor.send(to: String, message: String [, data: *])`
+- `Actor.send(to: String, message: String [, data: *])`  
   Send a message to an other actor.
-- `Actor.onMessage(from: String, message: String [, data: *])`
+- `Actor.onMessage(from: String, message: String [, data: *])`  
   Receive a message from an actor. The default implementation of this function
   iterates over all message listeners registered via `Actor.on`. The method can
   be overloaded if needed.
-- `Actor.on(pattern: String | RegExp | Function, callback: Function)`
+- `Actor.on(pattern: String | RegExp | Function, callback: Function)`  
   Register an message listener, which is triggered when a message comes in which
   matches given pattern. The pattern can be a String (exact match), a
   regular expression, or a test function which is invoked as `pattern(message)`
   and must return true or false.
-- `Actor.off(pattern: String | RegExp | Function, callback: Function)`
+- `Actor.off(pattern: String | RegExp | Function, callback: Function)`  
   Unegister a registered message listener.
-- `Actor.connect(messagebus: MessageBus [, callback: Function])`
+- `Actor.connect(messagebus: MessageBus [, callback: Function])`  
   Connect the actor to a message bus. The library comes with two message bus
   implementations: `LocalMessageBus` and `PubNubMessageBus`. One can add more
   implementations if needed. An actor can be connected to multiple message
   busses.
-- `Actor.disconnect(messagebus: MessageBus)`
+- `Actor.disconnect(messagebus: MessageBus)`  
   Disconnect the actor from a message bus.
 
 
@@ -102,19 +103,19 @@ message bus for other messaging services.
 Constructor:
 
 ```js
-var bus = new MessageBus([config: Object]);
+var bus = new MessageBus([config: Object], callback);
 ```
 
 Methods:
 
-- `MessageBus.connect(id: String, onMessage: Function [, onConnect: Function])`
+- `MessageBus.connect(id: String, onMessage: Function [, onConnect: Function])`  
   Connect a peer with given `id`. When a message for the peer comes in,
   the callback function `onMessage` is invoked as `onMessage(from: String,
   message: String [, data: *])`. An optional callback `onConnect` is triggered
   after the connection is created.
-- `MessageBus.disconnect(id: String)`
+- `MessageBus.disconnect(id: String)`  
   Disconnect a peer with given `id`.
-- `MessageBus.send(from: String, to: String, message: String [, data: *])`
+- `MessageBus.send(from: String, to: String, message: String [, data: *])`  
   Send a message via the message bus.
 
 

@@ -1,5 +1,9 @@
-# actors history
-https://github.com/enmasseio/actors
+# history
+
+
+## not yet released, version 1.3.0
+
+- Implemented DistribusMessageBus.
 
 
 ## 2014-04-24, version 1.2.0
