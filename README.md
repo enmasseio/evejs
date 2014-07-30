@@ -82,21 +82,20 @@ Methods:
   regular expression, or a test function which is invoked as `pattern(message)`
   and must return true or false.
 - `Actor.off(pattern: String | RegExp | Function, callback: Function)`  
-  Unegister a registered message listener.
-- `Actor.connect(messagebus: MessageBus [, callback: Function])`  
-  Connect the actor to a message bus. The library comes with two message bus
-  implementations: `LocalMessageBus` and `PubNubMessageBus`. One can add more
-  implementations if needed. An actor can be connected to multiple message
-  busses.
+  Unregister a registered message listener.
+- `Actor.connect(messagebus: MessageBus) : Promise<Actor, Error>`  
+  Connect the actor to a message bus. The library comes with multiple message 
+  bus implementations (see [API](#api). An actor can be connected to multiple 
+  message buses.
 - `Actor.disconnect(messagebus: MessageBus)`  
   Disconnect the actor from a message bus.
 
 
 ### MessageBus
 
-The library provideds implementations of the abstract prototype `MessageBus`:
-`LocalMessageBus` and `PubNubMessageBus`. It is quite easy to implement a
-message bus for other messaging services.
+The library provides multiple `MessageBus` implementations: `LocalMessageBus`,
+`PubNubMessageBus`, `AMQPMessageBus`, and `DistribusMessageBus`. It is quite 
+easy to implement a message bus for other messaging services.
 
 `MessageBus` has the following API:
 
