@@ -19,11 +19,8 @@ actor2.on(/./, function (from, message) {
 });
 
 // connect both actors to the message bus
-var connected1 = actor1.connect(bus);
-var connected2 = actor2.connect(bus);
+actor1.connect(bus);
+actor2.connect(bus);
 
-// once both are connected, send a message to actor 1
-Promise.all([connected1, connected2])
-    .then(function () {
-      actor2.send('actor1', 'Hello actor1!');
-    });
+// send a message to actor 1
+actor2.send('actor1', 'Hello actor1!');

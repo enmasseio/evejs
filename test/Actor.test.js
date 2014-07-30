@@ -106,11 +106,13 @@ describe('Actor', function() {
       actor2.send('actor1', 'hello');
     });
 
-    it('should get a callback when connected to a message bus', function (done) {
+    it('should resolve a promise when connected to a message bus', function () {
       var bus = new LocalMessageBus();
-
       var actor1 = new Actor('actor1');
-      actor1.connect(bus, done);
+
+      return actor1.connect(bus).then(function (actor) {
+        assert.strictEqual(actor, actor1);
+      });
     });
 
     it('should connect to multiple messagebusses', function (done) {

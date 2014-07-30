@@ -43,7 +43,7 @@ host1.listen('localhost', 3000)
       });
 
       // connect the actor to bus2
-      return  actor2.connect(bus2);
+      return actor2.connect(bus2);
     })
 
     .then(function () {
