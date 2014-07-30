@@ -5,6 +5,7 @@
 
 - Changed to a Promise based API.
 - Implemented DistribusMessageBus.
+- Dropped support for sending additional data with messages.
 
 
 ## 2014-04-24, version 1.2.0

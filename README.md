@@ -70,9 +70,9 @@ var actor = new actors.Actor([id: String]);
 
 Methods:
 
-- `Actor.send(to: String, message: String [, data: *])`  
+- `Actor.send(to: String, message: String)`  
   Send a message to an other actor.
-- `Actor.onMessage(from: String, message: String [, data: *])`  
+- `Actor.onMessage(from: String, message: String)`  
   Receive a message from an actor. The default implementation of this function
   iterates over all message listeners registered via `Actor.on`. The method can
   be overloaded if needed.
@@ -110,11 +110,11 @@ Methods:
 - `MessageBus.connect(id: String, onMessage: Function [, onConnect: Function])`  
   Connect a peer with given `id`. When a message for the peer comes in,
   the callback function `onMessage` is invoked as `onMessage(from: String,
-  message: String [, data: *])`. An optional callback `onConnect` is triggered
-  after the connection is created.
+  message: String)`. The method returns a Promise which resolves when the 
+  connection is created.
 - `MessageBus.disconnect(id: String)`  
   Disconnect a peer with given `id`.
-- `MessageBus.send(from: String, to: String, message: String [, data: *])`  
+- `MessageBus.send(from: String, to: String, message: String)`  
   Send a message via the message bus.
 
 

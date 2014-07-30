@@ -2,9 +2,9 @@ var Promise = require('promise');
 var actors = require('../index');
 
 var bus = new actors.PubNubMessageBus({
-      publish_key: 'demo',    // REPLACE THIS WITH YOUR PUBNUB PUBLISH KEY
-      subscribe_key: 'demo'   // REPLACE THIS WITH YOUR PUBNUB SUBSCRIBE KEY
-    });
+  publish_key: 'demo',    // REPLACE THIS WITH YOUR PUBNUB PUBLISH KEY
+  subscribe_key: 'demo'   // REPLACE THIS WITH YOUR PUBNUB SUBSCRIBE KEY
+});
 
 // actor 1 listens for messages containing 'hi' or 'hello' (case insensitive)
 var actor1 = new actors.Actor('actor1');
