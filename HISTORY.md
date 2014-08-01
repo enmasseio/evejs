@@ -1,7 +1,7 @@
 # history
 
 
-## not yet released, version 2.0.0
+## 2014-08-01, version 2.0.0
 
 - Changed to a Promise based API.
 - Implemented DistribusMessageBus.
