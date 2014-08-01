@@ -46,6 +46,50 @@ actor2.on(/./, function (from, message) {
 actor2.send('actor1', 'Hello actor1!');
 ```
 
+### Babble
+
+simple-actors can be used together with [babble](https://github.com/enmasseio/babble), extending the actors with support for dynamic communication flows.
+
+Example usage: 
+
+```js
+var actors = require('simple-actors');
+var babble = require('babble');
+
+// create two actors and babblify them
+var emma = babble.babblify(new actors.Actor('emma'));
+var jack = babble.babblify(new actors.Actor('jack'));
+
+// create a message bus and connect both actors
+var bus = new actors.LocalMessageBus();
+emma.connect(bus);
+jack.connect(bus);
+
+emma.listen('hi')
+    .listen(printMessage)
+    .decide(function (message, context) {
+      return (message.indexOf('age') != -1) ? 'age' : 'name';
+    }, {
+      'name': babble.tell('hi, my name is emma'),
+      'age':  babble.tell('hi, my age is 27')
+    });
+
+jack.tell('emma', 'hi')
+    .tell(function (message, context) {
+      if (Math.random() > 0.5) {
+        return 'my name is jack'
+      } else {
+        return 'my age is 25';
+      }
+    })
+    .listen(printMessage);
+
+function printMessage (message, context) {
+  console.log(context.from + ': ' + message);
+  return message;
+}
+```
+
 
 ## API
 

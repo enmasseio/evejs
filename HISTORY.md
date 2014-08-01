@@ -5,6 +5,7 @@
 
 - Changed to a Promise based API.
 - Implemented DistribusMessageBus.
+- Added examples on using `simple-actors` together with `babble`.
 - Dropped support for sending additional data with messages.
 
 
