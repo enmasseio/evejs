@@ -15,7 +15,7 @@
   "dependencies": {
     "amqp": "^0.2.0",
     "async": "^0.2.9",
-    "babble": "^0.7.0",
+    "babble": "^0.8.0",
     "distribus": "^0.3.0",
     "node-uuid": "^1.4.1",
     "promise": "^5.0.0",
