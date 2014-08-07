@@ -27,7 +27,7 @@ describe('Actor', function() {
       var count = 0;
 
       var pattern = 'hello';
-      var listener = function (from, message, data) {
+      var listener = function (from, message) {
         assert.equal(from, sender);
         count++;
       };
@@ -46,23 +46,21 @@ describe('Actor', function() {
     it('should listen to messages using a string pattern', function (done) {
       var actor = new Actor('actor1');
 
-      actor.on('hello', function (from, message, data) {
+      actor.on('hello', function (from, message) {
         assert.equal(from, 'actor2');
         assert.equal(message, 'hello');
-        assert.deepEqual(data, {name: 'actor2'});
         done();
       });
 
-      actor.onMessage('actor2', 'hello', {name: 'actor2'});
+      actor.onMessage('actor2', 'hello');
     });
 
     it('should listen to messages using a regexp pattern', function (done) {
       var actor = new Actor('actor1');
 
-      actor.on(/hello/, function (from, message, data) {
+      actor.on(/hello/, function (from, message) {
         assert.equal(from, 'actor2');
         assert.equal(message, 'hello, my name is actor2');
-        assert.strictEqual(data, undefined);
         done();
       });
 
@@ -75,10 +73,9 @@ describe('Actor', function() {
 
       actor.on(function (message) {
         return message.indexOf('hello') != -1;
-      }, function (from, message, data) {
+      }, function (from, message) {
         assert.equal(from, 'actor2');
         assert.equal(message, 'hello, my name is actor2');
-        assert.strictEqual(data, undefined);
         done();
       });
 
