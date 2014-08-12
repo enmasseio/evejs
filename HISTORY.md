@@ -1,6 +1,11 @@
 # history
 
 
+## 2014-08-01, version 2.1.0
+
+- Added an example.
+
+
 ## 2014-08-01, version 2.0.0
 
 - Changed to a Promise based API.
