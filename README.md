@@ -1,9 +1,6 @@
-# simple-actors
+# evejs
 
-Simple message based actors
-
-The actors send messages to each other via a message bus, and they can listen
-for message patterns.
+JavaScript version of Eve, the web based agent platform.
 
 
 ## Install
@@ -22,12 +19,12 @@ Example usage:
 ```js
 var actors = require('simple-actors');
 
-var bus = new actors.LocalMessageBus();
+var transport = new actors.LocalTransport();
     actor1 = new actors.Actor('actor1');
     actor2 = new actors.Actor('actor2');
 
-actor1.connect(bus);
-actor2.connect(bus);
+actor1.connect(transport);
+actor2.connect(transport);
 
 // actor1 listens for messages containing 'hi' or 'hello' (case insensitive)
 actor1.on(/hi|hello/i, function (from, message) {
@@ -60,10 +57,10 @@ var babble = require('babble');
 var emma = babble.babblify(new actors.Actor('emma'));
 var jack = babble.babblify(new actors.Actor('jack'));
 
-// create a message bus and connect both actors
-var bus = new actors.LocalMessageBus();
-emma.connect(bus);
-jack.connect(bus);
+// create a transport and connect both actors
+var transport = new actors.LocalTransport();
+emma.connect(transport);
+jack.connect(transport);
 
 emma.listen('hi')
     .listen(printMessage)
@@ -96,11 +93,11 @@ function printMessage (message, context) {
 The library contains the following prototypes:
 
 - `actors.Actor`
-- `actors.MessageBus` (abstract prototype)
-- `actors.LocalMessageBus` using a local, in process message bus.
-- `actors.DistribusMessageBus` using [distribus](https://github.com/enmasseio/distribus).
-- `actors.PubNubMessageBus` using [PubNub](http://www.pubnub.com/).
-- `actors.AMQPMessageBus` using the [AMPQ](http://www.amqp.org/) protocol,
+- `actors.Transport` (abstract prototype)
+- `actors.LocalTransport` using a local, in process transport.
+- `actors.DistribusTransport` using [distribus](https://github.com/enmasseio/distribus).
+- `actors.PubNubTransport` using [PubNub](http://www.pubnub.com/).
+- `actors.AMQPTransport` using the [AMPQ](http://www.amqp.org/) protocol,
   for example via [RabbitMQ](https://www.rabbitmq.com/) servers.
 
 
@@ -127,39 +124,39 @@ Methods:
   and must return true or false.
 - `Actor.off(pattern: String | RegExp | Function, callback: Function)`  
   Unregister a registered message listener.
-- `Actor.connect(messagebus: MessageBus) : Promise<Actor, Error>`  
-  Connect the actor to a message bus. The library comes with multiple message 
-  bus implementations (see [API](#api). An actor can be connected to multiple 
-  message buses.
-- `Actor.disconnect(messagebus: MessageBus)`  
-  Disconnect the actor from a message bus.
+- `Actor.connect(transport: Transport) : Promise<Actor, Error>`  
+  Connect the actor to a transport. The library comes with multiple message 
+  transport implementations (see [API](#api). An actor can be connected to 
+  multiple transports.
+- `Actor.disconnect(transport: Transport)`  
+  Disconnect the actor from a a transport.
 
 
-### MessageBus
+### Transport
 
-The library provides multiple `MessageBus` implementations: `LocalMessageBus`,
-`PubNubMessageBus`, `AMQPMessageBus`, and `DistribusMessageBus`. It is quite 
-easy to implement a message bus for other messaging services.
+The library provides multiple `Transport` implementations: `LocalTransport`,
+`PubNubTransport`, `AMQPTransport`, and `DistribusTransport`. It is quite 
+easy to implement a support for other messaging services.
 
-`MessageBus` has the following API:
+`Transport` has the following API:
 
 Constructor:
 
 ```js
-var bus = new MessageBus([config: Object]);
+var transport = new Transport([config: Object]);
 ```
 
 Methods:
 
-- `MessageBus.connect(id: String, onMessage: Function [, onConnect: Function])`  
+- `Transport.connect(id: String, onMessage: Function [, onConnect: Function])`  
   Connect a peer with given `id`. When a message for the peer comes in,
   the callback function `onMessage` is invoked as `onMessage(from: String,
   message: String)`. The method returns a Promise which resolves when the 
   connection is created.
-- `MessageBus.disconnect(id: String)`  
+- `Transport.disconnect(id: String)`  
   Disconnect a peer with given `id`.
-- `MessageBus.send(from: String, to: String, message: String)`  
-  Send a message via the message bus.
+- `Transport.send(from: String, to: String, message: String)`  
+  Send a message via the transport.
 
 
 

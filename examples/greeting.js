@@ -1,6 +1,6 @@
 var actors = require('../index');
 
-var bus = new actors.LocalMessageBus();
+var transport = new actors.LocalTransport();
 var actor1 = new actors.Actor('actor1');
 var actor2 = new actors.Actor('actor2');
 
@@ -17,9 +17,9 @@ actor2.on(/./, function (from, message) {
   console.log(from + ' said: ' + message);
 });
 
-// connect both actors to the message bus
-actor1.connect(bus);
-actor2.connect(bus);
+// connect both actors to the transport
+actor1.connect(transport);
+actor2.connect(transport);
 
 // send a message to actor 1
 actor2.send('actor1', 'Hello actor1!');

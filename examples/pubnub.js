@@ -1,7 +1,7 @@
 var Promise = require('promise');
 var actors = require('../index');
 
-var bus = new actors.PubNubMessageBus({
+var transport = new actors.PubNubTransport({
   publish_key: 'demo',    // REPLACE THIS WITH YOUR PUBNUB PUBLISH KEY
   subscribe_key: 'demo'   // REPLACE THIS WITH YOUR PUBNUB SUBSCRIBE KEY
 });
@@ -21,9 +21,9 @@ actor2.on(/./, function (from, message) {
   console.log(from + ' said: ' + message);
 });
 
-// connect both actors to the message bus
-var connected1 = actor1.connect(bus);
-var connected2 = actor2.connect(bus);
+// connect both actors to the transport
+var connected1 = actor1.connect(transport);
+var connected2 = actor2.connect(transport);
 
 // once both are connected, send a message to actor 1
 Promise.all([connected1, connected2])

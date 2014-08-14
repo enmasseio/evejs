@@ -36,13 +36,13 @@ MyActor.prototype.onGreeting = function (from, message) {
   console.log(from + ' said: ' + message);
 };
 
-var bus = new actors.LocalMessageBus();
+var transport = new actors.LocalTransport();
 var actor1 = new MyActor('actor1');
 var actor2 = new MyActor('actor2');
 
-// connect both actors to the message bus
-actor1.connect(bus);
-actor2.connect(bus);
+// connect both actors to the transport
+actor1.connect(transport);
+actor2.connect(transport);
 
 // send a message to actor 1
 actor2.sayHi('actor1');

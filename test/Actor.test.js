@@ -1,6 +1,6 @@
 var assert = require('assert');
 var Actor = require('../lib/Actor');
-var LocalMessageBus = require('../lib/LocalMessageBus');
+var LocalTransport = require('../lib/transport/LocalTransport');
 
 describe('Actor', function() {
 
@@ -85,14 +85,14 @@ describe('Actor', function() {
 
   });
 
-  describe ('messagebus', function () {
-    it('should send a message via a messagebus', function (done) {
-      var bus = new LocalMessageBus();
+  describe ('transport', function () {
+    it('should send a message via a transport', function (done) {
+      var transport = new LocalTransport();
 
       var actor1 = new Actor('actor1');
-      actor1.connect(bus);
+      actor1.connect(transport);
       var actor2 = new Actor('actor2');
-      actor2.connect(bus);
+      actor2.connect(transport);
 
       actor1.on('hello', function (from, message) {
         assert.equal(from, 'actor2');
@@ -103,28 +103,28 @@ describe('Actor', function() {
       actor2.send('actor1', 'hello');
     });
 
-    it('should resolve a promise when connected to a message bus', function () {
-      var bus = new LocalMessageBus();
+    it('should resolve a promise when connected to a transport', function () {
+      var transport = new LocalTransport();
       var actor1 = new Actor('actor1');
 
-      return actor1.connect(bus).then(function (actor) {
+      return actor1.connect(transport).then(function (actor) {
         assert.strictEqual(actor, actor1);
       });
     });
 
-    it('should connect to multiple messagebusses', function (done) {
-      var bus1 = new LocalMessageBus();
-      var bus2 = new LocalMessageBus();
+    it('should connect to multiple transports', function (done) {
+      var transport1 = new LocalTransport();
+      var transport2 = new LocalTransport();
 
       var actor1 = new Actor('actor1');
       var actor2 = new Actor('actor2');
       var actor3 = new Actor('actor3');
 
-      actor1.connect(bus1);
-      actor2.connect(bus1);
+      actor1.connect(transport1);
+      actor2.connect(transport1);
 
-      actor2.connect(bus2);
-      actor3.connect(bus2);
+      actor2.connect(transport2);
+      actor3.connect(transport2);
 
       var count = 0;
 
@@ -141,7 +141,7 @@ describe('Actor', function() {
       actor1.on('hello', log);
       actor3.on('hello', log);
 
-      // send messages to actors connected via a different message bus
+      // send messages to actors connected via a different transport
       actor2.send('actor1', 'hello');
       actor2.send('actor3', 'hello');
     });

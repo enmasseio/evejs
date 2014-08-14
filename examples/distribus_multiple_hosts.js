@@ -4,9 +4,9 @@ var actors = require('../index');
 var host1 = new distribus.Host();
 var host2 = new distribus.Host();
 
-// create two buses: one connected to host1, the other to host2
-var bus1 = new actors.DistribusMessageBus({host: host1});
-var bus2 = new actors.DistribusMessageBus({host: host2});
+// create two transports: one connected to host1, the other to host2
+var transport1 = new actors.DistribusTransport({host: host1});
+var transport2 = new actors.DistribusTransport({host: host2});
 
 var actor1;
 var actor2;
@@ -31,8 +31,8 @@ host1.listen('localhost', 3000)
         this.send(from, 'Hi ' + from + ', nice to meet you!');
       });
 
-      // connect the actor to bus1
-      return actor1.connect(bus1);
+      // connect the actor to transport1
+      return actor1.connect(transport1);
     })
 
     .then(function () {
@@ -42,8 +42,8 @@ host1.listen('localhost', 3000)
         console.log(from + ' said: ' + message);
       });
 
-      // connect the actor to bus2
-      return actor2.connect(bus2);
+      // connect the actor to transport2
+      return actor2.connect(transport2);
     })
 
     .then(function () {

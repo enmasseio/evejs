@@ -12,10 +12,10 @@ var babble = require('babble');
 var emma = babble.babblify(new actors.Actor('emma'));
 var jack = babble.babblify(new actors.Actor('jack'));
 
-// create a message bus and connect both actors
-var bus = new actors.LocalMessageBus();
-emma.connect(bus);
-jack.connect(bus);
+// create a transport and connect both actors
+var transport = new actors.LocalTransport();
+emma.connect(transport);
+jack.connect(transport);
 
 emma.listen('hi')
     .listen(printMessage)
