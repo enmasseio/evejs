@@ -36,7 +36,7 @@ MyAgent.prototype.onGreeting = function (from, message) {
   console.log(from + ' said: ' + message);
 };
 
-var transport = new eve.LocalTransport();
+var transport = new eve.transport.LocalTransport();
 var agent1 = new MyAgent('agent1');
 var agent2 = new MyAgent('agent2');
 

@@ -13,7 +13,7 @@ var emma = babble.babblify(new eve.Agent('emma'));
 var jack = babble.babblify(new eve.Agent('jack'));
 
 // create a transport and connect both agents
-var transport = new eve.LocalTransport();
+var transport = new eve.transport.LocalTransport();
 emma.connect(transport);
 jack.connect(transport);
 

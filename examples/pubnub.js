@@ -1,7 +1,7 @@
 var Promise = require('promise');
 var eve = require('../index');
 
-var transport = new eve.PubNubTransport({
+var transport = new eve.transport.PubNubTransport({
   publish_key: 'demo',    // REPLACE THIS WITH YOUR PUBNUB PUBLISH KEY
   subscribe_key: 'demo'   // REPLACE THIS WITH YOUR PUBNUB SUBSCRIBE KEY
 });

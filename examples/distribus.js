@@ -1,7 +1,7 @@
 var Promise = require('promise');
 var eve = require('../index');
 
-var transport = new eve.DistribusTransport();
+var transport = new eve.transport.DistribusTransport();
 
 // agent 1 listens for messages containing 'hi' or 'hello' (case insensitive)
 var agent1 = new eve.Agent('agent1');

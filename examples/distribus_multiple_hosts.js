@@ -5,8 +5,8 @@ var host1 = new distribus.Host();
 var host2 = new distribus.Host();
 
 // create two transports: one connected to host1, the other to host2
-var transport1 = new eve.DistribusTransport({host: host1});
-var transport2 = new eve.DistribusTransport({host: host2});
+var transport1 = new eve.transport.DistribusTransport({host: host1});
+var transport2 = new eve.transport.DistribusTransport({host: host2});
 
 var agent1;
 var agent2;

@@ -19,7 +19,7 @@ Example usage:
 ```js
 var eve = require('simple-actors');
 
-var transport = new eve.LocalTransport();
+var transport = new eve.transport.LocalTransport();
     agent1 = new eve.Agent('agent1');
     agent2 = new eve.Agent('agent2');
 
@@ -58,7 +58,7 @@ var emma = babble.babblify(new eve.Agent('emma'));
 var jack = babble.babblify(new eve.Agent('jack'));
 
 // create a transport and connect both agents
-var transport = new eve.LocalTransport();
+var transport = new eve.transport.LocalTransport();
 emma.connect(transport);
 jack.connect(transport);
 
@@ -93,11 +93,11 @@ function printMessage (message, context) {
 The library contains the following prototypes:
 
 - `eve.Agent`
-- `eve.Transport` (abstract prototype)
-- `eve.LocalTransport` using a local, in process transport.
-- `eve.DistribusTransport` using [distribus](https://github.com/enmasseio/distribus).
-- `eve.PubNubTransport` using [PubNub](http://www.pubnub.com/).
-- `eve.AMQPTransport` using the [AMPQ](http://www.amqp.org/) protocol,
+- `eve.transport.Transport` (abstract prototype)
+- `eve.transport.LocalTransport` using a local, in process transport.
+- `eve.transport.DistribusTransport` using [distribus](https://github.com/enmasseio/distribus).
+- `eve.transport.PubNubTransport` using [PubNub](http://www.pubnub.com/).
+- `eve.transport.AMQPTransport` using the [AMPQ](http://www.amqp.org/) protocol,
   for example via [RabbitMQ](https://www.rabbitmq.com/) servers.
 
 

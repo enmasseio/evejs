@@ -6,6 +6,7 @@
 - Renamed the library to evejs.
 - Renamed `Actor` to `Agent`. 
 - Renamed `*MessageBus` to `*Transport`. 
+- Moved the transports under the namespace `eve.transport.*`.
 
 
 ## 2014-08-01, version 2.1.0

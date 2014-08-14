@@ -1,6 +1,6 @@
 var eve = require('../index');
 
-var transport = new eve.LocalTransport();
+var transport = new eve.transport.LocalTransport();
 var agent1 = new eve.Agent('agent1');
 var agent2 = new eve.Agent('agent2');
 

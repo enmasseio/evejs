@@ -2,8 +2,8 @@ var Promise = require('promise');
 var eve = require('../index');
 
 // example configuration: {url: 'amqp://localhost'} or {host: 'dev.rabbitmq.com'}
-//var transport = new eve.AMQPTransport({url: 'amqp://localhost'});
-var transport = new eve.AMQPTransport({host: 'dev.rabbitmq.com'});
+//var transport = new eve.transport.AMQPTransport({url: 'amqp://localhost'});
+var transport = new eve.transport.AMQPTransport({host: 'dev.rabbitmq.com'});
 
 // agent 1 listens for messages containing 'hi' or 'hello' (case insensitive)
 var agent1 = new eve.Agent('agent1');
