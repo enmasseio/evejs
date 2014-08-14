@@ -9,7 +9,7 @@ Install the module via npm:
 
     npm install simple-actors
 
-*(Please let me know if you know a better name for this library...)*
+*(In the future the module will be renamed to `npm install evejs`)*
 
 
 ## Use
@@ -45,7 +45,7 @@ agent2.send('agent1', 'Hello agent1!');
 
 ### Babble
 
-simple-actors can be used together with [babble](https://github.com/enmasseio/babble), extending the agents with support for dynamic communication flows.
+Evejs can be used together with [babble](https://github.com/enmasseio/babble), extending the agents with support for dynamic communication flows.
 
 Example usage: 
 
