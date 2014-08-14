@@ -1,19 +1,19 @@
 /**
- * This example demonstrates how to extend an actor with babble.
- * Babble provides dynamic communication flows between message based actors.
+ * This example demonstrates how to extend an agent with babble.
+ * Babble provides dynamic communication flows between message based agents.
  *
  * https://github.com/enmasseio/babble
  */
 
-var actors = require('../index');
+var eve = require('../index');
 var babble = require('babble');
 
-// create two actors and babblify them
-var emma = babble.babblify(new actors.Actor('emma'));
-var jack = babble.babblify(new actors.Actor('jack'));
+// create two agents and babblify them
+var emma = babble.babblify(new eve.Agent('emma'));
+var jack = babble.babblify(new eve.Agent('jack'));
 
-// create a transport and connect both actors
-var transport = new actors.LocalTransport();
+// create a transport and connect both agents
+var transport = new eve.LocalTransport();
 emma.connect(transport);
 jack.connect(transport);
 

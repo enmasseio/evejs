@@ -17,48 +17,48 @@ Install the module via npm:
 Example usage:
 
 ```js
-var actors = require('simple-actors');
+var eve = require('simple-actors');
 
-var transport = new actors.LocalTransport();
-    actor1 = new actors.Actor('actor1');
-    actor2 = new actors.Actor('actor2');
+var transport = new eve.LocalTransport();
+    agent1 = new eve.Agent('agent1');
+    agent2 = new eve.Agent('agent2');
 
-actor1.connect(transport);
-actor2.connect(transport);
+agent1.connect(transport);
+agent2.connect(transport);
 
-// actor1 listens for messages containing 'hi' or 'hello' (case insensitive)
-actor1.on(/hi|hello/i, function (from, message) {
+// agent1 listens for messages containing 'hi' or 'hello' (case insensitive)
+agent1.on(/hi|hello/i, function (from, message) {
   console.log(from + ' said: ' + message);
 
   // reply to the greeting
   this.send(from, 'Hi ' + from + ', nice to meet you!');
 });
 
-// actor2 listens for any message
-actor2.on(/./, function (from, message) {
+// agent2 listens for any message
+agent2.on(/./, function (from, message) {
   console.log(from + ' said: ' + message);
 });
 
-// send a message to actor 1
-actor2.send('actor1', 'Hello actor1!');
+// send a message to agent 1
+agent2.send('agent1', 'Hello agent1!');
 ```
 
 ### Babble
 
-simple-actors can be used together with [babble](https://github.com/enmasseio/babble), extending the actors with support for dynamic communication flows.
+simple-actors can be used together with [babble](https://github.com/enmasseio/babble), extending the agents with support for dynamic communication flows.
 
 Example usage: 
 
 ```js
-var actors = require('simple-actors');
+var eve = require('simple-actors');
 var babble = require('babble');
 
-// create two actors and babblify them
-var emma = babble.babblify(new actors.Actor('emma'));
-var jack = babble.babblify(new actors.Actor('jack'));
+// create two agents and babblify them
+var emma = babble.babblify(new eve.Agent('emma'));
+var jack = babble.babblify(new eve.Agent('jack'));
 
-// create a transport and connect both actors
-var transport = new actors.LocalTransport();
+// create a transport and connect both agents
+var transport = new eve.LocalTransport();
 emma.connect(transport);
 jack.connect(transport);
 
@@ -92,44 +92,44 @@ function printMessage (message, context) {
 
 The library contains the following prototypes:
 
-- `actors.Actor`
-- `actors.Transport` (abstract prototype)
-- `actors.LocalTransport` using a local, in process transport.
-- `actors.DistribusTransport` using [distribus](https://github.com/enmasseio/distribus).
-- `actors.PubNubTransport` using [PubNub](http://www.pubnub.com/).
-- `actors.AMQPTransport` using the [AMPQ](http://www.amqp.org/) protocol,
+- `eve.Agent`
+- `eve.Transport` (abstract prototype)
+- `eve.LocalTransport` using a local, in process transport.
+- `eve.DistribusTransport` using [distribus](https://github.com/enmasseio/distribus).
+- `eve.PubNubTransport` using [PubNub](http://www.pubnub.com/).
+- `eve.AMQPTransport` using the [AMPQ](http://www.amqp.org/) protocol,
   for example via [RabbitMQ](https://www.rabbitmq.com/) servers.
 
 
-### Actor
+### Agent
 
 Constructor:
 
 ```js
-var actor = new actors.Actor([id: String]);
+var agent = new eve.Agent([id: String]);
 ```
 
 Methods:
 
-- `Actor.send(to: String, message: String)`  
-  Send a message to an other actor.
-- `Actor.onMessage(from: String, message: String)`  
-  Receive a message from an actor. The default implementation of this function
-  iterates over all message listeners registered via `Actor.on`. The method can
+- `Agent.send(to: String, message: String)`  
+  Send a message to an other agent.
+- `Agent.onMessage(from: String, message: String)`  
+  Receive a message from an agent. The default implementation of this function
+  iterates over all message listeners registered via `Agent.on`. The method can
   be overloaded if needed.
-- `Actor.on(pattern: String | RegExp | Function, callback: Function)`  
+- `Agent.on(pattern: String | RegExp | Function, callback: Function)`  
   Register an message listener, which is triggered when a message comes in which
   matches given pattern. The pattern can be a String (exact match), a
   regular expression, or a test function which is invoked as `pattern(message)`
   and must return true or false.
-- `Actor.off(pattern: String | RegExp | Function, callback: Function)`  
+- `Agent.off(pattern: String | RegExp | Function, callback: Function)`  
   Unregister a registered message listener.
-- `Actor.connect(transport: Transport) : Promise<Actor, Error>`  
-  Connect the actor to a transport. The library comes with multiple message 
-  transport implementations (see [API](#api). An actor can be connected to 
+- `Agent.connect(transport: Transport) : Promise<Agent, Error>`  
+  Connect the agent to a transport. The library comes with multiple message 
+  transport implementations (see [API](#api). An agent can be connected to 
   multiple transports.
-- `Actor.disconnect(transport: Transport)`  
-  Disconnect the actor from a a transport.
+- `Agent.disconnect(transport: Transport)`  
+  Disconnect the agent from a a transport.
 
 
 ### Transport
@@ -173,5 +173,5 @@ Then run the tests:
 
 ## To do
 
-- Implement a mixin pattern to turn existing objects into an actor.
+- Implement a mixin pattern to turn existing objects into an agent.
 - Maybe change the API to Promise based.

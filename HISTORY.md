@@ -1,6 +1,13 @@
 # history
 
 
+## not yet released, version 3.0.0
+
+- Renamed the library to evejs.
+- Renamed `Actor` to `Agent`. 
+- Renamed `*MessageBus` to `*Transport`. 
+
+
 ## 2014-08-01, version 2.1.0
 
 - Added an example.

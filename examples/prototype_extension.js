@@ -1,29 +1,29 @@
-// This example shows how to extend an Actor
-var actors = require('../index');
+// This example shows how to extend an Agent
+var eve = require('../index');
 
 /**
- * Custom actor prototype
+ * Custom agent prototype
  * @param {String} id
  * @constructor
- * @extend actors.Actor
+ * @extend eve.Agent
  */
-function MyActor(id) {
+function MyAgent(id) {
   // execute super constructor function
-  actors.Actor.call(this, id);
+  eve.Agent.call(this, id);
 
   // listen for greetings
   this.on(/hi|hello/i, this.onGreeting.bind(this));
 }
 
-// extend the actors.Actor prototype
-MyActor.prototype = Object.create(actors.Actor.prototype);
-MyActor.prototype.constructor = MyActor;
+// extend the eve.Agent prototype
+MyAgent.prototype = Object.create(eve.Agent.prototype);
+MyAgent.prototype.constructor = MyAgent;
 
 /**
- * Send a greeting to an actor
+ * Send a greeting to an agent
  * @param {String} to
  */
-MyActor.prototype.sayHi = function (to) {
+MyAgent.prototype.sayHi = function (to) {
   this.send(to, 'Hi!');
 };
 
@@ -32,22 +32,22 @@ MyActor.prototype.sayHi = function (to) {
  * @param {String} from
  * @param {String} message
  */
-MyActor.prototype.onGreeting = function (from, message) {
+MyAgent.prototype.onGreeting = function (from, message) {
   console.log(from + ' said: ' + message);
 };
 
-var transport = new actors.LocalTransport();
-var actor1 = new MyActor('actor1');
-var actor2 = new MyActor('actor2');
+var transport = new eve.LocalTransport();
+var agent1 = new MyAgent('agent1');
+var agent2 = new MyAgent('agent2');
 
-// connect both actors to the transport
-actor1.connect(transport);
-actor2.connect(transport);
+// connect both agents to the transport
+agent1.connect(transport);
+agent2.connect(transport);
 
-// send a message to actor 1
-actor2.sayHi('actor1');
+// send a message to agent 1
+agent2.sayHi('agent1');
 
 // Test prototype inheritance:
-// console.log(actor1 instanceof MyActor);       // true
-// console.log(actor1 instanceof actors.Actor);  // true
-// console.log(actor1.constructor.name);         // 'MyActor'
+// console.log(agent1 instanceof MyAgent);    // true
+// console.log(agent1 instanceof eve.Agent);  // true
+// console.log(agent1.constructor.name);      // 'MyAgent'

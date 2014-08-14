@@ -4,7 +4,8 @@
   "description": "Simple message based actors.",
   "author": "Jos de Jong <wjosdejong@gmail.com> (https://github.com/josdejong)",
   "keywords": [
-    "actors",
+    "eve",
+    "agent",
     "actor",
     "messages"
   ],

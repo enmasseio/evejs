@@ -1,4 +1,4 @@
-exports.Actor = require('./lib/Actor');
+exports.Agent = require('./lib/Agent');
 
 exports.Transport = require('./lib/transport/Transport');
 exports.LocalTransport = require('./lib/transport/LocalTransport');
