@@ -23,7 +23,7 @@ MyAgent.prototype.constructor = MyAgent;
  * Send a greeting to an agent
  * @param {String} to
  */
-MyAgent.prototype.sayHi = function (to) {
+MyAgent.prototype.sayHi = function(to) {
   this.send(to, 'Hi!');
 };
 
@@ -32,7 +32,7 @@ MyAgent.prototype.sayHi = function (to) {
  * @param {String} from
  * @param {String} message
  */
-MyAgent.prototype.onGreeting = function (from, message) {
+MyAgent.prototype.onGreeting = function(from, message) {
   console.log(from + ' said: ' + message);
 };
 
