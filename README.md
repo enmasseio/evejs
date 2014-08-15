@@ -87,6 +87,138 @@ function printMessage (message, context) {
 }
 ```
 
+### Create an Agent
+
+To create an agent prototype `MyAgent` extending `eve.Agent`, create a 
+file **MyAgent.js** containing:
+
+```js
+var eve = require('simple-actors');
+
+function MyAgent(id) {
+  // execute super constructor
+  eve.Agent.call(this, id);
+}
+
+// extend the eve.Agent prototype
+MyAgent.prototype = Object.create(eve.Agent.prototype);
+MyAgent.prototype.constructor = MyAgent;
+
+MyAgent.prototype.sayHi = function(to) {
+  this.send(to, 'Hi!');
+};
+
+MyAgent.prototype.onMessage = function(from, message) {
+  console.log(from + ' said: ' + JSON.stringify(message));
+};
+
+module.exports = MyAgent;
+```
+
+This agent can be used like:
+
+```js
+var eve = require('../index');
+var MyAgent = require('./MyAgent');
+
+var transport = new eve.transport.LocalTransport();
+
+var agent1 = new MyAgent('agent1');
+var agent2 = new MyAgent('agent2');
+
+agent1.connect(transport);
+agent2.connect(transport);
+
+// send a message to agent 1
+agent2.sayHi('agent1');
+```
+
+### ServiceManager
+
+With evejs, one can programmatically load transports and create agents.
+Evejs comes with a ServiceManager which enables loading transports from JSON 
+configuration.
+
+When creating an Agent, a service manager can be required as constructor argument. 
+This allows the Agent to select services that it needs by itself, for example
+by connecting to a transport on creation. Create a file **MyAgent.js** containing:
+
+```js
+var eve = require('simple-actors');
+
+function MyAgent(id, services) {
+  // execute super constructor
+  eve.Agent.call(this, id);
+  
+  // connect to all transports provided by the service manager
+  this.connect(services.transports.get());
+}
+
+// extend the eve.Agent prototype
+MyAgent.prototype = Object.create(eve.Agent.prototype);
+MyAgent.prototype.constructor = MyAgent;
+
+MyAgent.prototype.sayHi = function(to) {
+  this.send(to, 'Hi!');
+};
+
+MyAgent.prototype.onMessage = function(from, message) {
+  console.log(from + ' said: ' + JSON.stringify(message));
+};
+
+module.exports = MyAgent;
+```
+
+To load a ServiceManager and instantiate a few agents:
+
+```js
+var eve = require('../index');
+var MyAgent = require('./MyAgent');
+
+var config = {
+  transports: [
+    {
+      type: 'local'
+    }
+  ]
+};
+var services = new eve.ServiceManager(config);
+
+var agent1 = new MyAgent('agent1', services);
+var agent2 = new MyAgent('agent2', services);
+
+// send a message to agent 1
+agent2.sayHi('agent1');
+```
+
+The configuration can be saved in a separate file `config.json`:
+
+```json
+{
+  "transports": [
+    {
+      "type": "local"
+    }
+  ]
+}
+```
+
+Then, the configuration can be loaded into the ServiceManager like:
+
+```js
+var eve = require('../index');
+var MyAgent = require('./MyAgent');
+
+var config = require('./config.json');
+var services = new eve.ServiceManager(config);
+
+var agent1 = new MyAgent('agent1', services);
+var agent2 = new MyAgent('agent2', services);
+
+// send a message to agent 1
+agent2.sayHi('agent1');
+```
+
 
 ## API
 
@@ -122,6 +254,8 @@ Methods:
   matches given pattern. The pattern can be a String (exact match), a
   regular expression, or a test function which is invoked as `pattern(message)`
   and must return true or false.
+  Note that `Agent.on` only works when `Agent.onMessage` is not overwritten
+  by a custom Agent prototype.
 - `Agent.off(pattern: String | RegExp | Function, callback: Function)`  
   Unregister a registered message listener.
 - `Agent.connect(transport: Transport [, id: string]) : Promise<Agent, Error>`  
