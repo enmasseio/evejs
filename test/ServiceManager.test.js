@@ -63,6 +63,21 @@ describe('ServiceManager', function() {
     assert(manager.transports[0] instanceof LocalTransport);
   });
 
+  it('should load a service manager with config object', function () {
+    var manager = new ServiceManager({
+      transports: [
+        {type: 'local'},
+        {type: 'distribus'},
+        {type: 'local'}
+      ]
+    });
+
+    assert.equal(manager.transports.length, 3);
+    assert(manager.transports[0] instanceof LocalTransport);
+    assert(manager.transports[1] instanceof DistribusTransport);
+    assert(manager.transports[2] instanceof LocalTransport);
+  });
+
   it('should find all transports', function () {
     var manager = new ServiceManager();
 
