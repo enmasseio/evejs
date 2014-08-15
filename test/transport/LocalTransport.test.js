@@ -6,6 +6,7 @@ describe('LocalTransport', function() {
   it('should create a LocalTransport', function () {
     var transport = new LocalTransport();
     assert.ok(transport instanceof LocalTransport);
+    assert.equal(transport.type, 'local');
   });
 
   it('should connect and disconnect to LocalTransport', function () {
