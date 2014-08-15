@@ -1,4 +1,3 @@
-// This example shows how to extend Agent
 var eve = require('../../index');
 
 /**
@@ -31,11 +30,11 @@ MyAgent.prototype.sayHi = function(to) {
 /**
  * Handle incoming greetings. This overloads the default onMessage,
  * so we can't use MyAgent.on(pattern, listener) anymore
- * @param {String} from
- * @param {String} message
+ * @param {String} from     Id of the sender
+ * @param {*} message       Received message, a JSON object (often a string)
  */
 MyAgent.prototype.onMessage = function(from, message) {
-  console.log(from + ' said: ' + message);
+  console.log(from + ' said: ' + JSON.stringify(message));
 };
 
 /**

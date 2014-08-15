@@ -14,7 +14,7 @@ Install the module via npm:
 
 ## Use
 
-Example usage:
+### Basic usage
 
 ```js
 var eve = require('simple-actors');
@@ -124,7 +124,7 @@ Methods:
   and must return true or false.
 - `Agent.off(pattern: String | RegExp | Function, callback: Function)`  
   Unregister a registered message listener.
-- `Agent.connect(transport: Transport [id: string]) : Promise<Agent, Error>`  
+- `Agent.connect(transport: Transport [, id: string]) : Promise<Agent, Error>`  
   Connect the agent to a transport. The library comes with multiple message 
   transport implementations (see [API](#api). An agent can be connected to 
   multiple transports. By default, the agent connects to the transport with
