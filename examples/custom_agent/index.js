@@ -3,18 +3,13 @@ var MyAgent = require('./MyAgent');
 
 var config = {
   transports: [
-    {type: 'local'}
+    {id: 123, type: 'local'}
   ]
 };
-var manager = new eve.ServiceManager(config);
+var services = new eve.ServiceManager(config);
 
-var agent1 = new MyAgent('agent1', manager);
-var agent2 = new MyAgent('agent2', manager);
+var agent1 = new MyAgent('agent1', services);
+var agent2 = new MyAgent('agent2', services);
 
 // send a message to agent 1
 agent2.sayHi('agent1');
-
-// Test prototype inheritance:
-// console.log(agent1 instanceof MyAgent);    // true
-// console.log(agent1 instanceof eve.Agent);  // true
-// console.log(agent1.constructor.name);      // 'MyAgent'

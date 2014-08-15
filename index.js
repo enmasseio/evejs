@@ -1,6 +1,7 @@
 exports.Agent = require('./lib/Agent');
 
 exports.ServiceManager = require('./lib/ServiceManager');
+exports.TransportManager = require('./lib/TransportManager');
 
 exports.transport = {
   Transport: require('./lib/transport/Transport'),

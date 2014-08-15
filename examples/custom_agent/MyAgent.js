@@ -4,16 +4,16 @@ var eve = require('../../index');
 /**
  * Custom agent prototype
  * @param {String} id
- * @param {ServiceManager} manager
+ * @param {ServiceManager} services
  * @constructor
  * @extend eve.Agent
  */
-function MyAgent(id, manager) {
+function MyAgent(id, services) {
   // execute super constructor
   eve.Agent.call(this, id);
 
   // connect to all transports provided by the service manager
-  this.connect(manager.getTransports());
+  this.connect(services.transports.get());
 }
 
 // extend the eve.Agent prototype
@@ -44,5 +44,10 @@ MyAgent.prototype.onMessage = function(from, message) {
 MyAgent.prototype.destroy = function() {
   this.disconnect();
 };
+
+// Test prototype inheritance:
+// console.log(agent1 instanceof MyAgent);    // true
+// console.log(agent1 instanceof eve.Agent);  // true
+// console.log(agent1.constructor.name);      // 'MyAgent'
 
 module.exports = MyAgent;
