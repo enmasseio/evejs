@@ -1,13 +1,8 @@
 var eve = require('../../index');
 var MyAgent = require('./MyAgent');
 
-var config = {
-  transports: [
-    {
-      type: 'local'
-    }
-  ]
-};
+// load config from a file
+var config = require('./config.json');
 var services = new eve.ServiceManager(config);
 
 var agent1 = new MyAgent('agent1', services);
