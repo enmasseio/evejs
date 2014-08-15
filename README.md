@@ -20,8 +20,8 @@ Example usage:
 var eve = require('simple-actors');
 
 var transport = new eve.transport.LocalTransport();
-    agent1 = new eve.Agent('agent1');
-    agent2 = new eve.Agent('agent2');
+var agent1 = new eve.Agent('agent1');
+var agent2 = new eve.Agent('agent2');
 
 agent1.connect(transport);
 agent2.connect(transport);
@@ -124,10 +124,12 @@ Methods:
   and must return true or false.
 - `Agent.off(pattern: String | RegExp | Function, callback: Function)`  
   Unregister a registered message listener.
-- `Agent.connect(transport: Transport) : Promise<Agent, Error>`  
+- `Agent.connect(transport: Transport [id: string]) : Promise<Agent, Error>`  
   Connect the agent to a transport. The library comes with multiple message 
   transport implementations (see [API](#api). An agent can be connected to 
-  multiple transports.
+  multiple transports. By default, the agent connects to the transport with
+  it's own id. It is possible to provide an alternative id instead by specifying
+  this as second argument.
 - `Agent.disconnect(transport: Transport)`  
   Disconnect the agent from a a transport.
 

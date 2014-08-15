@@ -4,6 +4,9 @@
 ## not yet released, version 3.0.0
 
 - Renamed the library to evejs.
+- Implemented a `ServiceManager` and `TransportManager`.
+- Implemented support for connecting to multiple transports at once.
+- Implemented support for connecting with an alternative id.
 - Renamed `Actor` to `Agent`. 
 - Renamed `*MessageBus` to `*Transport`. 
 - Moved the transports under the namespace `eve.transport.*`.

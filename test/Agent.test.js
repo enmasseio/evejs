@@ -103,6 +103,23 @@ describe('Agent', function() {
       agent2.send('agent1', 'hello');
     });
 
+    it.skip('should connect with an alternative id', function (done) {
+      var transport = new LocalTransport();
+
+      var agent1 = new Agent('agent1');
+      agent1.connect(transport, '007');
+      var agent2 = new Agent('agent2');
+      agent2.connect(transport);
+
+      agent1.on('hello', function (from, message) {
+        assert.equal(from, 'agent2');
+        assert.equal(message, 'hello');
+        done();
+      });
+
+      agent2.send('007', 'hello');
+    });
+
     it('should connect and disconnect multiple transports at once', function () {
       var transport1 = new LocalTransport();
       var transport2 = new LocalTransport();
