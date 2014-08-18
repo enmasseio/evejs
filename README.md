@@ -316,12 +316,20 @@ var agent = new eve.Agent([id: String]);
 
 Methods:
 
-- `Agent.send(to: String, message: String)`  
-  Send a message to an other agent.
+- `Agent.send(to: String | Object, message: String)`  
+  Send a message to an other agent. Parameter `to` is either:
+
+  - the id of the recipient.
+  - an object specifying the type of transport and the id of the recipient:
+    `{id: string, transport: string}`
+  - an object specifying the id of a transport and the id of the recipient:
+    `{id: string, transportId: string}`
+
 - `Agent.receive(from: String, message: String)`  
   Receive a message from an agent. The default implementation of this function
   iterates over all message listeners registered via `Agent.on`. The method can
   be overloaded if needed.
+
 - `Agent.on(pattern: String | RegExp | Function, callback: Function)`  
   Register an message listener, which is triggered when a message comes in which
   matches given pattern. The pattern can be a String (exact match), a
@@ -329,14 +337,17 @@ Methods:
   and must return true or false.
   Note that `Agent.on` only works when `Agent.receive` is not overwritten
   by a custom Agent prototype.
+
 - `Agent.off(pattern: String | RegExp | Function, callback: Function)`  
   Unregister a registered message listener.
+
 - `Agent.connect(transport: Transport [, id: string]) : Promise<Agent, Error>`  
   Connect the agent to a transport. The library comes with multiple message 
   transport implementations (see [API](#api). An agent can be connected to 
   multiple transports. By default, the agent connects to the transport with
   it's own id. It is possible to provide an alternative id instead by specifying
   this as second argument.
+
 - `Agent.disconnect(transport: Transport)`  
   Disconnect the agent from a a transport.
 

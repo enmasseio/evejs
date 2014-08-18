@@ -9,6 +9,13 @@ describe('LocalTransport', function() {
     assert.equal(transport.type, 'local');
   });
 
+  it('should create a LocalTransport with id', function () {
+    var transport = new LocalTransport({id: 'foo'});
+    assert.ok(transport instanceof LocalTransport);
+    assert.equal(transport.type, 'local');
+    assert.equal(transport.id, 'foo');
+  });
+
   it('should connect and disconnect to LocalTransport', function () {
     var transport = new LocalTransport();
     var count = 0;

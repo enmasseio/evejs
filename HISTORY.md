@@ -7,6 +7,8 @@
 - Implemented a `ServiceManager` and `TransportManager`.
 - Implemented support for connecting to multiple transports at once.
 - Implemented support for connecting with an alternative id.
+- Implemented support for sending a message via a specific transport, by
+  specifying either the transports type or id.
 - Renamed `Actor` to `Agent`, and `peer` to `agent`. 
 - Renamed `*MessageBus` to `*Transport`. 
 - Renamed `Agent.onMessage` to `Agent.receive`. 

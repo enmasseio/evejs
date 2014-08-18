@@ -1,6 +1,7 @@
 var assert = require('assert');
 var Agent = require('../lib/Agent');
 var LocalTransport = require('../lib/transport/LocalTransport');
+var DistribusTransport = require('../lib/transport/DistribusTransport');
 
 describe('Agent', function() {
 
@@ -103,7 +104,7 @@ describe('Agent', function() {
       agent2.send('agent1', 'hello');
     });
 
-    it.skip('should connect with an alternative id', function (done) {
+    it('should connect with an alternative id', function (done) {
       var transport = new LocalTransport();
 
       var agent1 = new Agent('agent1');
@@ -205,6 +206,58 @@ describe('Agent', function() {
       // send messages to agents connected via a different transport
       agent2.send('agent1', 'hello');
       agent2.send('agent3', 'hello');
+    });
+
+    it('should send a message via a specific transport type', function (done) {
+      var transport1 = new LocalTransport();
+      var transport2 = new DistribusTransport();
+
+      var agent1 = new Agent('agent1');
+      var agent2 = new Agent('agent2');
+
+      agent1.connect(transport1);
+      agent1.connect(transport2);
+
+      agent2.connect(transport1);
+      agent2.connect(transport2);
+
+      function log(from, message) {
+        assert.equal(from, 'agent2');
+        assert.equal(message, 'hello');
+
+        done();
+      }
+
+      agent1.on('hello', log);
+
+      // send messages to agents connected via a the specified transport
+      agent2.send({id: 'agent1', transport: 'distribus'}, 'hello');
+    });
+
+    it('should send a message via a specific transport id', function (done) {
+      var transport1 = new LocalTransport({id: '1'});
+      var transport2 = new DistribusTransport({id: '2'});
+
+      var agent1 = new Agent('agent1');
+      var agent2 = new Agent('agent2');
+
+      agent1.connect(transport1);
+      agent1.connect(transport2);
+
+      agent2.connect(transport1);
+      agent2.connect(transport2);
+
+      function log(from, message) {
+        assert.equal(from, 'agent2');
+        assert.equal(message, 'hello');
+
+        done();
+      }
+
+      agent1.on('hello', log);
+
+      // send messages to agents connected via a the specified transport
+      agent2.send({id: 'agent1', transportId: '2'}, 'hello');
     });
   });
 
