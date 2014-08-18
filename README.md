@@ -95,9 +95,14 @@ file **MyAgent.js** containing:
 ```js
 var eve = require('simple-actors');
 
-function MyAgent(id) {
+function MyAgent(id, services) {
   // execute super constructor
   eve.Agent.call(this, id);
+  
+  // connect to all transports provided by the service manager
+  // fall back to the default service manager when not provided
+  services = services || eve.defaultServiceManager;
+  this.connect(services.transports.get());
 }
 
 // extend the eve.Agent prototype
@@ -115,19 +120,36 @@ MyAgent.prototype.onMessage = function(from, message) {
 module.exports = MyAgent;
 ```
 
-This agent can be used like:
+This agent can be used with the default service manager like:
 
 ```js
-var eve = require('../index');
+var eve = require('simple-actors');
 var MyAgent = require('./MyAgent');
-
-var transport = new eve.transport.LocalTransport();
 
 var agent1 = new MyAgent('agent1');
 var agent2 = new MyAgent('agent2');
 
-agent1.connect(transport);
-agent2.connect(transport);
+// send a message to agent 1
+agent2.sayHi('agent1');
+```
+
+Or with a provided service manager:
+
+```js
+var eve = require('simple-actors');
+var MyAgent = require('./MyAgent');
+
+var config = {
+  transports: [
+    {
+      type: 'distribus'
+    }
+  ]
+};
+var services = new eve.ServiceManager(config);
+
+var agent1 = new MyAgent('agent1', services);
+var agent2 = new MyAgent('agent2', services);
 
 // send a message to agent 1
 agent2.sayHi('agent1');
@@ -151,6 +173,8 @@ function MyAgent(id, services) {
   eve.Agent.call(this, id);
   
   // connect to all transports provided by the service manager
+  // fall back to the default service manager when not provided
+  services = services || eve.defaultServiceManager;
   this.connect(services.transports.get());
 }
 
@@ -172,7 +196,7 @@ module.exports = MyAgent;
 To load a ServiceManager and instantiate a few agents:
 
 ```js
-var eve = require('../index');
+var eve = require('simple-actors');
 var MyAgent = require('./MyAgent');
 
 var config = {
@@ -206,7 +230,7 @@ The configuration can be saved in a separate file `config.json`:
 Then, the configuration can be loaded into the ServiceManager like:
 
 ```js
-var eve = require('../index');
+var eve = require('simple-actors');
 var MyAgent = require('./MyAgent');
 
 var config = require('./config.json');
@@ -217,6 +241,53 @@ var agent2 = new MyAgent('agent2', services);
 
 // send a message to agent 1
 agent2.sayHi('agent1');
+```
+
+### defaultServiceManager
+
+For ease of use, evejs provides a `defaultServiceManager`, which has loaded
+a `LocalTransport`. Instead of providing a service manager when constructing
+and agent, the agent can test whether a service manager is provided and if not,
+fall back on the `defaultServiceManager`. This means that agents can be created
+and used without configuring and passing a service manager.
+
+```js
+var eve = require('simple-actors');
+
+function MyAgent(id, services) {
+  // execute super constructor
+  eve.Agent.call(this, id);
+  
+  // connect to all transports provided by the service manager
+  // fall back to the default service manager when not provided
+  services = services || eve.defaultServiceManager;
+  this.connect(services.transports.get());
+}
+
+// extend the eve.Agent prototype
+MyAgent.prototype = Object.create(eve.Agent.prototype);
+MyAgent.prototype.constructor = MyAgent;
+
+MyAgent.prototype.sayHi = function(to) {
+  this.send(to, 'Hi!');
+};
+
+MyAgent.prototype.onMessage = function(from, message) {
+  console.log(from + ' said: ' + JSON.stringify(message));
+};
+
+module.exports = MyAgent;
+```
+
+The agent `MyAgent` can be created with an optional service manager:
+
+```js
+// use default service manager
+var agent1 = new MyAgent(id);
+
+// use the provided service manager
+var services = new eve.ServiceManager(...);
+var agent1 = new MyAgent(id, services);
 ```
 
 
@@ -231,7 +302,9 @@ The library contains the following prototypes:
 - `eve.transport.PubNubTransport` using [PubNub](http://www.pubnub.com/).
 - `eve.transport.AMQPTransport` using the [AMPQ](http://www.amqp.org/) protocol,
   for example via [RabbitMQ](https://www.rabbitmq.com/) servers.
-
+- `eve.ServiceManager` construct a service manager.
+- `eve.defaultServiceManager` a default, global instance of a service manager, 
+  loaded with a `LocalTransport`
 
 ### Agent
 
@@ -294,8 +367,86 @@ Methods:
 - `Transport.send(from: String, to: String, message: String)`  
   Send a message via the transport.
 
+### ServiceManager
 
+A ServiceManager is an object to manage services for the agents. Currently,
+the only available service is transports. Typically, a service manager is 
+provided to an agent on construction, allowing the agent to connect to relevant 
+services.
 
+A ServiceManager is created as:
+
+```js
+var services = new eve.ServiceManager();
+var services = new eve.ServiceManager(config: Object);
+```
+
+Where `config` is an optional JSON object structured as:
+
+```js
+{
+  "transports": [
+    {
+      "type": STRING,
+      ... transport dependent params
+    },
+    ...
+  ]
+}
+```
+
+Properties:
+
+- `transports: TransportManager` see [TransportManager](#transportmanager)
+
+### TransportManager
+
+A TransportManager manages transports for reuse by multiple agents.
+
+A TransportManager is created as:
+
+```js
+var services = new eve.TransportManager();
+var services = new eve.TransportManager(config: Array);
+```
+
+Where `config` is an optional JSON array structured as:
+
+```js
+[
+  {
+    "type": STRING,
+    ... transport dependent params
+  },
+  ...
+]
+```
+
+Available types: `"amqp"`, `"distribus"`, `"local"`, and `"pubnub"`.
+
+Methods:
+
+- `add(transport: Transport) : Transport`  
+  Add a loaded transport to the manager. Returns the transport itself.
+- `get([type: string]) : Transport`  
+  Get transports. When optional parameter `type` is provided, the transports
+  are filtered by this type. When there are no transports found, an empty 
+  array is returned.
+  Available types are: 'amqp',  'distribus', 'local', 'pubnub'.
+- `getOne([type: string]) : Transport`  
+  Get a single transport. When optional parameter `type` is provided, the transports
+  are filtered by this type. 
+  Available types are: 'amqp',  'distribus', 'local', 'pubnub'. When type is defined, 
+  the first transport of this type is returned. When undefined, the first 
+  loaded transport of any type is returned.
+  Throws an error when no matching transport is found.
+- `load(config: Object) : Transport`  
+  Load a transport based on JSON configuration. Returns the loaded transport
+- `registerType(constructor: Function)`
+  Register a new type of transport. This transport can then be loaded via
+  configuration. When called, the constructor must generate a transport which
+  is an instance of `Transport`.
+  
 ## Test
 
 First install the project dependencies:
@@ -305,9 +456,3 @@ First install the project dependencies:
 Then run the tests:
 
     npm test
-
-
-## To do
-
-- Implement a mixin pattern to turn existing objects into an agent.
-- Maybe change the API to Promise based.

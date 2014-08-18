@@ -10,3 +10,7 @@ exports.transport = {
   AMQPTransport: require('./lib/transport/AMQPTransport'),
   DistribusTransport: require('./lib/transport/DistribusTransport')
 };
+
+// load a default ServiceManager with a LocalTransport
+exports.defaultServiceManager = new exports.ServiceManager();
+exports.defaultServiceManager.transports.add(new exports.transport.LocalTransport());

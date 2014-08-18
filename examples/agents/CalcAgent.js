@@ -3,7 +3,7 @@ var eve = require('../../index');
 /**
  * CalcAgent can evaluate expressions
  * @param {String} id
- * @param {ServiceManager} services
+ * @param {ServiceManager} [services]
  * @constructor
  * @extend eve.Agent
  */
@@ -12,6 +12,8 @@ function CalcAgent(id, services) {
   eve.Agent.call(this, id);
 
   // connect to all transports provided by the service manager
+  // fall back to the default service manager when not provided
+  services = services || eve.defaultServiceManager;
   this.connect(services.transports.get());
 }
 
