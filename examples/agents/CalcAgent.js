@@ -28,7 +28,7 @@ CalcAgent.prototype.constructor = CalcAgent;
  * @param {String} from
  * @param {{fn: string, a: number, b: number, id: string}} message
  */
-CalcAgent.prototype.onMessage = function(from, message) {
+CalcAgent.prototype.receive = function(from, message) {
   if ('fn' in message && 'a' in message && 'b' in message) {
     switch(message.fn) {
       case 'add':

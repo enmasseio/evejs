@@ -113,7 +113,7 @@ MyAgent.prototype.sayHi = function(to) {
   this.send(to, 'Hi!');
 };
 
-MyAgent.prototype.onMessage = function(from, message) {
+MyAgent.prototype.receive = function(from, message) {
   console.log(from + ' said: ' + JSON.stringify(message));
 };
 
@@ -186,7 +186,7 @@ MyAgent.prototype.sayHi = function(to) {
   this.send(to, 'Hi!');
 };
 
-MyAgent.prototype.onMessage = function(from, message) {
+MyAgent.prototype.receive = function(from, message) {
   console.log(from + ' said: ' + JSON.stringify(message));
 };
 
@@ -272,7 +272,7 @@ MyAgent.prototype.sayHi = function(to) {
   this.send(to, 'Hi!');
 };
 
-MyAgent.prototype.onMessage = function(from, message) {
+MyAgent.prototype.receive = function(from, message) {
   console.log(from + ' said: ' + JSON.stringify(message));
 };
 
@@ -318,7 +318,7 @@ Methods:
 
 - `Agent.send(to: String, message: String)`  
   Send a message to an other agent.
-- `Agent.onMessage(from: String, message: String)`  
+- `Agent.receive(from: String, message: String)`  
   Receive a message from an agent. The default implementation of this function
   iterates over all message listeners registered via `Agent.on`. The method can
   be overloaded if needed.
@@ -327,7 +327,7 @@ Methods:
   matches given pattern. The pattern can be a String (exact match), a
   regular expression, or a test function which is invoked as `pattern(message)`
   and must return true or false.
-  Note that `Agent.on` only works when `Agent.onMessage` is not overwritten
+  Note that `Agent.on` only works when `Agent.receive` is not overwritten
   by a custom Agent prototype.
 - `Agent.off(pattern: String | RegExp | Function, callback: Function)`  
   Unregister a registered message listener.
@@ -357,9 +357,9 @@ var transport = new Transport([config: Object]);
 
 Methods:
 
-- `Transport.connect(id: String, onMessage: Function [, onConnect: Function])`  
+- `Transport.connect(id: String, receive: Function [, onConnect: Function])`  
   Connect an agent with given `id`. When a message for the agent comes in,
-  the callback function `onMessage` is invoked as `onMessage(from: String,
+  the callback function `receive` is invoked as `receive(from: String,
   message: String)`. The method returns a Promise which resolves when the 
   connection is created.
 - `Transport.disconnect(id: String)`  

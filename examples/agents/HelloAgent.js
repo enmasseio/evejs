@@ -30,12 +30,12 @@ HelloAgent.prototype.sayHi = function(to) {
 };
 
 /**
- * Handle incoming greetings. This overloads the default onMessage,
+ * Handle incoming greetings. This overloads the default receive,
  * so we can't use HelloAgent.on(pattern, listener) anymore
  * @param {String} from     Id of the sender
  * @param {*} message       Received message, a JSON object (often a string)
  */
-HelloAgent.prototype.onMessage = function(from, message) {
+HelloAgent.prototype.receive = function(from, message) {
   console.log(from + ' said: ' + JSON.stringify(message));
 };
 

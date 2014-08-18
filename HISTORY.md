@@ -9,6 +9,7 @@
 - Implemented support for connecting with an alternative id.
 - Renamed `Actor` to `Agent`, and `peer` to `agent`. 
 - Renamed `*MessageBus` to `*Transport`. 
+- Renamed `Agent.onMessage` to `Agent.receive`. 
 - Moved the transports under the namespace `eve.transport.*`.
 
 
