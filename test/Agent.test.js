@@ -130,15 +130,15 @@ describe('Agent', function() {
             assert.equal(results.length, 2);
             assert.strictEqual(results[0], agent1);
             assert.strictEqual(results[1], agent1);
-            assert.deepEqual(Object.keys(transport1.peers), ['agent1']);
-            assert.deepEqual(Object.keys(transport2.peers), ['agent1']);
+            assert.deepEqual(Object.keys(transport1.agents), ['agent1']);
+            assert.deepEqual(Object.keys(transport2.agents), ['agent1']);
           })
           .then(function () {
             agent1.disconnect([transport1, transport2]);
 
             assert.deepEqual(agent1.connections, []);
-            assert.deepEqual(Object.keys(transport1.peers), []);
-            assert.deepEqual(Object.keys(transport2.peers), []);
+            assert.deepEqual(Object.keys(transport1.agents), []);
+            assert.deepEqual(Object.keys(transport2.agents), []);
           });
     });
 
@@ -152,15 +152,15 @@ describe('Agent', function() {
             assert.equal(results.length, 2);
             assert.strictEqual(results[0], agent1);
             assert.strictEqual(results[1], agent1);
-            assert.deepEqual(Object.keys(transport1.peers), ['agent1']);
-            assert.deepEqual(Object.keys(transport2.peers), ['agent1']);
+            assert.deepEqual(Object.keys(transport1.agents), ['agent1']);
+            assert.deepEqual(Object.keys(transport2.agents), ['agent1']);
           })
           .then(function () {
             agent1.disconnect();
 
             assert.deepEqual(agent1.connections, []);
-            assert.deepEqual(Object.keys(transport1.peers), []);
-            assert.deepEqual(Object.keys(transport2.peers), []);
+            assert.deepEqual(Object.keys(transport1.agents), []);
+            assert.deepEqual(Object.keys(transport2.agents), []);
           });
     });
 

@@ -14,20 +14,20 @@ describe('LocalTransport', function() {
     var count = 0;
 
     // connect and send a message
-    transport.connect('peer1', function (from, message) {
-      assert.equal(from, 'peer2');
+    transport.connect('agent1', function (from, message) {
+      assert.equal(from, 'agent2');
       assert.equal(message, 'hi there');
       count++;
     });
 
-    transport.send('peer2', 'peer1', 'hi there');
+    transport.send('agent2', 'agent1', 'hi there');
     assert.equal(count, 1);
 
     // disconnect
-    transport.disconnect('peer1');
+    transport.disconnect('agent1');
     assert.throws (function () {
-      transport.send('peer2', 'peer1', 'hi there');
-    }, /Error: Peer with id peer1 not found/);
+      transport.send('agent2', 'agent1', 'hi there');
+    }, /Error: Agent with id agent1 not found/);
   });
 
 });

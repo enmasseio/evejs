@@ -285,12 +285,12 @@ var transport = new Transport([config: Object]);
 Methods:
 
 - `Transport.connect(id: String, onMessage: Function [, onConnect: Function])`  
-  Connect a peer with given `id`. When a message for the peer comes in,
+  Connect an agent with given `id`. When a message for the agent comes in,
   the callback function `onMessage` is invoked as `onMessage(from: String,
   message: String)`. The method returns a Promise which resolves when the 
   connection is created.
 - `Transport.disconnect(id: String)`  
-  Disconnect a peer with given `id`.
+  Disconnect an agent with given `id`.
 - `Transport.send(from: String, to: String, message: String)`  
   Send a message via the transport.
 
