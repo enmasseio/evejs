@@ -24,12 +24,12 @@ host1.listen('localhost', 3000)
     .then(function () {
       // agent 1 listens for messages containing 'hi' or 'hello' (case insensitive)
       agent1 = new eve.Agent('agent1');
-      agent1.on(/hi|hello/i, function (from, message) {
+      agent1.receive = function (from, message) {
         console.log(from + ' said: ' + message);
 
         // reply to the greeting
         this.send(from, 'Hi ' + from + ', nice to meet you!');
-      });
+      };
 
       // connect the agent to transport1
       return agent1.connect(transport1);
@@ -38,9 +38,9 @@ host1.listen('localhost', 3000)
     .then(function () {
       // agent 2 listens for any message
       agent2 = new eve.Agent('agent2');
-      agent2.on(/./, function (from, message) {
+      agent2.receive = function (from, message) {
         console.log(from + ' said: ' + message);
-      });
+      };
 
       // connect the agent to transport2
       return agent2.connect(transport2);

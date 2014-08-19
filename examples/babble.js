@@ -9,8 +9,8 @@ var eve = require('../index');
 var babble = require('babble');
 
 // create two agents and babblify them
-var emma = babble.babblify(new eve.Agent('emma'));
-var jack = babble.babblify(new eve.Agent('jack'));
+var emma = new eve.Agent('emma').extend('babble');
+var jack = new eve.Agent('jack').extend('babble');
 
 // create a transport and connect both agents
 var transport = new eve.transport.LocalTransport();

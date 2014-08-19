@@ -20,10 +20,10 @@ describe('Agent', function() {
     });
   });
 
-  describe ('message listeners', function () {
+  describe ('patterns', function () {
 
     it('should add and remove a message listener', function () {
-      var agent = new Agent('agent1');
+      var agent = new Agent('agent1').extend('patterns');
       var sender = 'agent2';
       var count = 0;
 
@@ -34,20 +34,20 @@ describe('Agent', function() {
       };
 
       // add the listener, test if listener is triggered
-      agent.on(pattern, listener);
+      agent.listen(pattern, listener);
       agent.receive(sender, pattern);
       assert.equal(count, 1);
 
       // remove the listener, test if listener is not triggered anymore
-      agent.off(pattern, listener);
+      agent.unlisten(pattern, listener);
       agent.receive(sender, pattern);
       assert.equal(count, 1);
     });
 
     it('should listen to messages using a string pattern', function (done) {
-      var agent = new Agent('agent1');
+      var agent = new Agent('agent1').extend('patterns');
 
-      agent.on('hello', function (from, message) {
+      agent.listen('hello', function (from, message) {
         assert.equal(from, 'agent2');
         assert.equal(message, 'hello');
         done();
@@ -57,9 +57,9 @@ describe('Agent', function() {
     });
 
     it('should listen to messages using a regexp pattern', function (done) {
-      var agent = new Agent('agent1');
+      var agent = new Agent('agent1').extend('patterns');
 
-      agent.on(/hello/, function (from, message) {
+      agent.listen(/hello/, function (from, message) {
         assert.equal(from, 'agent2');
         assert.equal(message, 'hello, my name is agent2');
         done();
@@ -70,9 +70,9 @@ describe('Agent', function() {
     });
 
     it('should listen to messages using a function pattern', function (done) {
-      var agent = new Agent('agent1');
+      var agent = new Agent('agent1').extend('patterns');
 
-      agent.on(function (message) {
+      agent.listen(function (message) {
         return message.indexOf('hello') != -1;
       }, function (from, message) {
         assert.equal(from, 'agent2');
@@ -91,15 +91,15 @@ describe('Agent', function() {
       var transport = new LocalTransport();
 
       var agent1 = new Agent('agent1');
-      agent1.connect(transport);
       var agent2 = new Agent('agent2');
+      agent1.connect(transport);
       agent2.connect(transport);
 
-      agent1.on('hello', function (from, message) {
+      agent1.receive = function (from, message) {
         assert.equal(from, 'agent2');
         assert.equal(message, 'hello');
         done();
-      });
+      };
 
       agent2.send('agent1', 'hello');
     });
@@ -112,11 +112,11 @@ describe('Agent', function() {
       var agent2 = new Agent('agent2');
       agent2.connect(transport);
 
-      agent1.on('hello', function (from, message) {
+      agent1.receive = function (from, message) {
         assert.equal(from, 'agent2');
         assert.equal(message, 'hello');
         done();
-      });
+      };
 
       agent2.send('007', 'hello');
     });
@@ -200,8 +200,8 @@ describe('Agent', function() {
         }
       }
 
-      agent1.on('hello', log);
-      agent3.on('hello', log);
+      agent1.receive = log;
+      agent3.receive = log;
 
       // send messages to agents connected via a different transport
       agent2.send('agent1', 'hello');
@@ -228,7 +228,7 @@ describe('Agent', function() {
         done();
       }
 
-      agent1.on('hello', log);
+      agent1.receive = log;
 
       // send messages to agents connected via a the specified transport
       agent2.send({id: 'agent1', transport: 'distribus'}, 'hello');
@@ -254,7 +254,7 @@ describe('Agent', function() {
         done();
       }
 
-      agent1.on('hello', log);
+      agent1.receive = log;
 
       // send messages to agents connected via a the specified transport
       agent2.send({id: 'agent1', transportId: '2'}, 'hello');

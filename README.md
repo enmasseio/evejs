@@ -19,15 +19,44 @@ Install the module via npm:
 ```js
 var eve = require('simple-actors');
 
-var transport = new eve.transport.LocalTransport();
+// create two agents
 var agent1 = new eve.Agent('agent1');
 var agent2 = new eve.Agent('agent2');
 
+// overload the receive message of agent1
+agent1.receive = function (from, message) {
+  console.log(from + ' said: ' + message);
+
+  // reply to the greeting
+  this.send(from, 'Hi ' + from + ', nice to meet you!');
+});
+
+// overload the receive message of agent1
+agent2.receive = function (from, message) {
+  console.log(from + ' said: ' + message);
+});
+
+// create a transport and connect both agents
+var transport = new eve.transport.LocalTransport();
 agent1.connect(transport);
 agent2.connect(transport);
 
+// send a message to agent 1
+agent2.send('agent1', 'Hello agent1!');
+```
+
+### Patterns
+
+```js
+var eve = require('simple-actors');
+
+// create two agents and extend them with the 'patterns' module 
+// so they can listen for matching patterns
+var agent1 = new eve.Agent('agent1').extend('patterns');
+var agent2 = new eve.Agent('agent2').extend('patterns');
+
 // agent1 listens for messages containing 'hi' or 'hello' (case insensitive)
-agent1.on(/hi|hello/i, function (from, message) {
+agent1.listen(/hi|hello/i, function (from, message) {
   console.log(from + ' said: ' + message);
 
   // reply to the greeting
@@ -35,9 +64,14 @@ agent1.on(/hi|hello/i, function (from, message) {
 });
 
 // agent2 listens for any message
-agent2.on(/./, function (from, message) {
+agent2.listen(/./, function (from, message) {
   console.log(from + ' said: ' + message);
 });
+
+// create a transport and connect both agents
+var transport = new eve.transport.LocalTransport();
+agent1.connect(transport);
+agent2.connect(transport);
 
 // send a message to agent 1
 agent2.send('agent1', 'Hello agent1!');
@@ -54,8 +88,8 @@ var eve = require('simple-actors');
 var babble = require('babble');
 
 // create two agents and babblify them
-var emma = babble.babblify(new eve.Agent('emma'));
-var jack = babble.babblify(new eve.Agent('jack'));
+var emma = new eve.Agent('emma').extend('babble');
+var jack = new eve.Agent('jack').extend('babble');
 
 // create a transport and connect both agents
 var transport = new eve.transport.LocalTransport();
@@ -63,7 +97,10 @@ emma.connect(transport);
 jack.connect(transport);
 
 emma.listen('hi')
-    .listen(printMessage)
+    .listen(function (message, context) {
+      console.log(context.from + ': ' + message);
+      return message;
+    })
     .decide(function (message, context) {
       return (message.indexOf('age') != -1) ? 'age' : 'name';
     }, {
@@ -79,12 +116,10 @@ jack.tell('emma', 'hi')
         return 'my age is 25';
       }
     })
-    .listen(printMessage);
-
-function printMessage (message, context) {
-  console.log(context.from + ': ' + message);
-  return message;
-}
+    .listen(function (message, context) {
+      console.log(context.from + ': ' + message);
+      return message;
+    });
 ```
 
 ### Create an Agent
@@ -325,21 +360,24 @@ Methods:
   - an object specifying the id of a transport and the id of the recipient:
     `{id: string, transportId: string}`
 
+- `Agent.extend(module: String [, options: Object]): Agent`  
+  Extend an agent with modules (mixins). Available modules: 
+  - `'patterns'`  
+    Add support for pattern listening to an object. The agent will be extended
+    with functions `listen` and `unlisten`. Cannot be used in conjunction with
+    module `'babble'`.
+     
+  - `'babble'`  
+    Babblify an agent. The babblified agent will be extended with functions
+    `ask`, `tell`, and `listen`. Cannot be used in conjunction with
+    module `'patterns'`.
+  
+  The function `extend` returns the agent itself, which allows chaining multiple
+  extenstions.
+
 - `Agent.receive(from: String, message: String)`  
-  Receive a message from an agent. The default implementation of this function
-  iterates over all message listeners registered via `Agent.on`. The method can
-  be overloaded if needed.
-
-- `Agent.on(pattern: String | RegExp | Function, callback: Function)`  
-  Register an message listener, which is triggered when a message comes in which
-  matches given pattern. The pattern can be a String (exact match), a
-  regular expression, or a test function which is invoked as `pattern(message)`
-  and must return true or false.
-  Note that `Agent.on` only works when `Agent.receive` is not overwritten
-  by a custom Agent prototype.
-
-- `Agent.off(pattern: String | RegExp | Function, callback: Function)`  
-  Unregister a registered message listener.
+  Receive a message from an agent. The method should be overloaded with an
+  implementation doing something with incoming messages.
 
 - `Agent.connect(transport: Transport [, id: string]) : Promise<Agent, Error>`  
   Connect the agent to a transport. The library comes with multiple message 
@@ -350,6 +388,57 @@ Methods:
 
 - `Agent.disconnect(transport: Transport)`  
   Disconnect the agent from a a transport.
+
+
+### Modules
+
+An agent can be extended with modules, offering additional functionality.
+evejs comes with a number of built in modules. Usage:
+
+    agent.extend(moduleName);
+
+#### Patterns
+
+The `'patterns'` module extends an agent with  support for pattern listening. 
+The agent will be extended with functions `listen` and `unlisten`. Cannot be 
+used in conjunction with module `'babble'`.
+
+Usage:
+
+    agent.extend('pattern');
+
+Methods:
+
+- `Agent.listen(pattern: String | RegExp | Function, callback: Function)`  
+  Register an pattern listener, which is triggered when a message comes in which
+  matches given pattern. The pattern can be a String (exact match), a
+  regular expression, or a test function which is invoked as `pattern(message)`
+  and must return true or false. 
+  When the `callback` function returns true, propagation to other message 
+  listeners will be stopped.
+
+- `Agent.unlisten(pattern: String | RegExp | Function, callback: Function)`  
+  Unregister a registered pattern listener.
+
+#### Babble
+
+Babble enables dynamic communication flows between agents by means of 
+conversations. A conversation is modeled as a control flow diagram containing 
+blocks `ask`, `tell`, `listen`, `iif`, `decide`, and `then`. Each block can 
+link to a next block in the control flow. Conversations are dynamic: 
+a scenario is build programmatically, and the blocks can dynamically determine 
+the next block in the scenario. During a conversation, a context is available 
+to store the state of the conversation.
+
+The module `'babble'` cannot be used in conjunction with module `'babble'`.
+
+Usage:
+
+    agent.extend('babble');
+
+The full API and documentation can be found at the project page of babble:
+
+https://github.com/enmasseio/babble
 
 
 ### Transport

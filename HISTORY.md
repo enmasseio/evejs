@@ -9,6 +9,8 @@
 - Implemented support for connecting with an alternative id.
 - Implemented support for sending a message via a specific transport, by
   specifying either the transports type or id.
+- Extended Agent with a function `extend`, for easy loading of modules. 
+- Moved pattern listening functionality in a separate module.
 - Renamed `Actor` to `Agent`, and `peer` to `agent`. 
 - Renamed `*MessageBus` to `*Transport`. 
 - Renamed `Agent.onMessage` to `Agent.receive`. 
