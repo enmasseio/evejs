@@ -11,6 +11,9 @@ function CalcAgent(id, services) {
   // execute super constructor
   eve.Agent.call(this, id);
 
+  // extend the agent with support for requests
+  this.extend('request');
+
   // connect to all transports provided by the service manager
   // fall back to the default service manager when not provided
   services = services || eve.defaultServiceManager;
@@ -29,49 +32,18 @@ CalcAgent.prototype.constructor = CalcAgent;
  * @param {{fn: string, a: number, b: number, id: string}} message
  */
 CalcAgent.prototype.receive = function(from, message) {
-  if ('fn' in message && 'a' in message && 'b' in message) {
+  if (typeof message === 'object' && 'fn' in message && 'a' in message && 'b' in message) {
     switch(message.fn) {
-      case 'add':
-        this.send(from, {
-          id: message.id,
-          result: message.a + message.b
-        });
-        break;
-
-      case 'subtract':
-        this.send(from, {
-          id: message.id,
-          result: message.a - message.b
-        });
-        break;
-
-      case 'multiply':
-        this.send(from, {
-          id: message.id,
-          result: message.a * message.b
-        });
-        break;
-
-      case 'divide':
-        this.send(from, {
-          id: message.id,
-          result: message.a / message.b
-        });
-        break;
-
+      case 'add':       return message.a + message.b;
+      case 'subtract':  return message.a - message.b;
+      case 'multiply':  return message.a * message.b;
+      case 'divide':    return message.a / message.b;
       default:
-        this.send(from, {
-          id: message.id,
-          error: 'Unknown function "' + message.fn + '"'
-        });
-        break;
+        throw new Error('Unknown function "' + message.fn + '"');
     }
   }
   else {
-    this.send(from, {
-      id: message.id,
-      error: 'Object expected with properties fn, a, and b'
-    });
+    throw new Error('Object expected with properties fn, a, and b');
   }
 };
 

@@ -103,6 +103,50 @@ describe ('request', function () {
         });
   });
 
+  it('should handle errors thrown by the agents receive method', function () {
+    var agent1 = new Agent('agent1').extend('request');
+    var agent2 = new Agent('agent2').extend('request');
+
+    agent1.receive = function (from, message) {
+      throw new Error('oops');
+    };
+
+    var transport = new LocalTransport();
+    agent1.connect(transport);
+    agent2.connect(transport);
+
+    return agent2.request('agent1', 'foo')
+        .then(function (reply) {
+          assert.ok(false, 'Should not resolve');
+        })
+        .catch(function (err) {
+          assert(err instanceof Error);
+          assert.equal(err.message, 'oops');
+        });
+  });
+
+  it('should handle errors returned via rejected promise', function () {
+    var agent1 = new Agent('agent1').extend('request');
+    var agent2 = new Agent('agent2').extend('request');
+
+    agent1.receive = function (from, message) {
+      return Promise.reject(new Error('oops'));
+    };
+
+    var transport = new LocalTransport();
+    agent1.connect(transport);
+    agent2.connect(transport);
+
+    return agent2.request('agent1', 'foo')
+        .then(function (reply) {
+          assert.ok(false, 'Should not resolve');
+        })
+        .catch(function (err) {
+          assert(err instanceof Error);
+          assert.equal(err.message, 'oops');
+        });
+  });
+
   // TODO: test with multiple messages in queue
 
   // TODO: test in combination with the rpc module (when implemented)
