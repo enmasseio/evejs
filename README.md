@@ -375,12 +375,12 @@ The library contains the following prototypes:
 Constructor:
 
 ```js
-var agent = new eve.Agent([id: String]);
+var agent = new eve.Agent([id: string]);
 ```
 
 Methods:
 
-- `Agent.send(to: String | Object, message: String)`  
+- `Agent.send(to: string | Object, message: string)`  
   Send a message to an other agent. Parameter `to` is either:
 
   - the id of the recipient.
@@ -389,7 +389,7 @@ Methods:
   - an object specifying the id of a transport and the id of the recipient:
     `{id: string, transportId: string}`
 
-- `Agent.extend(module: String [, options: Object]): Agent`  
+- `Agent.extend(module: string | Array.<string> [, options: Object]): Agent`  
   Extend an agent with modules (mixins). Available modules: 
   - `'pattern'`  
     Add support for pattern listening to an object. The agent will be extended
@@ -408,7 +408,7 @@ Methods:
   The function `extend` returns the agent itself, which allows chaining multiple
   extenstions.
 
-- `Agent.receive(from: String, message: String)`  
+- `Agent.receive(from: string, message: string)`  
   Receive a message from an agent. The method should be overloaded with an
   implementation doing something with incoming messages.
 
@@ -453,14 +453,14 @@ Available options:
 
 Methods:
 
-- `Agent.listen(pattern: String | RegExp | Function, callback: Function)`  
+- `Agent.listen(pattern: string | RegExp | Function, callback: Function)`  
   Register an pattern listener, which is triggered when a message comes in which
-  matches given pattern. The pattern can be a String (exact match), a
+  matches given pattern. The pattern can be a string (exact match), a
   regular expression, or a test function which is invoked as `pattern(message)`.
   When a message matches the pattern, the `callback` function is invoked as
   `callback(from, message)`.
 
-- `Agent.unlisten(pattern: String | RegExp | Function, callback: Function)`  
+- `Agent.unlisten(pattern: string | RegExp | Function, callback: Function)`  
   Unregister a registered pattern listener.
 
 #### Request
@@ -481,7 +481,7 @@ Available options:
 
 Methods:
 
-- `Agent.request(to: String | Object, message: String, message: *)`    
+- `Agent.request(to: string | Object, message: string, message: *)`    
   Send a request. The function returns a promise which resolves with the reply
   comes in.
 
@@ -522,14 +522,14 @@ var transport = new Transport([config: Object]);
 
 Methods:
 
-- `Transport.connect(id: String, receive: Function [, onConnect: Function])`  
+- `Transport.connect(id: string, receive: Function [, onConnect: Function])`  
   Connect an agent with given `id`. When a message for the agent comes in,
-  the callback function `receive` is invoked as `receive(from: String,
-  message: String)`. The method returns a Promise which resolves when the 
+  the callback function `receive` is invoked as `receive(from: string,
+  message: string)`. The method returns a Promise which resolves when the 
   connection is created.
-- `Transport.disconnect(id: String)`  
+- `Transport.disconnect(id: string)`  
   Disconnect an agent with given `id`.
-- `Transport.send(from: String, to: String, message: String)`  
+- `Transport.send(from: string, to: string, message: string)`  
   Send a message via the transport.
 
 ### ServiceManager

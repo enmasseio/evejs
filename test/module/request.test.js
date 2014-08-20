@@ -66,9 +66,44 @@ describe ('request', function () {
         });
   });
 
-  // TODO: test with multiple messages in queue
+  it('should retrurn a reply resolved by a pattern listener', function () {
+    var agent1 = new Agent('agent1').extend(['pattern', 'request']);
+    var agent2 = new Agent('agent2').extend(['pattern', 'request']);
 
-  // TODO: test in combination with the pattern module
+    agent1.listen('foo', function (from, message) {
+      return 'bar'
+    });
+
+    var transport = new LocalTransport();
+    agent1.connect(transport);
+    agent2.connect(transport);
+
+    return agent2.request('agent1', 'foo')
+        .then(function (reply) {
+          assert.equal(reply, 'bar');
+        });
+  });
+
+  it('should retrurn a reply resolved by a pattern listener (2)', function () {
+    // load modules in the wrong order (-> pattern must be loaded first by the agent anyways)
+    var agent1 = new Agent('agent1').extend(['request', 'pattern']);
+    var agent2 = new Agent('agent2').extend(['request', 'pattern']);
+
+    agent1.listen('foo', function (from, message) {
+      return 'bar'
+    });
+
+    var transport = new LocalTransport();
+    agent1.connect(transport);
+    agent2.connect(transport);
+
+    return agent2.request('agent1', 'foo')
+        .then(function (reply) {
+          assert.equal(reply, 'bar');
+        });
+  });
+
+  // TODO: test with multiple messages in queue
 
   // TODO: test in combination with the rpc module (when implemented)
 
