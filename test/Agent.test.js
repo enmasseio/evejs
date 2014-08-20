@@ -20,78 +20,12 @@ describe('Agent', function() {
     });
   });
 
-  describe ('patterns', function () {
-
-    it('should add and remove a message listener', function () {
-      var agent = new Agent('agent1').extend('patterns');
-      var sender = 'agent2';
-      var count = 0;
-
-      var pattern = 'hello';
-      var listener = function (from, message) {
-        assert.equal(from, sender);
-        count++;
-      };
-
-      // add the listener, test if listener is triggered
-      agent.listen(pattern, listener);
-      agent.receive(sender, pattern);
-      assert.equal(count, 1);
-
-      // remove the listener, test if listener is not triggered anymore
-      agent.unlisten(pattern, listener);
-      agent.receive(sender, pattern);
-      assert.equal(count, 1);
-    });
-
-    it('should listen to messages using a string pattern', function (done) {
-      var agent = new Agent('agent1').extend('patterns');
-
-      agent.listen('hello', function (from, message) {
-        assert.equal(from, 'agent2');
-        assert.equal(message, 'hello');
-        done();
-      });
-
-      agent.receive('agent2', 'hello');
-    });
-
-    it('should listen to messages using a regexp pattern', function (done) {
-      var agent = new Agent('agent1').extend('patterns');
-
-      agent.listen(/hello/, function (from, message) {
-        assert.equal(from, 'agent2');
-        assert.equal(message, 'hello, my name is agent2');
-        done();
-      });
-
-      agent.receive('agent2', 'hi there'); // this message should be ignored
-      agent.receive('agent2', 'hello, my name is agent2');
-    });
-
-    it('should listen to messages using a function pattern', function (done) {
-      var agent = new Agent('agent1').extend('patterns');
-
-      agent.listen(function (message) {
-        return message.indexOf('hello') != -1;
-      }, function (from, message) {
-        assert.equal(from, 'agent2');
-        assert.equal(message, 'hello, my name is agent2');
-        done();
-      });
-
-      agent.receive('agent2', 'hi there'); // this message should be ignored
-      agent.receive('agent2', 'hello, my name is agent2');
-    });
-
-  });
-
   describe ('transport', function () {
     it('should send a message via a transport', function (done) {
-      var transport = new LocalTransport();
-
       var agent1 = new Agent('agent1');
       var agent2 = new Agent('agent2');
+
+      var transport = new LocalTransport();
       agent1.connect(transport);
       agent2.connect(transport);
 
@@ -105,11 +39,11 @@ describe('Agent', function() {
     });
 
     it('should connect with an alternative id', function (done) {
-      var transport = new LocalTransport();
-
       var agent1 = new Agent('agent1');
-      agent1.connect(transport, '007');
       var agent2 = new Agent('agent2');
+
+      var transport = new LocalTransport();
+      agent1.connect(transport, '007');
       agent2.connect(transport);
 
       agent1.receive = function (from, message) {

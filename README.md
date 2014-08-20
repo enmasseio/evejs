@@ -45,15 +45,15 @@ agent2.connect(transport);
 agent2.send('agent1', 'Hello agent1!');
 ```
 
-### Patterns
+### Pattern
 
 ```js
 var eve = require('simple-actors');
 
-// create two agents and extend them with the 'patterns' module 
+// create two agents and extend them with the 'pattern' module 
 // so they can listen for matching patterns
-var agent1 = new eve.Agent('agent1').extend('patterns');
-var agent2 = new eve.Agent('agent2').extend('patterns');
+var agent1 = new eve.Agent('agent1').extend('pattern');
+var agent2 = new eve.Agent('agent2').extend('pattern');
 
 // agent1 listens for messages containing 'hi' or 'hello' (case insensitive)
 agent1.listen(/hi|hello/i, function (from, message) {
@@ -75,6 +75,35 @@ agent2.connect(transport);
 
 // send a message to agent 1
 agent2.send('agent1', 'Hello agent1!');
+```
+
+### Request
+
+```js
+var eve = require('simple-actors');
+
+// create two agents
+var agent1 = new eve.Agent('agent1').extend('request');
+var agent2 = new eve.Agent('agent2').extend('request');
+
+// overload the receive message of agent1
+agent1.receive = function (from, message) {
+  console.log(from + ' said: ' + message);
+
+  // reply to the greeting
+  return 'Hi ' + from + ', nice to meet you!';
+});
+
+// create a transport and connect both agents
+var transport = new eve.transport.LocalTransport();
+agent1.connect(transport);
+agent2.connect(transport);
+
+// send a request to agent 1, await the response
+agent2.request('agent1', 'Hello agent1!')
+    .then(function(reply) {
+      console.log(from + ' said: ' + reply);
+    });
 ```
 
 ### Babble
@@ -362,15 +391,19 @@ Methods:
 
 - `Agent.extend(module: String [, options: Object]): Agent`  
   Extend an agent with modules (mixins). Available modules: 
-  - `'patterns'`  
+  - `'pattern'`  
     Add support for pattern listening to an object. The agent will be extended
     with functions `listen` and `unlisten`. Cannot be used in conjunction with
     module `'babble'`.
-     
+  
+  - `'request'`  
+    Add support for sending requests and immediately retrieving a reply. The 
+    agent will be extended with a function `request`.
+  
   - `'babble'`  
     Babblify an agent. The babblified agent will be extended with functions
     `ask`, `tell`, and `listen`. Cannot be used in conjunction with
-    module `'patterns'`.
+    module `'pattern'`.
   
   The function `extend` returns the agent itself, which allows chaining multiple
   extenstions.
@@ -397,9 +430,9 @@ evejs comes with a number of built in modules. Usage:
 
     agent.extend(moduleName);
 
-#### Patterns
+#### Pattern
 
-The `'patterns'` module extends an agent with  support for pattern listening. 
+The `'pattern'` module extends an agent with  support for pattern listening. 
 The agent will be extended with functions `listen` and `unlisten`. Cannot be 
 used in conjunction with module `'babble'`.
 
@@ -419,6 +452,21 @@ Methods:
 
 - `Agent.unlisten(pattern: String | RegExp | Function, callback: Function)`  
   Unregister a registered pattern listener.
+
+#### Request
+
+The `'request'` module adds support for sending requests and immediately 
+retrieving a reply.
+
+Usage:
+
+    agent.extend('request');
+
+Methods:
+
+- `Agent.request(to: String | Object, message: String, message: *)`    
+  Send a request. The function returns a promise which resolves with the reply
+  comes in.
 
 #### Babble
 

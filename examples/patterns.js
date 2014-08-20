@@ -1,8 +1,8 @@
 var eve = require('../index');
 
 // create two agents and extend them with pattern listening functionality
-var agent1 = new eve.Agent('agent1').extend('patterns');
-var agent2 = new eve.Agent('agent2').extend('patterns');
+var agent1 = new eve.Agent('agent1').extend('pattern');
+var agent2 = new eve.Agent('agent2').extend('pattern');
 
 // create a transport and connect both agents
 var transport = new eve.transport.LocalTransport();
