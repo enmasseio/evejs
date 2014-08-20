@@ -16,6 +16,8 @@ Install the module via npm:
 
 ### Basic usage
 
+A basic agent has a methods `send`, `receive`, `connect` and `disconnect`.
+
 ```js
 var eve = require('simple-actors');
 
@@ -46,6 +48,9 @@ agent2.send('agent1', 'Hello agent1!');
 ```
 
 ### Pattern
+
+Agents can be extended with support for a pattern listener. Incoming messages
+can be matched against patterns.
 
 ```js
 var eve = require('simple-actors');
@@ -79,6 +84,8 @@ agent2.send('agent1', 'Hello agent1!');
 
 ### Request
 
+Using the `request` module, agents can easily send a message and await a response.
+
 ```js
 var eve = require('simple-actors');
 
@@ -110,8 +117,6 @@ agent2.request('agent1', 'Hello agent1!')
 
 Evejs can be used together with [babble](https://github.com/enmasseio/babble), extending the agents with support for dynamic communication flows.
 
-Example usage: 
-
 ```js
 var eve = require('simple-actors');
 var babble = require('babble');
@@ -125,7 +130,7 @@ var transport = new eve.transport.LocalTransport();
 emma.connect(transport);
 jack.connect(transport);
 
-emma.listen('hi')
+emma.listen(/hi/)
     .listen(function (message, context) {
       console.log(context.from + ': ' + message);
       return message;
@@ -151,9 +156,9 @@ jack.tell('emma', 'hi')
     });
 ```
 
-### Create an Agent
+### Create an Agent class
 
-To create an agent prototype `MyAgent` extending `eve.Agent`, create a 
+To create an agent class `MyAgent` extending `eve.Agent`, create a 
 file **MyAgent.js** containing:
 
 ```js
