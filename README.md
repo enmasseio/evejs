@@ -438,17 +438,27 @@ used in conjunction with module `'babble'`.
 
 Usage:
 
-    agent.extend('pattern');
+    agent.extend('pattern' [, options]);
+
+Available options:
+
+- `stopPropagation: boolean`  
+  When true, a message will not be propagated to other pattern listeners as 
+  soon as there is a match with one of the listeners. Thus, up to one listener 
+  is triggered on an incoming message. Default value is false.
+  
+  When false (default), a message will be delivered at all matching pattern 
+  listeners. When true, a message will be be delivered at the first matching 
+  pattern listener only.
 
 Methods:
 
 - `Agent.listen(pattern: String | RegExp | Function, callback: Function)`  
   Register an pattern listener, which is triggered when a message comes in which
   matches given pattern. The pattern can be a String (exact match), a
-  regular expression, or a test function which is invoked as `pattern(message)`
-  and must return true or false. 
-  When the `callback` function returns true, propagation to other message 
-  listeners will be stopped.
+  regular expression, or a test function which is invoked as `pattern(message)`.
+  When a message matches the pattern, the `callback` function is invoked as
+  `callback(from, message)`.
 
 - `Agent.unlisten(pattern: String | RegExp | Function, callback: Function)`  
   Unregister a registered pattern listener.
@@ -460,7 +470,14 @@ retrieving a reply.
 
 Usage:
 
-    agent.extend('request');
+    agent.extend('request' [, options]);
+
+Available options:
+
+- `timeout: number`  
+  Specify the timeout for a request in milliseconds. When no reply is received
+  before the timeout is exceeded, the requests promise is rejected.
+  Default value is 60000 ms.
 
 Methods:
 

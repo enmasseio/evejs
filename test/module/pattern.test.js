@@ -65,4 +65,42 @@ describe ('pattern', function () {
     agent._receive('agent2', 'hello, my name is agent2');
   });
 
+  it('should deliver a message to multiple matching listeners', function () {
+    var agent = new Agent('agent1').extend('pattern');
+
+    var log = [];
+
+    function callback (from, message) {
+      log.push([from, message]);
+    }
+
+    agent.listen(/hi/, callback);
+    agent.listen(/there/, callback);
+
+    agent._receive('agent2', 'hi there');
+
+    assert.deepEqual(log, [
+      ['agent2', 'hi there'],
+      ['agent2', 'hi there']
+    ]);
+  });
+
+  it('should deliver a message to the first matching listeners', function () {
+    var agent = new Agent('agent1').extend('pattern', {stopPropagation: true});
+
+    var log = [];
+
+    function callback (from, message) {
+      log.push([from, message]);
+    }
+
+    agent.listen(/hi/, callback);
+    agent.listen(/there/, callback);
+
+    agent._receive('agent2', 'hi there');
+    assert.deepEqual(log, [
+      ['agent2', 'hi there']
+    ]);
+  });
+
 });
