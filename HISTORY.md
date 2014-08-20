@@ -5,6 +5,7 @@
 
 - Renamed the library to evejs.
 - Implemented a `ServiceManager` and `TransportManager`.
+- Implemented agent extension modules `request` and `pattern`.
 - Implemented support for connecting to multiple transports at once.
 - Implemented support for connecting with an alternative id.
 - Implemented support for sending a message via a specific transport, by

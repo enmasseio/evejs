@@ -6,7 +6,7 @@ var LocalTransport = require('../../lib/transport/LocalTransport');
 describe ('request', function () {
 
   it('should send a request and receive a reply', function () {
-    var agent1 = new Agent('agent1');
+    var agent1 = new Agent('agent1').extend('request');
     var agent2 = new Agent('agent2').extend('request');
 
     agent1.receive = function (from, message) {
@@ -14,8 +14,6 @@ describe ('request', function () {
       assert.equal(message, 'test');
       return message + message;
     };
-
-    agent1.extend('request'); // TODO: should be able to extend agent1 before receive is overloaded
 
     var transport = new LocalTransport();
     agent1.connect(transport);
@@ -45,7 +43,7 @@ describe ('request', function () {
   });
 
   it('should send a request and receive a reply resolved by a promise', function () {
-    var agent1 = new Agent('agent1');
+    var agent1 = new Agent('agent1').extend('request');
     var agent2 = new Agent('agent2').extend('request');
 
     agent1.receive = function (from, message) {
@@ -57,8 +55,6 @@ describe ('request', function () {
         }, 50);
       });
     };
-
-    agent1.extend('request'); // TODO: should be able to extend agent1 before receive is overloaded
 
     var transport = new LocalTransport();
     agent1.connect(transport);

@@ -16,12 +16,12 @@ describe ('pattern', function () {
 
     // add the listener, test if listener is triggered
     agent.listen(pattern, listener);
-    agent.receive(sender, pattern);
+    agent._receive(sender, pattern);
     assert.equal(count, 1);
 
     // remove the listener, test if listener is not triggered anymore
     agent.unlisten(pattern, listener);
-    agent.receive(sender, pattern);
+    agent._receive(sender, pattern);
     assert.equal(count, 1);
   });
 
@@ -34,7 +34,7 @@ describe ('pattern', function () {
       done();
     });
 
-    agent.receive('agent2', 'hello');
+    agent._receive('agent2', 'hello');
   });
 
   it('should listen to messages using a regexp pattern', function (done) {
@@ -46,8 +46,8 @@ describe ('pattern', function () {
       done();
     });
 
-    agent.receive('agent2', 'hi there'); // this message should be ignored
-    agent.receive('agent2', 'hello, my name is agent2');
+    agent._receive('agent2', 'hi there'); // this message should be ignored
+    agent._receive('agent2', 'hello, my name is agent2');
   });
 
   it('should listen to messages using a function pattern', function (done) {
@@ -61,8 +61,8 @@ describe ('pattern', function () {
       done();
     });
 
-    agent.receive('agent2', 'hi there'); // this message should be ignored
-    agent.receive('agent2', 'hello, my name is agent2');
+    agent._receive('agent2', 'hi there'); // this message should be ignored
+    agent._receive('agent2', 'hello, my name is agent2');
   });
 
 });
