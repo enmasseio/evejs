@@ -1,4 +1,5 @@
 exports.Agent = require('./lib/Agent');
+exports.LocalAgent = require('./lib/LocalAgent');
 
 exports.ServiceManager = require('./lib/ServiceManager');
 exports.TransportManager = require('./lib/TransportManager');
@@ -11,6 +12,4 @@ exports.transport = {
   DistribusTransport: require('./lib/transport/DistribusTransport')
 };
 
-// load a default ServiceManager with a LocalTransport
-exports.defaultServiceManager = new exports.ServiceManager();
-exports.defaultServiceManager.transports.add(new exports.transport.LocalTransport());
+exports.system = require('./lib/system');

@@ -1,13 +1,8 @@
 var eve = require('../index');
 
 // create two agents and extend them with pattern listening functionality
-var agent1 = new eve.Agent('agent1').extend('pattern');
-var agent2 = new eve.Agent('agent2').extend('pattern');
-
-// create a transport and connect both agents
-var transport = new eve.transport.LocalTransport();
-agent1.connect(transport);
-agent2.connect(transport);
+var agent1 = new eve.LocalAgent('agent1').extend('pattern');
+var agent2 = new eve.LocalAgent('agent2').extend('pattern');
 
 // agent 1 listens for messages containing 'hi' or 'hello' (case insensitive)
 agent1.listen(/hi|hello/i, function (from, message) {

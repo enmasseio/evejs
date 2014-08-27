@@ -9,16 +9,14 @@ var eve = require('../index');
 var babble = require('babble');
 
 // create two agents and babblify them
-var emma = new eve.Agent('emma').extend('babble');
-var jack = new eve.Agent('jack').extend('babble');
-
-// create a transport and connect both agents
-var transport = new eve.transport.LocalTransport();
-emma.connect(transport);
-jack.connect(transport);
+var emma = new eve.LocalAgent('emma').extend('babble');
+var jack = new eve.LocalAgent('jack').extend('babble');
 
 emma.listen('hi')
-    .listen(printMessage)
+    .listen(function (message, context) {
+      console.log(context.from + ': ' + message);
+      return message;
+    })
     .decide(function (message, context) {
       return (message.indexOf('age') != -1) ? 'age' : 'name';
     }, {
@@ -34,9 +32,6 @@ jack.tell('emma', 'hi')
         return 'my age is 25';
       }
     })
-    .listen(printMessage);
-
-function printMessage (message, context) {
-  console.log(context.from + ': ' + message);
-  return message;
-}
+    .listen(function (message, context) {
+      console.log(context.from + ': ' + message);
+    });

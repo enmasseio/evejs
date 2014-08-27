@@ -3,18 +3,15 @@ var eve = require('../../index');
 /**
  * Custom agent prototype
  * @param {String} id
- * @param {ServiceManager} [services]
  * @constructor
  * @extend eve.Agent
  */
-function HelloAgent(id, services) {
+function HelloAgent(id) {
   // execute super constructor
   eve.Agent.call(this, id);
 
-  // connect to all transports provided by the service manager
-  // fall back to the default service manager when not provided
-  services = services || eve.defaultServiceManager;
-  this.connect(services.transports.get());
+  // connect to all transports configured by the system
+  this.connect(eve.system.transports.get());
 }
 
 // extend the eve.Agent prototype

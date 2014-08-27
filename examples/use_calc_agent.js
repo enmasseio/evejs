@@ -1,5 +1,4 @@
 var eve = require('../index');
-var HelloAgent = require('./agents/HelloAgent');
 var CalcAgent = require('./agents/CalcAgent');
 
 var config = {
@@ -9,13 +8,13 @@ var config = {
     }
   ]
 };
-var services = new eve.ServiceManager(config);
+eve.system.init(config);
 
 var jack = new eve.Agent('jack');
 jack.extend('request', {timeout: 10000});
-jack.connect(services.transports.get());
+jack.connect(eve.system.transports.get());
 
-var calcAgent = new CalcAgent('calcAgent', services);
+var calcAgent = new CalcAgent('calcAgent');
 
 // send a message to calcAgent
 jack.request('calcAgent', {fn: 'add', a: 2, b: 4.1})

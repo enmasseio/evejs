@@ -3,10 +3,10 @@ var HelloAgent = require('./agents/HelloAgent');
 
 // load config from a file
 var config = require('./config.json');
-var services = new eve.ServiceManager(config);
+eve.system.init(config);
 
-var agent1 = new HelloAgent('agent1', services);
-var agent2 = new HelloAgent('agent2', services);
+var agent1 = new HelloAgent('agent1');
+var agent2 = new HelloAgent('agent2');
 
 // send a message to agent 1
 agent2.sayHi('agent1');

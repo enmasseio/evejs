@@ -1,13 +1,8 @@
 var eve = require('../index');
 
-// create two agents
-var agent1 = new eve.Agent('agent1');
-var agent2 = new eve.Agent('agent2');
-
-// create a transport and connect both agents
-var transport = new eve.transport.LocalTransport();
-agent1.connect(transport);
-agent2.connect(transport);
+// create two agents. A LocalAgent automatically connects to a LocalTransport
+var agent1 = new eve.LocalAgent('agent1');
+var agent2 = new eve.LocalAgent('agent2');
 
 // agent 1 listens for messages containing 'hi' or 'hello' (case insensitive)
 agent1.receive = function (from, message) {
