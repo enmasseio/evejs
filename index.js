@@ -5,7 +5,8 @@ exports.ServiceManager = require('./lib/ServiceManager');
 exports.TransportManager = require('./lib/TransportManager');
 
 exports.module = {
-  Patter: require('./lib/module/Pattern')
+  Pattern: require('./lib/module/Pattern'),
+  Request: require('./lib/module/Request')
 };
 
 exports.transport = {

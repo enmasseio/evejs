@@ -1,7 +1,9 @@
 var assert = require('assert');
 var Agent = require('../../lib/Agent');
 
-describe ('pattern', function () {
+describe ('Pattern', function () {
+
+  // TODO: should test Pattern isolated from Agent
 
   it('should add and remove a pattern listener', function () {
     var agent = new Agent('agent1').extend('pattern');
@@ -126,5 +128,7 @@ describe ('pattern', function () {
       ['agent2', 'hi there']
     ]);
   });
+
+  // TODO: test Pattern.destroy
 
 });

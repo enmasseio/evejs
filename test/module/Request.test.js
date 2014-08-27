@@ -3,7 +3,9 @@ var Promise = require('promise');
 var Agent = require('../../lib/Agent');
 var LocalTransport = require('../../lib/transport/LocalTransport');
 
-describe ('request', function () {
+describe ('Request', function () {
+
+  // TODO: test Request itself, isolated from Agent
 
   it('should send a request and receive a reply', function () {
     var agent1 = new Agent('agent1').extend('request');
@@ -20,6 +22,29 @@ describe ('request', function () {
     agent2.connect(transport);
 
     return agent2.request('agent1', 'test')
+        .then(function (reply) {
+          assert.equal(reply, 'testtest');
+        });
+  });
+
+  it('should send a request and receive a reply (loaded via extendTo)', function () {
+    var agent1 = new Agent('agent1');
+    var agent2 = new Agent('agent2');
+
+    agent1.request = agent1.extendTo('request');
+    agent2.request = agent2.extendTo('request');
+
+    agent1.receive = function (from, message) {
+      assert.equal(from, 'agent2');
+      assert.equal(message, 'test');
+      return message + message;
+    };
+
+    var transport = new LocalTransport();
+    agent1.connect(transport);
+    agent2.connect(transport);
+
+    return agent2.request.request('agent1', 'test')
         .then(function (reply) {
           assert.equal(reply, 'testtest');
         });
@@ -148,6 +173,8 @@ describe ('request', function () {
   });
 
   // TODO: test with multiple messages in queue
+
+  // TODO: test Request.destroy
 
   // TODO: test in combination with the rpc module (when implemented)
 
