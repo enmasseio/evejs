@@ -195,4 +195,6 @@ describe('Agent', function() {
     });
   });
 
+  // TODO: test extendTo
+
 });

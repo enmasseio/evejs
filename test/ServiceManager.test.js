@@ -20,4 +20,8 @@ describe('ServiceManager', function() {
     assert.equal(services.transports.transports.length, 1);
   });
 
+  // TODO: test init
+  // TODO: test load
+  // TODO: test clear
+
 });

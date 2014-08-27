@@ -25,6 +25,30 @@ describe ('pattern', function () {
     assert.equal(count, 1);
   });
 
+  it('should add and remove a pattern listener using extendTo', function () {
+    var agent = new Agent('agent1');
+    var sender = 'agent2';
+    var count = 0;
+
+    agent.pattern = agent.extendTo('pattern');
+
+    var pattern = 'hello';
+    var listener = function (from, message) {
+      assert.equal(from, sender);
+      count++;
+    };
+
+    // add the listener, test if listener is triggered
+    agent.pattern.listen(pattern, listener);
+    agent._receive(sender, pattern);
+    assert.equal(count, 1);
+
+    // remove the listener, test if listener is not triggered anymore
+    agent.pattern.unlisten(pattern, listener);
+    agent._receive(sender, pattern);
+    assert.equal(count, 1);
+  });
+
   it('should listen to messages using a string pattern', function (done) {
     var agent = new Agent('agent1').extend('pattern');
 

@@ -165,4 +165,7 @@ describe('TransportManager', function() {
     }, /No transport found/);
   });
 
+  // TODO: test load
+  // TODO: test clear
+
 });

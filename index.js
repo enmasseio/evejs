@@ -4,6 +4,10 @@ exports.LocalAgent = require('./lib/LocalAgent');
 exports.ServiceManager = require('./lib/ServiceManager');
 exports.TransportManager = require('./lib/TransportManager');
 
+exports.module = {
+  Patter: require('./lib/module/Pattern')
+};
+
 exports.transport = {
   Transport: require('./lib/transport/Transport'),
   LocalTransport: require('./lib/transport/LocalTransport'),
