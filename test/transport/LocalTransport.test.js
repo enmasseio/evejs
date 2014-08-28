@@ -1,5 +1,5 @@
 var assert = require('assert');
-var LocalTransport = require('../../lib/transport/LocalTransport');
+var LocalTransport = require('../../lib/transport/local/LocalTransport');
 
 describe('LocalTransport', function() {
 
@@ -21,19 +21,22 @@ describe('LocalTransport', function() {
     var count = 0;
 
     // connect and send a message
-    transport.connect('agent1', function (from, message) {
+    var conn1 = transport.connect('agent1', function (from, message) {
       assert.equal(from, 'agent2');
       assert.equal(message, 'hi there');
       count++;
     });
 
-    transport.send('agent2', 'agent1', 'hi there');
+    var conn2 = transport.connect('agent2', function (from, message) {
+    });
+
+    conn2.send('agent1', 'hi there');
     assert.equal(count, 1);
 
     // disconnect
-    transport.disconnect('agent1');
+    conn1.close();
     assert.throws (function () {
-      transport.send('agent2', 'agent1', 'hi there');
+      conn2.send('agent1', 'hi there');
     }, /Error: Agent with id agent1 not found/);
   });
 

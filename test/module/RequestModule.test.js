@@ -1,7 +1,7 @@
 var assert = require('assert');
 var Promise = require('promise');
 var Agent = require('../../lib/Agent');
-var LocalTransport = require('../../lib/transport/LocalTransport');
+var LocalTransport = require('../../lib/transport/local/LocalTransport');
 
 describe ('Request', function () {
 

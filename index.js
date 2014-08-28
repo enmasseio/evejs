@@ -11,11 +11,19 @@ exports.module = {
 };
 
 exports.transport = {
-  Transport: require('./lib/transport/Transport'),
-  LocalTransport: require('./lib/transport/LocalTransport'),
-  PubNubTransport: require('./lib/transport/PubNubTransport'),
-  AMQPTransport: require('./lib/transport/AMQPTransport'),
-  DistribusTransport: require('./lib/transport/DistribusTransport')
+  Transport:          require('./lib/transport/Transport'),
+  LocalTransport:     require('./lib/transport/local/LocalTransport'),
+  PubNubTransport:    require('./lib/transport/pubnub/PubNubTransport'),
+  AMQPTransport:      require('./lib/transport/amqp/AMQPTransport'),
+  DistribusTransport: require('./lib/transport/distribus/DistribusTransport'),
+  
+  connection: {
+    Connection:          require('./lib/transport/Connection'),
+    LocalConnection:     require('./lib/transport/local/LocalConnection'),
+    PubNubConnection:    require('./lib/transport/pubnub/PubNubConnection'),
+    AMQPConnection:      require('./lib/transport/amqp/AMQPConnection'),
+    DistribusConnection: require('./lib/transport/distribus/DistribusConnection')
+  }
 };
 
 exports.system = require('./lib/system');

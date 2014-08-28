@@ -22,11 +22,11 @@ agent2.receive = function (from, message) {
 };
 
 // connect both agents to the transport
-var connected1 = agent1.connect(transport);
-var connected2 = agent2.connect(transport);
+var conn1 = agent1.connect(transport);
+var conn2 = agent2.connect(transport);
 
 // once both are connected, send a message to agent 1
-Promise.all([connected1, connected2])
+Promise.all([conn1.ready, conn2.ready])
     .then(function () {
       agent2.send('agent1', 'Hello agent1!');
     });

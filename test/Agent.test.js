@@ -1,7 +1,7 @@
 var assert = require('assert');
 var Agent = require('../lib/Agent');
-var LocalTransport = require('../lib/transport/LocalTransport');
-var DistribusTransport = require('../lib/transport/DistribusTransport');
+var LocalTransport = require('../lib/transport/local/LocalTransport');
+var DistribusTransport = require('../lib/transport/distribus/DistribusTransport');
 
 describe('Agent', function() {
 
@@ -60,21 +60,19 @@ describe('Agent', function() {
       var transport2 = new LocalTransport();
 
       var agent1 = new Agent('agent1');
-      return agent1.connect([transport1, transport2])
-          .then(function (results) {
-            assert.equal(results.length, 2);
-            assert.strictEqual(results[0], agent1);
-            assert.strictEqual(results[1], agent1);
-            assert.deepEqual(Object.keys(transport1.agents), ['agent1']);
-            assert.deepEqual(Object.keys(transport2.agents), ['agent1']);
-          })
-          .then(function () {
-            agent1.disconnect([transport1, transport2]);
+      var connections = agent1.connect([transport1, transport2]);
 
-            assert.deepEqual(agent1.connections, []);
-            assert.deepEqual(Object.keys(transport1.agents), []);
-            assert.deepEqual(Object.keys(transport2.agents), []);
-          });
+      assert.equal(connections.length, 2);
+      assert.strictEqual(connections[0].transport, transport1);
+      assert.strictEqual(connections[1].transport, transport2);
+      assert.deepEqual(Object.keys(transport1.agents), ['agent1']);
+      assert.deepEqual(Object.keys(transport2.agents), ['agent1']);
+
+      agent1.disconnect([transport1, transport2]);
+
+      assert.deepEqual(agent1.connections, []);
+      assert.deepEqual(Object.keys(transport1.agents), []);
+      assert.deepEqual(Object.keys(transport2.agents), []);
     });
 
     it('should disconnect all transports at once', function () {
@@ -82,30 +80,19 @@ describe('Agent', function() {
       var transport2 = new LocalTransport();
 
       var agent1 = new Agent('agent1');
-      return agent1.connect([transport1, transport2])
-          .then(function (results) {
-            assert.equal(results.length, 2);
-            assert.strictEqual(results[0], agent1);
-            assert.strictEqual(results[1], agent1);
-            assert.deepEqual(Object.keys(transport1.agents), ['agent1']);
-            assert.deepEqual(Object.keys(transport2.agents), ['agent1']);
-          })
-          .then(function () {
-            agent1.disconnect();
+      var connections = agent1.connect([transport1, transport2]);
 
-            assert.deepEqual(agent1.connections, []);
-            assert.deepEqual(Object.keys(transport1.agents), []);
-            assert.deepEqual(Object.keys(transport2.agents), []);
-          });
-    });
+      assert.equal(connections.length, 2);
+      assert.strictEqual(connections[0].transport, transport1);
+      assert.strictEqual(connections[1].transport, transport2);
+      assert.deepEqual(Object.keys(transport1.agents), ['agent1']);
+      assert.deepEqual(Object.keys(transport2.agents), ['agent1']);
 
-    it('should resolve a promise when connected to a transport', function () {
-      var transport = new LocalTransport();
-      var agent1 = new Agent('agent1');
+      agent1.disconnect();
 
-      return agent1.connect(transport).then(function (agent) {
-        assert.strictEqual(agent, agent1);
-      });
+      assert.deepEqual(agent1.connections, []);
+      assert.deepEqual(Object.keys(transport1.agents), []);
+      assert.deepEqual(Object.keys(transport2.agents), []);
     });
 
     it('should connect to multiple transports', function (done) {

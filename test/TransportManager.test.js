@@ -1,8 +1,8 @@
 var assert = require('assert');
 var TransportManager = require('../lib/TransportManager');
 var Transport = require('../lib/transport/Transport');
-var LocalTransport = require('../lib/transport/LocalTransport');
-var DistribusTransport = require('../lib/transport/DistribusTransport');
+var LocalTransport = require('../lib/transport/local/LocalTransport');
+var DistribusTransport = require('../lib/transport/distribus/DistribusTransport');
 
 describe('TransportManager', function() {
 
@@ -84,7 +84,7 @@ describe('TransportManager', function() {
     manager.add(new LocalTransport());
     manager.add(new DistribusTransport());
 
-    var transports = manager.get();
+    var transports = manager.getByType();
     assert.equal(transports.length, 4);
     assert(transports[0] instanceof DistribusTransport);
     assert(transports[1] instanceof LocalTransport);
@@ -100,69 +100,21 @@ describe('TransportManager', function() {
     manager.add(new LocalTransport());
     manager.add(new DistribusTransport());
 
-    var transports = manager.get('local');
+    var transports = manager.getByType('local');
     assert.equal(transports.length, 2);
     assert(transports[0] instanceof LocalTransport);
     assert(transports[1] instanceof LocalTransport);
 
-    var transports2 = manager.get('amqp');
+    var transports2 = manager.getByType('amqp');
     assert.equal(transports2.length, 0);
-  });
-
-  it('should find all transports by type', function () {
-    var manager = new TransportManager();
-
-    manager.add(new DistribusTransport());
-    manager.add(new LocalTransport());
-    manager.add(new LocalTransport());
-    manager.add(new DistribusTransport());
-
-    var transports = manager.get('local');
-    assert.equal(transports.length, 2);
-    assert(transports[0] instanceof LocalTransport);
-    assert(transports[1] instanceof LocalTransport);
   });
 
   it('should throw an error when finding an unknown type of transport', function () {
     var manager = new TransportManager();
 
     assert.throws(function () {
-      manager.get('foo');
+      manager.getByType('foo');
     }, /Unknown type/);
-  });
-
-  it('should find a single transport', function () {
-    var manager = new TransportManager();
-
-    manager.add(new DistribusTransport());
-    manager.add(new LocalTransport());
-    manager.add(new LocalTransport());
-
-    var transport = manager.getOne();
-    assert(transport instanceof DistribusTransport);
-  });
-
-  it('should find a single transport by type', function () {
-    var manager = new TransportManager();
-
-    manager.add(new DistribusTransport());
-    manager.add(new LocalTransport());
-    manager.add(new DistribusTransport());
-
-    var transport = manager.getOne('local');
-    assert(transport instanceof LocalTransport);
-  });
-
-  it('should throw an error when a no transport is found', function () {
-    var manager = new TransportManager();
-
-    assert.throws(function () {
-      manager.getOne();
-    }, /No transport found/);
-
-    assert.throws(function () {
-      manager.getOne('local');
-    }, /No transport found/);
   });
 
   // TODO: test load

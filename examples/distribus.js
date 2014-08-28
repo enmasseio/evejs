@@ -25,5 +25,9 @@ agent2.receive = function (from, message) {
   console.log(from + ' said: ' + message);
 };
 
+// Connect to all configured transports
+agent1.connect(eve.system.transports.get());
+agent2.connect(eve.system.transports.get());
+
 // send a message to agent 1
 agent2.send('agent1', 'Hello agent1!');
