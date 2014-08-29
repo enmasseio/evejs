@@ -1,5 +1,6 @@
 var assert = require('assert');
 var Agent = require('../lib/Agent');
+var system = require('../lib/system');
 var LocalTransport = require('../lib/transport/local/LocalTransport');
 var DistribusTransport = require('../lib/transport/distribus/DistribusTransport');
 
@@ -53,6 +54,50 @@ describe('Agent', function() {
       };
 
       agent2.send('007', 'hello');
+    });
+
+    it('should connect to a transport by id', function () {
+      var agent1 = new Agent('agent1');
+
+      system.init({
+        transports: [
+          {
+            id: 't1',
+            type: 'local'
+          },
+          {
+            id: 't2',
+            type: 'distribus'
+          }
+        ]
+      });
+
+      var conn = agent1.connect('t1');
+      assert.equal(conn.transport.id, 't1');
+    });
+
+    it('should disconnect from a transport by id', function () {
+      var agent1 = new Agent('agent1');
+      var agent2 = new Agent('agent2');
+
+      system.init({
+        transports: [
+          {
+            id: 't1',
+            type: 'local'
+          },
+          {
+            id: 't2',
+            type: 'distribus'
+          }
+        ]
+      });
+
+      var conn = agent1.connect('t1');
+      assert.equal(conn.transport.id, 't1');
+
+      agent1.disconnect('t1');
+      assert.deepEqual(agent1.connections, []);
     });
 
     it('should connect and disconnect multiple transports at once', function () {

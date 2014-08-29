@@ -92,6 +92,27 @@ describe('TransportManager', function() {
     assert(transports[3] instanceof DistribusTransport);
   });
 
+  it('should find a transport by id', function () {
+    var manager = new TransportManager();
+
+    var d = new DistribusTransport({id: 'mydistribus'});
+    manager.add(new LocalTransport());
+    manager.add(d);
+    manager.add(new LocalTransport());
+    manager.add(new DistribusTransport());
+
+    var transport = manager.get('mydistribus');
+    assert.strictEqual(transport, d);
+  });
+
+  it('should throw an error when a transport could not be found', function () {
+    var manager = new TransportManager();
+
+    assert.throws(function () {
+      manager.get('nonexisting');
+    }, /not found/);
+  });
+
   it('should find all transports by type', function () {
     var manager = new TransportManager();
 
