@@ -3,18 +3,57 @@ var eve = require('../../index');
 /**
  * CalcAgent can evaluate expressions
  * @param {String} id
+ * @param {ServiceManager} [services]
  * @constructor
  * @extend eve.Agent
  */
-function CalcAgent(id) {
+
+eve.system.load({
+  transport: [{
+    id: "myDistribus",  // optional
+    type:"distribus",   // id if no id available
+    port:8000,
+    default: false
+  },
+  {
+    id: "pubnubID",  // optional
+    type:"distribus",   // id if no id available
+    port:8000,
+    default: false
+  }
+  ]
+})
+
+
+function CalcAgent(id,dist) {
   // execute super constructor
   eve.Agent.call(this, id);
 
   // extend the agent with support for requests
-  this.extend('request');
+  this.extend('request'); // mixin op this
+  this.rpc = this.extendTo("rpc", {settings:{}}); // mixin in object dat gereturned wordt
+  this.babble = this.extendTo("babble");
 
-  // connect to all transports provided by the system
-  this.connect(eve.system.transports.get());
+  var dist = this.connect("myDistribus");
+  dist.ready.then()
+  this.disconnect("myDistribus");
+
+  this.connect(distribus);  // distribus = new Transport.Distribus({})
+  this.disconnect(distribus);
+
+  // nog niet bekeken, gaat niet meer op als we this.myDB1.send gebruiken??
+  this.send("pietje" , {method:"",params:{}}); // over default
+  this.send("pietje@myDistribus", {method:"",params:{}});
+  this.send("distribus://networkKey/jack", {method:"",params:{}});
+  this.send({id:'jack', transport:"distribus", networkKey:"key"}, {method:"",params:{}});
+
+  this.send("pietje" , {method:"",params:{}}); // over default
+
+  var url = eve.system.transports.get("myDistribus").getURL("pietje");
+  var url2 = eve.system.transports.getByType("myDistribus");
+  url2[0].getURL("pietje")
+  var url = dist.getURL('pietje')
+
 }
 
 // extend the eve.Agent prototype
@@ -29,6 +68,7 @@ CalcAgent.prototype.constructor = CalcAgent;
  * @param {{fn: string, a: number, b: number, id: string}} message
  */
 CalcAgent.prototype.receive = function(from, message) {
+
   if (typeof message === 'object' && 'fn' in message && 'a' in message && 'b' in message) {
     switch(message.fn) {
       case 'add':       return message.a + message.b;
