@@ -27,12 +27,12 @@ describe ('Pattern', function () {
     assert.equal(count, 1);
   });
 
-  it('should add and remove a pattern listener using extendTo', function () {
+  it('should add and remove a pattern listener using loadModule', function () {
     var agent = new Agent('agent1');
     var sender = 'agent2';
     var count = 0;
 
-    agent.pattern = agent.extendTo('pattern');
+    agent.pattern = agent.loadModule('pattern');
 
     var pattern = 'hello';
     var listener = function (from, message) {

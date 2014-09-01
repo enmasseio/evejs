@@ -1,16 +1,9 @@
 var eve = require('../index');
+var RequestAgent = require('./agents/RequestAgent');
 
 // create two agents
-var agent1 = new eve.LocalAgent('agent1').extend('request');
-var agent2 = new eve.LocalAgent('agent2').extend('request');
-
-// overload the receive message of agent1
-agent1.receive = function (from, message) {
-  console.log(from + ' said: ' + message);
-
-  // reply to the greeting
-  return 'Hi ' + from + ', nice to meet you!';
-};
+var agent1 = new RequestAgent('agent1');
+var agent2 = new RequestAgent('agent2');
 
 // send a request to agent 1, await the response
 agent2.request('agent1', 'Hello agent1!')

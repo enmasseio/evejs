@@ -1,6 +1,8 @@
 var Promise = require('promise');
 var eve = require('../index');
+var HelloAgent = require('./agents/HelloAgent');
 
+// Configure eve, load a distribus transport
 eve.system.init({
   transports: [
     {
@@ -9,25 +11,9 @@ eve.system.init({
   ]
 });
 
-
-// agent 1 listens for messages containing 'hi' or 'hello' (case insensitive)
-var agent1 = new eve.Agent('agent1');
-agent1.receive = function (from, message) {
-  console.log(from + ' said: ' + message);
-
-  // reply to the greeting
-  this.send(from, 'Hi ' + from + ', nice to meet you!');
-};
-
-// agent 2 listens for any message
-var agent2 = new eve.Agent('agent2');
-agent2.receive = function (from, message) {
-  console.log(from + ' said: ' + message);
-};
-
-// Connect to all configured transports
-agent1.connect(eve.system.transports.get());
-agent2.connect(eve.system.transports.get());
+// create two agents
+var agent1 = new HelloAgent('agent1');
+var agent2 = new HelloAgent('agent2');
 
 // send a message to agent 1
 agent2.send('agent1', 'Hello agent1!');

@@ -1,31 +1,25 @@
 var Promise = require('promise');
 var eve = require('../index');
+var HelloAgent = require('./agents/HelloAgent');
 
-// example configuration: {url: 'amqp://localhost'} or {host: 'dev.rabbitmq.com'}
-// var transport = new eve.transport.AMQPTransport({url: 'amqp://localhost'});
-var transport = new eve.transport.AMQPTransport({host: 'dev.rabbitmq.com'});
+// Configure eve
+// Example AMQP configurations:
+//   {type: 'amqp', url: 'amqp://localhost'} or
+//   {type: 'amqp', host: 'dev.rabbitmq.com'}
+eve.system.init({
+  transports: [
+    {
+      type: 'amqp',
+      host: 'dev.rabbitmq.com'
+    }
+  ]
+});
 
-// agent 1 listens for messages containing 'hi' or 'hello' (case insensitive)
-var agent1 = new eve.Agent('agent1');
-agent1.receive = function (from, message) {
-  console.log(from + ' said: ' + message);
+// create two agents
+var agent1 = new HelloAgent('agent1');
+var agent2 = new HelloAgent('agent2');
 
-  // reply to the greeting
-  this.send(from, 'Hi ' + from + ', nice to meet you!');
-};
-
-// agent 2 listens for any message
-var agent2 = new eve.Agent('agent2');
-agent2.receive = function (from, message) {
-  console.log(from + ' said: ' + message);
-};
-
-// connect both agents to the AMQP transport
-var conn1 = agent1.connect(transport);
-var conn2 = agent2.connect(transport);
-
-// once both are connected, send a message to agent 1
-Promise.all([conn1.ready, conn2.ready])
-    .then(function () {
-      agent2.send('agent1', 'Hello agent1!');
-    });
+// once both agents are connected, send a message to agent1
+Promise.all([agent1.ready, agent2.ready]).then(function () {
+  agent2.send('agent1', 'Hello agent1!');
+});

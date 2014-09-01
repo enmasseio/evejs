@@ -27,12 +27,12 @@ describe ('Request', function () {
         });
   });
 
-  it('should send a request and receive a reply (loaded via extendTo)', function () {
+  it('should send a request and receive a reply (loaded via loadModule)', function () {
     var agent1 = new Agent('agent1');
     var agent2 = new Agent('agent2');
 
-    agent1.request = agent1.extendTo('request');
-    agent2.request = agent2.extendTo('request');
+    agent1.request = agent1.loadModule('request');
+    agent2.request = agent2.loadModule('request');
 
     agent1.receive = function (from, message) {
       assert.equal(from, 'agent2');

@@ -11,7 +11,7 @@ function HelloAgent(id) {
   eve.Agent.call(this, id);
 
   // connect to all transports configured by the system
-  this.connect(eve.system.transports.get());
+  this.connect(eve.system.transports.getAll());
 }
 
 // extend the eve.Agent prototype
@@ -22,8 +22,8 @@ HelloAgent.prototype.constructor = HelloAgent;
  * Send a greeting to an agent
  * @param {String} to
  */
-HelloAgent.prototype.sayHi = function(to) {
-  this.send(to, 'Hi!');
+HelloAgent.prototype.sayHello = function(to) {
+  this.send(to, 'Hello ' + to + '!');
 };
 
 /**
@@ -34,17 +34,15 @@ HelloAgent.prototype.sayHi = function(to) {
  */
 HelloAgent.prototype.receive = function(from, message) {
   console.log(from + ' said: ' + JSON.stringify(message));
-};
 
-/**
- * Destroy the agent, disconnect from all connected transports
- */
-HelloAgent.prototype.destroy = function() {
-  this.disconnect();
+  if (message.indexOf('Hello') === 0) {
+    // reply to the greeting
+    this.send(from, 'Hi ' + from + ', nice to meet you!');
+  }
 };
 
 // Test prototype inheritance:
-// console.log(agent1 instanceof HelloAgent);    // true
+// console.log(agent1 instanceof HelloAgent); // true
 // console.log(agent1 instanceof eve.Agent);  // true
 // console.log(agent1.constructor.name);      // 'HelloAgent'
 

@@ -1,5 +1,4 @@
 exports.Agent = require('./lib/Agent');
-exports.LocalAgent = require('./lib/LocalAgent');
 
 exports.ServiceManager = require('./lib/ServiceManager');
 exports.TransportManager = require('./lib/TransportManager');

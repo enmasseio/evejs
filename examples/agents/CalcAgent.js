@@ -14,7 +14,7 @@ function CalcAgent(id) {
   this.extend('request');
 
   // connect to all transports provided by the system
-  this.connect(eve.system.transports.get());
+  this.connect(eve.system.transports.getAll());
 }
 
 // extend the eve.Agent prototype
@@ -42,13 +42,6 @@ CalcAgent.prototype.receive = function(from, message) {
   else {
     throw new Error('Object expected with properties fn, a, and b');
   }
-};
-
-/**
- * Destroy the agent, disconnect from all connected transports
- */
-CalcAgent.prototype.destroy = function() {
-  this.disconnect();
 };
 
 module.exports = CalcAgent;

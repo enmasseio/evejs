@@ -202,6 +202,7 @@ describe('Agent', function() {
 
   });
 
-  // TODO: test extendTo
+  // TODO: test loadModule
+  // TODO: test Agent.ready
 
 });

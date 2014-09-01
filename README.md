@@ -14,215 +14,291 @@ Install the module via npm:
 
 ## Use
 
+An agent basically has a methods `send`, `receive`, `connect` and `disconnect`.
+An agent can be extended with modules like `pattern` and `request`. There is
+a central configuration `eve.system` which can be used to load transports. 
+The loaded transports can be used by agents to communicate with each other.
+
+To set up a system with eve agents:
+
+- Create an agent class extending `eve.Agent`. A template for a custom agent is:
+
+  ```js
+  var eve = require('simple-actors');
+  
+  function MyAgent(id) {
+    eve.Agent.call(this, id);
+  
+    // ...
+  }
+  
+  MyAgent.prototype = Object.create(eve.Agent.prototype);
+  MyAgent.prototype.constructor = MyAgent;
+  
+  MyAgent.prototype.receive = function (from, message) {
+    // ...
+  };
+  
+  module.exports = MyAgent;
+  ```
+
+- Configure `eve.system`, load transports and other services.
+
+  ```js
+  eve.system.init({
+    transports: [
+      {
+        type: 'distribus'
+      }
+    ]
+  });
+  ```
+
+- Create instances of an agent:
+
+  ```js
+  var agent1 = new MyAgent('agent1');
+  ```
+
+- Connect an agent to one or multiple transports. This is normally done in
+  the agents constructor function:
+  
+  ```js
+  agent1.connect(eve.system.transports.getAll());
+  ```
+
+
 ### Basic usage
 
-A basic agent has a methods `send`, `receive`, `connect` and `disconnect`.
+To create a simple agent class, create a file [**HelloAgent.js**](examples/agents/HelloAgent.js) with the 
+following code:
 
 ```js
 var eve = require('simple-actors');
 
+function HelloAgent(id) {
+  // execute super constructor
+  eve.Agent.call(this, id);
+
+  // connect to all transports configured by the system
+  this.connect(eve.system.transports.getAll());
+}
+
+// extend the eve.Agent prototype
+HelloAgent.prototype = Object.create(eve.Agent.prototype);
+HelloAgent.prototype.constructor = HelloAgent;
+
+HelloAgent.prototype.sayHello = function(to) {
+  this.send(to, 'Hello ' + to + '!');
+};
+
+HelloAgent.prototype.receive = function(from, message) {
+  console.log(from + ' said: ' + JSON.stringify(message));
+
+  if (message.indexOf('Hello') === 0) {
+    // reply to the greeting
+    this.send(from, 'Hi ' + from + ', nice to meet you!');
+  }
+};
+
+module.exports = HelloAgent;
+```
+
+This agent class can be used as follows. Note that the agents talk to each 
+other via a `LocalTransport` which is instantiated in `eve.system` by default.
+
+```js
+var eve = require('simple-actors');
+var HelloAgent = require('./HelloAgent');
+
 // create two agents
-var agent1 = new eve.Agent('agent1');
-var agent2 = new eve.Agent('agent2');
+var agent1 = new HelloAgent('agent1');
+var agent2 = new HelloAgent('agent2');
 
-// overload the receive message of agent1
-agent1.receive = function (from, message) {
-  console.log(from + ' said: ' + message);
-
-  // reply to the greeting
-  this.send(from, 'Hi ' + from + ', nice to meet you!');
-});
-
-// overload the receive message of agent1
-agent2.receive = function (from, message) {
-  console.log(from + ' said: ' + message);
-});
-
-// create a transport and connect both agents
-var transport = new eve.transport.LocalTransport();
-agent1.connect(transport);
-agent2.connect(transport);
-
-// send a message to agent 1
+// send a message to agent1
 agent2.send('agent1', 'Hello agent1!');
 ```
+
 
 ### Pattern
 
 Agents can be extended with support for a pattern listener. Incoming messages
-can be matched against patterns.
+can be matched against patterns. Save the following code as [**PatternAgent.js**](examples/agents/PatternAgent.js):
 
 ```js
 var eve = require('simple-actors');
 
-// create two agents and extend them with the 'pattern' module 
-// so they can listen for matching patterns
-var agent1 = new eve.Agent('agent1').extend('pattern');
-var agent2 = new eve.Agent('agent2').extend('pattern');
+function PatternAgent(id) {
+  // execute super constructor
+  eve.Agent.call(this, id);
 
-// agent1 listens for messages containing 'hi' or 'hello' (case insensitive)
-agent1.listen(/hi|hello/i, function (from, message) {
-  console.log(from + ' said: ' + message);
+  // extend the agent with pattern listening functionality
+  this.extend('pattern');
 
-  // reply to the greeting
-  this.send(from, 'Hi ' + from + ', nice to meet you!');
-});
+  // listen for messages containing 'hello' (case insensitive)
+  this.listen(/hello/i, function (from, message) {
+    // reply to the greeting
+    this.send(from, 'Hi ' + from + ', nice to meet you!');
+  });
 
-// agent2 listens for any message
-agent2.listen(/./, function (from, message) {
-  console.log(from + ' said: ' + message);
-});
+  // listen for any message
+  this.listen(/./, function (from, message) {
+    console.log(from + ' said: ' + message);
+  });
 
-// create a transport and connect both agents
-var transport = new eve.transport.LocalTransport();
-agent1.connect(transport);
-agent2.connect(transport);
+  // connect to all transports provided by the system
+  this.connect(eve.system.transports.getAll());
+}
+
+// extend the eve.Agent prototype
+PatternAgent.prototype = Object.create(eve.Agent.prototype);
+PatternAgent.prototype.constructor = PatternAgent;
+
+module.exports = PatternAgent;
+```
+
+Usage:
+
+```js
+var eve = require('simple-actors');
+var PatternAgent = require('./PatternAgent');
+
+// create two agents
+var agent1 = new PatternAgent('agent1');
+var agent2 = new PatternAgent('agent2');
 
 // send a message to agent 1
 agent2.send('agent1', 'Hello agent1!');
 ```
 
+
+
 ### Request
 
 Using the `request` module, agents can easily send a message and await a response.
+Create a file [**RequestAgent.js**](examples/agents/RequestAgent.js) containing:
 
 ```js
 var eve = require('simple-actors');
 
-// create two agents
-var agent1 = new eve.Agent('agent1').extend('request');
-var agent2 = new eve.Agent('agent2').extend('request');
+function RequestAgent(id) {
+  // execute super constructor
+  eve.Agent.call(this, id);
 
-// overload the receive message of agent1
-agent1.receive = function (from, message) {
+  // extend the agent with support for requests
+  this.extend('request');
+
+  // connect to all transports provided by the system
+  this.connect(eve.system.transports.getAll());
+}
+
+// extend the eve.Agent prototype
+RequestAgent.prototype = Object.create(eve.Agent.prototype);
+RequestAgent.prototype.constructor = RequestAgent;
+
+// implement the receive method
+RequestAgent.prototype.receive = function (from, message) {
   console.log(from + ' said: ' + message);
 
-  // reply to the greeting
+  // return value is send back as reply in case of a request
   return 'Hi ' + from + ', nice to meet you!';
-});
+};
 
-// create a transport and connect both agents
-var transport = new eve.transport.LocalTransport();
-agent1.connect(transport);
-agent2.connect(transport);
+module.exports = RequestAgent;
+```
+
+Usage:
+
+```js
+var eve = require('simple-actors');
+var RequestAgent = require('./RequestAgent');
+
+// create two agents
+var agent1 = new RequestAgent('agent1');
+var agent2 = new RequestAgent('agent2');
 
 // send a request to agent 1, await the response
 agent2.request('agent1', 'Hello agent1!')
     .then(function(reply) {
-      console.log(from + ' said: ' + reply);
+      console.log('reply: ' + reply);
     });
 ```
 
 ### Babble
 
-Evejs can be used together with [babble](https://github.com/enmasseio/babble), extending the agents with support for dynamic communication flows.
+Evejs can be used together with [babble](https://github.com/enmasseio/babble), extending the agents with support for dynamic communication flows. 
+
+Create a file [**BabbleAgent.js**](examples/agents/BabbleAgent.js) with the
+following contents:
 
 ```js
-var eve = require('simple-actors');
 var babble = require('babble');
-
-// create two agents and babblify them
-var emma = new eve.Agent('emma').extend('babble');
-var jack = new eve.Agent('jack').extend('babble');
-
-// create a transport and connect both agents
-var transport = new eve.transport.LocalTransport();
-emma.connect(transport);
-jack.connect(transport);
-
-emma.listen(/hi/)
-    .listen(function (message, context) {
-      console.log(context.from + ': ' + message);
-      return message;
-    })
-    .decide(function (message, context) {
-      return (message.indexOf('age') != -1) ? 'age' : 'name';
-    }, {
-      'name': babble.tell('hi, my name is emma'),
-      'age':  babble.tell('hi, my age is 27')
-    });
-
-jack.tell('emma', 'hi')
-    .tell(function (message, context) {
-      if (Math.random() > 0.5) {
-        return 'my name is jack'
-      } else {
-        return 'my age is 25';
-      }
-    })
-    .listen(function (message, context) {
-      console.log(context.from + ': ' + message);
-      return message;
-    });
-```
-
-### Create an Agent class
-
-To create an agent class `MyAgent` extending `eve.Agent`, create a 
-file **MyAgent.js** containing:
-
-```js
 var eve = require('simple-actors');
 
-function MyAgent(id, services) {
+function BabbleAgent(id, props) {
   // execute super constructor
   eve.Agent.call(this, id);
-  
-  // connect to all transports provided by the service manager
-  // fall back to the default service manager when not provided
-  services = services || eve.defaultServiceManager;
-  this.connect(services.transports.get());
+
+  this.props = props;
+
+  // babblify the agent
+  this.extend('babble');
+
+  // add a conversation listener
+  this.listen('hi')
+      .listen(function (message, context) {
+        console.log(context.from + ': ' + message);
+        return message;
+      })
+      .decide(function (message, context) {
+        return (message.indexOf('age') != -1) ? 'age' : 'name';
+      }, {
+        'name': babble.tell('hi, my name is ' + this.id),
+        'age':  babble.tell('hi, my age is ' + this.props.age)
+      });
+
+  // connect to all transports provided by the system
+  this.connect(eve.system.transports.getAll());
 }
 
 // extend the eve.Agent prototype
-MyAgent.prototype = Object.create(eve.Agent.prototype);
-MyAgent.prototype.constructor = MyAgent;
+BabbleAgent.prototype = Object.create(eve.Agent.prototype);
+BabbleAgent.prototype.constructor = BabbleAgent;
 
-MyAgent.prototype.sayHi = function(to) {
-  this.send(to, 'Hi!');
+// have a conversation with an other agent
+BabbleAgent.prototype.talk = function (to) {
+  var name = this.id;
+  var age = this.props.age;
+
+  this.tell(to, 'hi')
+      .tell(function (message, context) {
+        if (Math.random() > 0.5) {
+          return 'my name is ' + name;
+        } else {
+          return 'my age is ' + age;
+        }
+      })
+      .listen(function (message, context) {
+        console.log(context.from + ': ' + message);
+      });
 };
 
-MyAgent.prototype.receive = function(from, message) {
-  console.log(from + ' said: ' + JSON.stringify(message));
-};
-
-module.exports = MyAgent;
+module.exports = BabbleAgent;
 ```
 
-This agent can be used with the default service manager like:
+Usage:
 
 ```js
-var eve = require('simple-actors');
-var MyAgent = require('./MyAgent');
+var BabbleAgent = require('./BabbleAgent');
 
-var agent1 = new MyAgent('agent1');
-var agent2 = new MyAgent('agent2');
+// create two agents
+var emma = new BabbleAgent('emma', {age: 27});
+var jack = new BabbleAgent('jack', {age: 25});
 
-// send a message to agent 1
-agent2.sayHi('agent1');
+// let jack have a conversation with emma
+jack.talk('emma');
 ```
 
-Or with a provided service manager:
-
-```js
-var eve = require('simple-actors');
-var MyAgent = require('./MyAgent');
-
-var config = {
-  transports: [
-    {
-      type: 'distribus'
-    }
-  ]
-};
-var services = new eve.ServiceManager(config);
-
-var agent1 = new MyAgent('agent1', services);
-var agent2 = new MyAgent('agent2', services);
-
-// send a message to agent 1
-agent2.sayHi('agent1');
-```
 
 ### ServiceManager
 
@@ -230,61 +306,33 @@ With evejs, one can programmatically load transports and create agents.
 Evejs comes with a ServiceManager which enables loading transports from JSON 
 configuration.
 
-When creating an Agent, a service manager can be required as constructor argument. 
-This allows the Agent to select services that it needs by itself, for example
-by connecting to a transport on creation. Create a file **MyAgent.js** containing:
+Evejs has a singleton service manager available at `eve.system`. By default,
+a `LocalTransport` is loaded in the service manager, allowing local agents
+to communicate with each other without need for additional configuration.
+
+The service manager can be configured like
 
 ```js
 var eve = require('simple-actors');
+var HelloAgent = require('./examples/agents/HelloAgent');
 
-function MyAgent(id, services) {
-  // execute super constructor
-  eve.Agent.call(this, id);
-  
-  // connect to all transports provided by the service manager
-  // fall back to the default service manager when not provided
-  services = services || eve.defaultServiceManager;
-  this.connect(services.transports.get());
-}
-
-// extend the eve.Agent prototype
-MyAgent.prototype = Object.create(eve.Agent.prototype);
-MyAgent.prototype.constructor = MyAgent;
-
-MyAgent.prototype.sayHi = function(to) {
-  this.send(to, 'Hi!');
-};
-
-MyAgent.prototype.receive = function(from, message) {
-  console.log(from + ' said: ' + JSON.stringify(message));
-};
-
-module.exports = MyAgent;
-```
-
-To load a ServiceManager and instantiate a few agents:
-
-```js
-var eve = require('simple-actors');
-var MyAgent = require('./MyAgent');
-
-var config = {
+// configure eve
+eve.system.init({
   transports: [
     {
-      type: 'local'
+      type: 'distribus',
     }
   ]
-};
-var services = new eve.ServiceManager(config);
+});
 
-var agent1 = new MyAgent('agent1', services);
-var agent2 = new MyAgent('agent2', services);
+// create two agents
+var agent1 = new HelloAgent('agent1');
+var agent2 = new HelloAgent('agent2');
 
-// send a message to agent 1
-agent2.sayHi('agent1');
+agent2.sayHello('agent1');
 ```
 
-The configuration can be saved in a separate file `config.json`:
+The configuration can be saved in a separate configuration file like **config.json**:
 
 ```json
 {
@@ -300,63 +348,17 @@ Then, the configuration can be loaded into the ServiceManager like:
 
 ```js
 var eve = require('simple-actors');
-var MyAgent = require('./MyAgent');
+var HelloAgent = require('./examples/agents/HelloAgent');
 
+// configure eve
 var config = require('./config.json');
-var services = new eve.ServiceManager(config);
+eve.system.init(config);
 
-var agent1 = new MyAgent('agent1', services);
-var agent2 = new MyAgent('agent2', services);
+// create two agents
+var agent1 = new HelloAgent('agent1');
+var agent2 = new HelloAgent('agent2');
 
-// send a message to agent 1
-agent2.sayHi('agent1');
-```
-
-### defaultServiceManager
-
-For ease of use, evejs provides a `defaultServiceManager`, which has loaded
-a `LocalTransport`. Instead of providing a service manager when constructing
-and agent, the agent can test whether a service manager is provided and if not,
-fall back on the `defaultServiceManager`. This means that agents can be created
-and used without configuring and passing a service manager.
-
-```js
-var eve = require('simple-actors');
-
-function MyAgent(id, services) {
-  // execute super constructor
-  eve.Agent.call(this, id);
-  
-  // connect to all transports provided by the service manager
-  // fall back to the default service manager when not provided
-  services = services || eve.defaultServiceManager;
-  this.connect(services.transports.get());
-}
-
-// extend the eve.Agent prototype
-MyAgent.prototype = Object.create(eve.Agent.prototype);
-MyAgent.prototype.constructor = MyAgent;
-
-MyAgent.prototype.sayHi = function(to) {
-  this.send(to, 'Hi!');
-};
-
-MyAgent.prototype.receive = function(from, message) {
-  console.log(from + ' said: ' + JSON.stringify(message));
-};
-
-module.exports = MyAgent;
-```
-
-The agent `MyAgent` can be created with an optional service manager:
-
-```js
-// use default service manager
-var agent1 = new MyAgent(id);
-
-// use the provided service manager
-var services = new eve.ServiceManager(...);
-var agent1 = new MyAgent(id, services);
+agent2.sayHello('agent1');
 ```
 
 
@@ -372,8 +374,8 @@ The library contains the following prototypes:
 - `eve.transport.AMQPTransport` using the [AMPQ](http://www.amqp.org/) protocol,
   for example via [RabbitMQ](https://www.rabbitmq.com/) servers.
 - `eve.ServiceManager` construct a service manager.
-- `eve.defaultServiceManager` a default, global instance of a service manager, 
-  loaded with a `LocalTransport`
+- `eve.system` a default, global instance of a service manager, 
+  loaded with a `LocalTransport`.
 
 ### Agent
 
@@ -382,6 +384,11 @@ Constructor:
 ```js
 var agent = new eve.Agent([id: string]);
 ```
+
+Properties:
+
+- `Agent.ready : Promise`  
+  A promise which resolves when all connections of the agent are ready.
 
 Methods:
 
@@ -413,19 +420,29 @@ Methods:
   The function `extend` returns the agent itself, which allows chaining multiple
   extenstions.
 
+- `Agent.loadModule(module: string | Array.<string> [, options: Object]): Module`  
+  Load a module for an agent. This is the same as `Agent.extend`, except that 
+  the functions offered by the module are not attached to the Agent itself, but
+  returned as object. This allows storing the new functions in a separate 
+  namespace, preventing conflicts between modules or the agent itself. 
+
 - `Agent.receive(from: string, message: string)`  
   Receive a message from an agent. The method should be overloaded with an
   implementation doing something with incoming messages.
 
-- `Agent.connect(transport: Transport [, id: string]) : Promise<Agent, Error>`  
-  Connect the agent to a transport. The library comes with multiple message 
-  transport implementations (see [API](#api). An agent can be connected to 
-  multiple transports. By default, the agent connects to the transport with
-  it's own id. It is possible to provide an alternative id instead by specifying
+- `Agent.connect(transport: Transport | Transport[] | string | string[] [, id: string]) : Promise<Agent, Error>`  
+  Connect the agent to a transport instance or the id of a transport loaded 
+  in `eve.system`. Parameter `transport` can be an Array to connect to multiple
+  transports at once. Eve comes with multiple message transport implementations 
+  (see [API](#api). 
+  By default, the agent connects to the transport with it's 
+  own id. It is possible to provide an alternative id instead by specifying
   this as second argument.
 
-- `Agent.disconnect(transport: Transport)`  
-  Disconnect the agent from a a transport.
+- `Agent.disconnect([transport: Transport | Transport[] | string | string[]])`  
+  Disconnect the agent from a transport or multiple transports. When parameter
+  `transport` is not provided, the agent will be disconnected from all 
+  transports.
 
 
 ### Modules
@@ -434,6 +451,7 @@ An agent can be extended with modules, offering additional functionality.
 evejs comes with a number of built in modules. Usage:
 
     agent.extend(moduleName);
+    agent.moduleName = agent.loadModule(moduleName);
 
 #### Pattern
 
@@ -527,15 +545,35 @@ var transport = new Transport([config: Object]);
 
 Methods:
 
-- `Transport.connect(id: string, receive: Function [, onConnect: Function])`  
+- `Transport.connect(id: string, receive: Function) : Connection`    
   Connect an agent with given `id`. When a message for the agent comes in,
   the callback function `receive` is invoked as `receive(from: string,
-  message: string)`. The method returns a Promise which resolves when the 
-  connection is created.
-- `Transport.disconnect(id: string)`  
-  Disconnect an agent with given `id`.
-- `Transport.send(from: string, to: string, message: string)`  
+  message: string)`. The method returns a [`Connection`](#connection), which
+  can be used to send messages.
+
+### Connection
+
+When a connection is opened by a [`Transport`](#transport), a `Connection` is 
+returned.
+
+Constructor:
+
+```js
+var connection = new Connection(transport: Transport, id: string, receive: function);
+```
+
+Properties:
+
+- `Transport.ready: Promise`  
+  The ready state of the transport. When ready, the properties Promise resolves.
+
+Methods:
+
+- `Transport.close()`  
+  Close the connection.
+- `Transport.send(to: string, message: string)`  
   Send a message via the transport.
+
 
 ### ServiceManager
 
@@ -598,18 +636,16 @@ Methods:
 
 - `add(transport: Transport) : Transport`  
   Add a loaded transport to the manager. Returns the transport itself.
-- `get([type: string]) : Transport`  
+- `get(id: string) : Transport`  
+  Get a single transport by it's id.
+  Throws an error when no matching transport is found.
+- `getAll() : Transport[]`  
+  Get all transports.
+- `getByType([type: string]) : Transport[]`  
   Get transports. When optional parameter `type` is provided, the transports
   are filtered by this type. When there are no transports found, an empty 
   array is returned.
   Available types are: 'amqp',  'distribus', 'local', 'pubnub'.
-- `getOne([type: string]) : Transport`  
-  Get a single transport. When optional parameter `type` is provided, the transports
-  are filtered by this type. 
-  Available types are: 'amqp',  'distribus', 'local', 'pubnub'. When type is defined, 
-  the first transport of this type is returned. When undefined, the first 
-  loaded transport of any type is returned.
-  Throws an error when no matching transport is found.
 - `load(config: Object) : Transport`  
   Load a transport based on JSON configuration. Returns the loaded transport
 - `registerType(constructor: Function)`
