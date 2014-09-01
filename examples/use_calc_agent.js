@@ -28,5 +28,6 @@ jack.request('calcAgent', 'wrong input...')
       console.log('response:', response);
     })
     .catch(function (err) {
-      console.log(err.toString());
+      console.log('We should receive an error because of wrong input: ');
+      console.log('  ', err.toString());
     });

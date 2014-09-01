@@ -110,12 +110,14 @@ describe('Agent', function() {
       assert.equal(connections.length, 2);
       assert.strictEqual(connections[0].transport, transport1);
       assert.strictEqual(connections[1].transport, transport2);
+      assert.strictEqual(agent1.defaultConnection.transport, transport1);
       assert.deepEqual(Object.keys(transport1.agents), ['agent1']);
       assert.deepEqual(Object.keys(transport2.agents), ['agent1']);
 
       agent1.disconnect([transport1, transport2]);
 
       assert.deepEqual(agent1.connections, []);
+      assert.strictEqual(agent1.defaultConnection, null);
       assert.deepEqual(Object.keys(transport1.agents), []);
       assert.deepEqual(Object.keys(transport2.agents), []);
     });
@@ -130,19 +132,21 @@ describe('Agent', function() {
       assert.equal(connections.length, 2);
       assert.strictEqual(connections[0].transport, transport1);
       assert.strictEqual(connections[1].transport, transport2);
+      assert.strictEqual(agent1.defaultConnection.transport, transport1);
       assert.deepEqual(Object.keys(transport1.agents), ['agent1']);
       assert.deepEqual(Object.keys(transport2.agents), ['agent1']);
 
       agent1.disconnect();
 
       assert.deepEqual(agent1.connections, []);
+      assert.strictEqual(agent1.defaultConnection, null);
       assert.deepEqual(Object.keys(transport1.agents), []);
       assert.deepEqual(Object.keys(transport2.agents), []);
     });
 
-    it('should connect to multiple transports', function (done) {
-      var transport1 = new LocalTransport();
-      var transport2 = new LocalTransport();
+    it('should send a message with agentId@transportId notation', function (done) {
+      var transport1 = new LocalTransport({id: 'local1'});
+      var transport2 = new LocalTransport({id: 'local2'});
 
       var agent1 = new Agent('agent1');
       var agent2 = new Agent('agent2');
@@ -171,60 +175,31 @@ describe('Agent', function() {
 
       // send messages to agents connected via a different transport
       agent2.send('agent1', 'hello');
-      agent2.send('agent3', 'hello');
+      agent2.send('agent3@local2', 'hello');
     });
 
-    it('should send a message via a specific transport type', function (done) {
-      var transport1 = new LocalTransport();
-      var transport2 = new DistribusTransport();
+    it('should send a message with the default transport', function (done) {
+      var transport1 = new LocalTransport({id: 'local1'});
+      var transport2 = new LocalTransport({id: 'local2', 'default': true});
 
-      var agent1 = new Agent('agent1');
       var agent2 = new Agent('agent2');
-
-      agent1.connect(transport1);
-      agent1.connect(transport2);
+      var agent3 = new Agent('agent3');
 
       agent2.connect(transport1);
-      agent2.connect(transport2);
 
-      function log(from, message) {
+      agent2.connect(transport2);
+      agent3.connect(transport2);
+
+      agent3.receive = function (from, message) {
         assert.equal(from, 'agent2');
         assert.equal(message, 'hello');
-
         done();
-      }
+      };
 
-      agent1.receive = log;
-
-      // send messages to agents connected via a the specified transport
-      agent2.send({id: 'agent1', transport: 'distribus'}, 'hello');
+      // send messages to agents connected via a different transport
+      agent2.send('agent3', 'hello'); // should go over local1
     });
 
-    it('should send a message via a specific transport id', function (done) {
-      var transport1 = new LocalTransport({id: '1'});
-      var transport2 = new DistribusTransport({id: '2'});
-
-      var agent1 = new Agent('agent1');
-      var agent2 = new Agent('agent2');
-
-      agent1.connect(transport1);
-      agent1.connect(transport2);
-
-      agent2.connect(transport1);
-      agent2.connect(transport2);
-
-      function log(from, message) {
-        assert.equal(from, 'agent2');
-        assert.equal(message, 'hello');
-
-        done();
-      }
-
-      agent1.receive = log;
-
-      // send messages to agents connected via a the specified transport
-      agent2.send({id: 'agent1', transportId: '2'}, 'hello');
-    });
   });
 
   // TODO: test extendTo
