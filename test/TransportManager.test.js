@@ -9,7 +9,7 @@ describe('TransportManager', function() {
   it('should create a transport manager', function () {
     var manager = new TransportManager();
 
-    assert.deepEqual(Object.keys(manager.types).sort(), ['amqp', 'distribus', 'local', 'pubnub']);
+    assert.deepEqual(Object.keys(manager.types).sort(), ['amqp', 'distribus', 'http', 'local', 'pubnub']);
     assert.deepEqual(manager.transports, []);
   });
 
@@ -25,7 +25,7 @@ describe('TransportManager', function() {
 
     manager.registerType(TestTransport);
 
-    assert.deepEqual(Object.keys(manager.types).sort(), ['amqp', 'distribus', 'local', 'pubnub', 'test'])
+    assert.deepEqual(Object.keys(manager.types).sort(), ['amqp', 'distribus', 'http', 'local', 'pubnub', 'test'])
   });
 
   it('should throw an error when registering an already existing transport type', function () {

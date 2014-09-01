@@ -15,7 +15,7 @@ exports.transport = {
   PubNubTransport:    require('./lib/transport/pubnub/PubNubTransport'),
   AMQPTransport:      require('./lib/transport/amqp/AMQPTransport'),
   DistribusTransport: require('./lib/transport/distribus/DistribusTransport'),
-  HttpTransport:      require('./lib/transport/http/HttpTransport'),
+  HTTPTransport:      require('./lib/transport/http/HTTPTransport'),
   
   connection: {
     Connection:          require('./lib/transport/Connection'),
@@ -23,7 +23,7 @@ exports.transport = {
     PubNubConnection:    require('./lib/transport/pubnub/PubNubConnection'),
     AMQPConnection:      require('./lib/transport/amqp/AMQPConnection'),
     DistribusConnection: require('./lib/transport/distribus/DistribusConnection'),
-    HttpConnection:      require('./lib/transport/http/HttpConnection')
+    HTTPConnection:      require('./lib/transport/http/HTTPConnection')
   }
 };
 
