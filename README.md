@@ -389,14 +389,16 @@ Properties:
 
 Methods:
 
-- `Agent.send(to: string | Object, message: string)`  
+- `Agent.send(to: string, message: string)`  
   Send a message to an other agent. Parameter `to` is either:
-
-  - the id of the recipient.
-  - an object specifying the type of transport and the id of the recipient:
-    `{id: string, transport: string}`
-  - an object specifying the id of a transport and the id of the recipient:
-    `{id: string, transportId: string}`
+  
+  - A string "agentId", the id of the recipient. Will be send
+    via the default transport or when there is no default
+    transport via the first connected transport.
+  - A string "agentId@transportId" Only usable locally, not
+    for sharing an address with remote agents.
+  - A string "protocol://networkId/agentId". This is a sharable
+    identifier for an agent.
 
 - `Agent.extend(module: string | Array.<string> [, options: Object]): Agent`  
   Extend an agent with modules (mixins). Available modules: 

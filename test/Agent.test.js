@@ -178,6 +178,48 @@ describe('Agent', function() {
       agent2.send('agent3@local2', 'hello');
     });
 
+    it('should send a message with protocol://networkId/agentId notation', function (done) {
+      var transport1 = new LocalTransport({id: 'local1'});
+      var transport2 = new DistribusTransport({networkId: 'distribus1'});
+
+      var agent1 = new Agent('agent1');
+      var agent2a = new Agent('agent2');
+      var agent2b = new Agent('agent2');
+
+      agent1.connect(transport1);
+      agent2a.connect(transport1);
+
+      agent1.connect(transport2);
+      agent2b.connect(transport2);
+
+      var count2a = 0;
+      var count2b = 0;
+
+      agent2a.receive = function (from, message) {
+        assert.equal(from, 'agent1');
+        assert.equal(message, 'hello');
+
+        count2a++;
+        if (count2a == 1 && count2b == 1) {
+          done();
+        }
+      };
+
+      agent2b.receive = function (from, message) {
+        assert.equal(from, 'agent1');
+        assert.equal(message, 'hello');
+
+        count2b++;
+        if (count2a == 1 && count2b == 1) {
+          done();
+        }
+      };
+
+      // send messages to agents connected via a different transport
+      agent1.send('local://local1/agent2', 'hello');
+      agent1.send('distribus://distribus1/agent2', 'hello');
+    });
+
     it('should send a message with the default transport', function (done) {
       var transport1 = new LocalTransport({id: 'local1'});
       var transport2 = new LocalTransport({id: 'local2', 'default': true});

@@ -17,7 +17,7 @@
     "amqp": "^0.2.0",
     "async": "^0.2.9",
     "babble": "^0.10.0",
-    "distribus": "^0.3.0",
+    "distribus": "^0.4.0",
     "node-uuid": "^1.4.1",
     "promise": "^5.0.0",
     "pubnub": "^3.5.48"

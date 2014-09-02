@@ -1,4 +1,4 @@
-var PatternAgent2 = require('./agents/PatternAgent');
+var PatternAgent2 = require('./agents/PatternAgent2');
 
 // create two agents
 var agent1 = new PatternAgent2('agent1');
