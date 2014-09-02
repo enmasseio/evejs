@@ -24,10 +24,10 @@ describe('util', function() {
     assert.equal(util.isPromise(myPromise), true);
   });
 
-  it('should split an url', function () {
-    assert.deepEqual(util.splitUrl('http://example.com/path'),      {protocol: 'http', domain: 'example.com', path: 'path'});
-    assert.deepEqual(util.splitUrl('http://example.com/some/path'), {protocol: 'http', domain: 'example.com', path: 'some/path'});
-    assert.deepEqual(util.splitUrl('https://example.com/'),         {protocol: 'https', domain: 'example.com', path: ''});
-    assert.deepEqual(util.splitUrl('a://b/c'),                      {protocol: 'a', domain: 'b', path: 'c'});
+  it('should parse an url', function () {
+    assert.deepEqual(util.parseUrl('http://example.com/path'),      {protocol: 'http', domain: 'example.com', path: 'path'});
+    assert.deepEqual(util.parseUrl('http://example.com/some/path'), {protocol: 'http', domain: 'example.com', path: 'some/path'});
+    assert.deepEqual(util.parseUrl('https://example.com/'),         {protocol: 'https', domain: 'example.com', path: ''});
+    assert.deepEqual(util.parseUrl('a://b/c'),                      {protocol: 'a', domain: 'b', path: 'c'});
   });
 });
