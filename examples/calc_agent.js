@@ -1,4 +1,3 @@
-var eve = require('../index');
 var CalcAgent = require('./agents/CalcAgent');
 var RequestAgent = require('./agents/RequestAgent');
 

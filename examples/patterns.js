@@ -1,4 +1,3 @@
-var eve = require('../index');
 var PatternAgent = require('./agents/PatternAgent');
 
 // create two agents

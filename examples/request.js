@@ -1,4 +1,3 @@
-var eve = require('../index');
 var RequestAgent = require('./agents/RequestAgent');
 
 // create two agents

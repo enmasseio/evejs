@@ -108,7 +108,6 @@ This agent class can be used as follows. Note that the agents talk to each
 other via a `LocalTransport` which is instantiated in `eve.system` by default.
 
 ```js
-var eve = require('simple-actors');
 var HelloAgent = require('./HelloAgent');
 
 // create two agents
@@ -160,7 +159,6 @@ module.exports = PatternAgent;
 Usage:
 
 ```js
-var eve = require('simple-actors');
 var PatternAgent = require('./PatternAgent');
 
 // create two agents
@@ -210,7 +208,6 @@ module.exports = RequestAgent;
 Usage:
 
 ```js
-var eve = require('simple-actors');
 var RequestAgent = require('./RequestAgent');
 
 // create two agents
