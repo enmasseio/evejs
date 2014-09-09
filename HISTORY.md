@@ -5,12 +5,11 @@
 
 - Renamed the library to evejs.
 - Implemented a `ServiceManager` and `TransportManager`.
-- Implemented agent extension modules `request` and `pattern`.
+- Implemented agent extension modules `request`, `pattern`, and `babble`.
 - Implemented support for connecting to multiple transports at once.
 - Implemented support for connecting with an alternative id.
-- Implemented support for sending a message via a specific transport, by
-  specifying either the transports type or id.
-- Extended Agent with a functions `extend`, and `extentTo` for module loading. 
+- Implemented support for identifying an agent on a specific transport by an url.
+- Extended Agent with a functions `extend`, and `loadModule` for module loading. 
 - Moved pattern listening functionality in a separate module.
 - Renamed `Actor` to `Agent`, and `peer` to `agent`. 
 - Renamed `*MessageBus` to `*Transport`. 
