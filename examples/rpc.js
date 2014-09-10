@@ -1,6 +1,6 @@
 var Promise = require('promise');
 var eve = require('../index');
-var HelloAgent = require('./agents/HelloAgent');
+var RPCAgent = require('./agents/RPCAgent');
 
 eve.system.init({
   transports: [
@@ -16,11 +16,8 @@ eve.system.init({
 });
 
 // create two agents
-var agent1 = new HelloAgent('agent1');
-var agent2 = new HelloAgent('agent2');
+var agent1 = new RPCAgent('agent1');
+var agent2 = new RPCAgent('agent2');
 
 // send a message to agent1
-agent2.sayHello('http://127.0.0.1:3000/agents/agent1');
-
-// alternative:
-agent2.sayHello('agent1'); // this works because of the remoteUrl of the transport.
+agent2.askToAdd('http://127.0.0.1:3000/agents/agent1',{a:1,b:2});
