@@ -221,6 +221,60 @@ agent2.request('agent1', 'Hello agent1!')
     });
 ```
 
+### RPC
+
+Using the `rpc` module, agents can easily send a message and await a response.
+Create a file [**RPCAgent.js**](examples/agents/RPCAgent.js) containing:
+
+```js
+var eve = require('../../index');
+
+function RPCAgent(id, props) {
+  // execute super constructor
+  eve.Agent.call(this, id);
+
+  this.props = props;
+
+  // load the RPC module
+  this.rpc = this.loadModule('rpc',this.rpcFunctions);
+
+  // connect to all transports provided by the system
+  this.connect(eve.system.transports.getAll());
+}
+
+// extend the eve.Agent prototype
+RPCAgent.prototype = Object.create(eve.Agent.prototype);
+RPCAgent.prototype.constructor = RPCAgent;
+
+// create an object containing all RPC functions.
+RPCAgent.prototype.rpcFunctions = {};
+
+// create an RPC function
+RPCAgent.prototype.rpcFunctions.add = function(params, from) {
+  return params.a + params.b;
+}
+
+
+
+module.exports = RPCAgent;
+```
+
+Usage:
+
+```js
+var RPCAgent = require('./agents/RPCAgent');
+
+// create two agents
+var agent1 = new RPCAgent('agent1');
+var agent2 = new RPCAgent('agent2');
+
+// send a message to agent1
+var message = {method:"add", params:{a:1,b:3}};
+agent2.rpc.request("agent1", message).then(function(reply) {
+    console.log("The agent told me that",params.a, "+",params.b,"=",reply.result);
+  });
+}
+```
 ### Babble
 
 Evejs can be used together with [babble](https://github.com/enmasseio/babble), extending the agents with support for dynamic communication flows. 
@@ -527,7 +581,40 @@ The full API and documentation can be found at the project page of babble:
 
 https://github.com/enmasseio/babble
 
+#### RPC
 
+The RPC module allows your agents to communicate using JSON RPC 2.0. This can be used over all transport implementations. When using the HTTP transport, the request and reply are performed in the same HTTP session.
+
+Usage:
+```
+    agent.rpc = agent.loadModule('rpc',options);
+```
+In the options you can define which functions you want to open up the the RPC module. You can supply these as an Object or an Array of function names. The possible ways to define the options are shown here:
+
+```
+agent.add = function (params, [from]) {return params.a + params.b; }
+var options = ['add']
+```
+```
+agent.add = function (params, [from]) {return params.a + params.b; }
+var options = {add: agent.add};
+```
+```
+agent.rpcFunctions = {};
+agent.rpcFunctions.add = function (params, [from]) {return params.a + params.b; }
+var options = agent.rpcFunctions;
+```
+
+Methods:
+
+```
+agent.request(to: string | Object, 
+{method: String, params: *, [id: String, jsonrpc: '2.0']});    
+```
+
+  Send a request. The function returns a promise which resolves with the reply
+  comes in. Only the 'method' and the 'params' fields are required. Evejs will give the message an UUID and add the jsonrpc field as required by the JSON RPC 2.0 spec. The reply is delivered in the JSON RPC response format.
+  
 ### Transport
 
 The library provides multiple `Transport` implementations: `LocalTransport`,

@@ -1,4 +1,3 @@
-var Promise = require('promise');
 var eve = require('../index');
 var RPCAgent = require('./agents/RPCAgent');
 
