@@ -1,6 +1,6 @@
 {
-  "name": "simple-actors",
-  "version": "2.0.1-SNAPSHOT",
+  "name": "evejs",
+  "version": "0.4.0",
   "description": "Simple message based agents.",
   "author": "Jos de Jong <wjosdejong@gmail.com> (https://github.com/josdejong)",
   "keywords": [

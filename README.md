@@ -1,15 +1,13 @@
 # evejs
 
-JavaScript version of Eve, the web based agent platform.
+Simple message based agents. This is the JavaScript version of [Eve](http://eve.almende.com), the web based agent platform.
 
 
 ## Install
 
 Install the module via npm:
 
-    npm install simple-actors
-
-*(In the future the module will be renamed to `npm install evejs`)*
+    npm install evejs
 
 
 ## Use
@@ -24,7 +22,7 @@ To set up a system with eve agents:
 - Create an agent class extending `eve.Agent`. A template for a custom agent is:
 
   ```js
-  var eve = require('simple-actors');
+  var eve = require('evejs');
   
   function MyAgent(id) {
     eve.Agent.call(this, id);
@@ -74,7 +72,7 @@ To create a simple agent class, create a file [**HelloAgent.js**](examples/agent
 following code:
 
 ```js
-var eve = require('simple-actors');
+var eve = require('evejs');
 
 function HelloAgent(id) {
   // execute super constructor
@@ -125,7 +123,7 @@ Agents can be extended with support for a pattern listener. Incoming messages
 can be matched against patterns. Save the following code as [**PatternAgent.js**](examples/agents/PatternAgent.js):
 
 ```js
-var eve = require('simple-actors');
+var eve = require('evejs');
 
 function PatternAgent(id) {
   // execute super constructor
@@ -177,7 +175,7 @@ Using the `request` module, agents can easily send a message and await a respons
 Create a file [**RequestAgent.js**](examples/agents/RequestAgent.js) containing:
 
 ```js
-var eve = require('simple-actors');
+var eve = require('evejs');
 
 function RequestAgent(id) {
   // execute super constructor
@@ -284,7 +282,7 @@ following contents:
 
 ```js
 var babble = require('babble');
-var eve = require('simple-actors');
+var eve = require('evejs');
 
 function BabbleAgent(id, props) {
   // execute super constructor
@@ -364,7 +362,7 @@ to communicate with each other without need for additional configuration.
 The service manager can be configured like
 
 ```js
-var eve = require('simple-actors');
+var eve = require('evejs');
 var HelloAgent = require('./examples/agents/HelloAgent');
 
 // configure eve
@@ -398,7 +396,7 @@ The configuration can be saved in a separate configuration file like **config.js
 Then, the configuration can be loaded into the ServiceManager like:
 
 ```js
-var eve = require('simple-actors');
+var eve = require('evejs');
 var HelloAgent = require('./examples/agents/HelloAgent');
 
 // configure eve
