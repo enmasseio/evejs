@@ -6,8 +6,8 @@ function RPCAgent(id, props) {
 
   this.props = props;
 
+  // extend the agent with RPC functionality
   this.extend('rpc',this.rpcFunctions);
-
 
   // connect to all transports provided by the system
   this.connect(eve.system.transports.getAll());
@@ -16,20 +16,18 @@ function RPCAgent(id, props) {
 // extend the eve.Agent prototype
 RPCAgent.prototype = Object.create(eve.Agent.prototype);
 RPCAgent.prototype.constructor = RPCAgent;
+
+// create functions available for RPC
 RPCAgent.prototype.rpcFunctions = {};
 RPCAgent.prototype.rpcFunctions.add = function(params, from) {
   return params.a + params.b;
-}
-
-RPCAgent.prototype.add = function(params, from) {
-  return params.a + params.b;
-}
+};
 
 RPCAgent.prototype.askToAdd = function(to, params) {
-  var message = {method:"add", params:params};
+  var message = {method:'add', params: params};
   this.request(to, message).then(function(reply) {
-    console.log("The agent told me that",params.a, "+",params.b,"=",reply.result);
+    console.log('The agent told me that', params.a, '+', params.b, '=', reply.result);
   });
-}
+};
 
 module.exports = RPCAgent;
