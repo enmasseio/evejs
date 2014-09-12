@@ -1,7 +1,7 @@
 # history
 
 
-## not yet released, version 0.4.0
+## 2014-10-12, version 0.4.0
 
 - Completely reworked version of evejs, a mix of the former evejs and the 
   simple-actors module.

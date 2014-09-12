@@ -65,6 +65,14 @@ To set up a system with eve agents:
   agent1.connect(eve.system.transports.getAll());
   ```
 
+- To send and receive messages, each agent has a method `send(to, message)` and `receive(from, message)`. A message can be send to and agent by specifying either the agents full url, or just the agents id. In the latter case, the agent will send the message via the transport marked as *default*.
+  
+  ```js
+  agent1.send('distribus://networkId/agent2', 'hello agent2!');
+  agent1.send('agent2', 'hello agent2!'); // send via the default transport
+  ```
+  
+  The *networkId* of a transport can be found at `transport.networkId`.
 
 ### HelloAgent
 
@@ -878,6 +886,12 @@ agent2.rpc.request("agent1", message).then(function(reply) {
   });
 }
 ```
+
+
+## Communication protocols
+
+TODO: document the communication protocols.
+
 
 
 ## Test
