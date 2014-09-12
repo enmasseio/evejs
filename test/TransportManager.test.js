@@ -179,6 +179,18 @@ describe('TransportManager', function() {
     assert.deepEqual(manager.getAll(), []);
   });
 
+  it('should clear all transports', function () {
+    var manager = new TransportManager();
+    manager.add(new LocalTransport());
+    manager.add(new DistribusTransport());
+    manager.add(new LocalTransport());
+
+    assert.equal(manager.getAll().length, 3);
+
+    manager.clear();
+    assert.equal(manager.getAll().length, 0);
+  });
+
   it('should throw an error when finding an unknown type of transport', function () {
     var manager = new TransportManager();
 
@@ -186,8 +198,4 @@ describe('TransportManager', function() {
       manager.getByType('foo');
     }, /Unknown type/);
   });
-
-  // TODO: test load
-  // TODO: test clear
-
 });
