@@ -637,6 +637,10 @@ Methods:
   message: string)`. The method returns a [`Connection`](#connection), which
   can be used to send messages.
 
+- `Transport.close() : Connection`    
+  Close a transport. For example in case of an `HTTPTransport`, the server
+  will be closed.
+
 ### Connection
 
 When a connection is opened by a [`Transport`](#transport), a `Connection` is 

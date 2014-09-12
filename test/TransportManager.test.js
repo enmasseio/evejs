@@ -105,6 +105,19 @@ describe('TransportManager', function() {
     assert.strictEqual(transport, d);
   });
 
+  it('should find a transport by id', function () {
+    var manager = new TransportManager();
+
+    var d = new DistribusTransport({id: 'mydistribus'});
+    manager.add(new LocalTransport());
+    manager.add(d);
+    manager.add(new LocalTransport());
+    manager.add(new DistribusTransport());
+
+    var transport = manager.get('mydistribus');
+    assert.strictEqual(transport, d);
+  });
+
   it('should throw an error when a transport could not be found', function () {
     var manager = new TransportManager();
 
@@ -128,6 +141,42 @@ describe('TransportManager', function() {
 
     var transports2 = manager.getByType('amqp');
     assert.equal(transports2.length, 0);
+  });
+
+  it('should unload a transport by instance', function () {
+    var manager = new TransportManager();
+    var transport = new LocalTransport({id: 1});
+    manager.add(transport);
+
+    assert.strictEqual(manager.getAll()[0], transport);
+
+    manager.unload(transport);
+    assert.deepEqual(manager.getAll(), []);
+  });
+
+  it('should unload a transport by id', function () {
+    var manager = new TransportManager();
+    var transport = new LocalTransport({id: '1'});
+    manager.add(transport);
+
+    assert.strictEqual(manager.getAll()[0], transport);
+
+    manager.unload('1');
+    assert.deepEqual(manager.getAll(), []);
+  });
+
+  it('should unload multiple transports', function () {
+    var manager = new TransportManager();
+    var transport1 = new LocalTransport({id: '1'});
+    var transport2 = new LocalTransport({id: '2'});
+    manager.add(transport1);
+    manager.add(transport2);
+
+    assert.strictEqual(manager.getAll()[0], transport1);
+    assert.strictEqual(manager.getAll()[1], transport2);
+
+    manager.unload(['1', '2']);
+    assert.deepEqual(manager.getAll(), []);
   });
 
   it('should throw an error when finding an unknown type of transport', function () {
