@@ -45,7 +45,7 @@ To set up a system with eve agents:
 - Configure `eve.system`, load transports and other services.
 
   ```js
-  eve.system.init({
+  eve.system.load({
     transports: [
       {
         type: 'distribus'
@@ -368,7 +368,7 @@ var eve = require('simple-actors');
 var HelloAgent = require('./examples/agents/HelloAgent');
 
 // configure eve
-eve.system.init({
+eve.system.load({
   transports: [
     {
       type: 'distribus',
@@ -403,7 +403,7 @@ var HelloAgent = require('./examples/agents/HelloAgent');
 
 // configure eve
 var config = require('./config.json');
-eve.system.init(config);
+eve.system.load(config);
 
 // create two agents
 var agent1 = new HelloAgent('agent1');
@@ -697,6 +697,14 @@ Properties:
 
 - `transports: TransportManager` see [TransportManager](#transportmanager)
 
+Methods:
+
+- `clear()`  
+  Close all configured services and remove them from the manager.
+- `init(config: Object)`  
+  Initialize the service manager with services loaded from a configuration
+  object. All current services are unloaded and removed.
+
 ### TransportManager
 
 A TransportManager manages transports for reuse by multiple agents.
@@ -726,6 +734,8 @@ Methods:
 
 - `add(transport: Transport) : Transport`  
   Add a loaded transport to the manager. Returns the transport itself.
+- `clear()`  
+  Close all configured transports and remove them from the manager.
 - `get(id: string) : Transport`  
   Get a single transport by it's id.
   Throws an error when no matching transport is found.

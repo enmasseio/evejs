@@ -71,6 +71,7 @@ describe('Agent', function() {
           }
         ]
       });
+      assert.equal(system.transports.transports.length, 2);
 
       var conn = agent1.connect('t1');
       assert.equal(conn.transport.id, 't1');
@@ -92,6 +93,7 @@ describe('Agent', function() {
           }
         ]
       });
+      assert.equal(system.transports.transports.length, 2);
 
       var conn = agent1.connect('t1');
       assert.equal(conn.transport.id, 't1');

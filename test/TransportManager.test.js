@@ -10,15 +10,13 @@ describe('TransportManager', function() {
     var manager = new TransportManager();
 
     assert.deepEqual(Object.keys(manager.types).sort(), ['amqp', 'distribus', 'http', 'local', 'pubnub']);
-    assert.deepEqual(manager.transports, []);
+    assert.equal(manager.transports.length, 0);
   });
 
   it('should register a new transport type', function () {
     var manager = new TransportManager();
 
-    function TestTransport () {
-
-    }
+    function TestTransport () {}
 
     TestTransport.prototype = new Transport();
     TestTransport.prototype.type = 'test';
@@ -47,7 +45,6 @@ describe('TransportManager', function() {
     var manager = new TransportManager();
 
     var local = new LocalTransport();
-
     manager.add(local);
 
     assert.equal(manager.transports.length, 1);
