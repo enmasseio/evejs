@@ -10,8 +10,9 @@ function RPCAgent(id, props) {
   this.rpc = this.loadModule('rpc', {add: this.rpcFunctions.add});
   // other ways to load the RPC module:
   // this.rpc = this.loadModule('rpc', this.rpcFunctions);
-  // this.rpc = this.loadModule('rpc', {add: this.add});
-  // this.rpc = this.loadModule('rpc', ['add']);
+  // this.rpc = this.loadModule('rpc', {minus: this.minus});
+  // this.rpc = this.loadModule('rpc', ['minus']);
+
 
   // connect to all transports provided by the system
   this.connect(eve.system.transports.getAll());
@@ -21,19 +22,15 @@ function RPCAgent(id, props) {
 RPCAgent.prototype = Object.create(eve.Agent.prototype);
 RPCAgent.prototype.constructor = RPCAgent;
 
-RPCAgent.prototype.add = function(params, sender) {
-  return params.a + params.b;
-};
+RPCAgent.prototype.minus = function(params, sender) {
+  return params.a - params.b;
+}
 
 RPCAgent.prototype.askToAdd = function(to, params) {
-  var message = {method:'add', params: params};
+  var message = {method:"add", params:params};
   this.rpc.request(to, message).then(function(reply) {
-    console.log('The agent told me that',params.a, '+',params.b,'=',reply.result);
+    console.log("The agent told me that",params.a, "+",params.b,"=",reply);
   });
-};
-
-// create functions available for RPC
-RPCAgent.prototype.rpcFunctions = {};
-RPCAgent.prototype.rpcFunctions.add = RPCAgent.prototype.add;
+}
 
 module.exports = RPCAgent;

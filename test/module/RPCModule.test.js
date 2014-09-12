@@ -15,15 +15,17 @@ describe ('RPC', function () {
     agent2.rpcFunctions = {};
     agent1.rpcFunctions.add = function (params,from) {
       assert.equal(from, sender);
-      assert.equal(params.a, checkParams.a);
-      assert.equal(params.b, checkParams.b);
+      assert.deepEqual(params, checkParams);
       return params.a + params.b;
     }
     agent1.rpc = agent1.loadModule("rpc", agent1.rpcFunctions)
     agent2.rpc = agent2.loadModule("rpc", agent2.rpcFunctions)
 
 
-    agent2.rpc.request("agent1",{method:"add",params:{a:1,b:3}})
+    return agent2.rpc.request("agent1",{method:"add",params:{a:1,b:3}}).then(
+      function (reply) {
+        assert.equal(reply, 3);
+      })
   });
 
 //  it('should add and remove a pattern listener using loadModule', function () {
