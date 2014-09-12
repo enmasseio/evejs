@@ -19,4 +19,4 @@ var agent1 = new RPCAgent('agent1');
 var agent2 = new RPCAgent('agent2');
 
 // send a message to agent1
-agent2.askToAdd('http://127.0.0.1:3000/agents/agent1',{a:1,b:2});
+agent2.askToAdd('http://127.0.0.1:3000/agents/agent1', {a:1, b:2});

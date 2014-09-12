@@ -19,7 +19,7 @@ RPCAgent.prototype.constructor = RPCAgent;
 
 // create functions available for RPC
 RPCAgent.prototype.rpcFunctions = {};
-RPCAgent.prototype.rpcFunctions.add = function(params, from) {
+RPCAgent.prototype.rpcFunctions.add = function(params, sender) {
   return params.a + params.b;
 };
 

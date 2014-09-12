@@ -21,7 +21,7 @@ function RPCAgent(id, props) {
 RPCAgent.prototype = Object.create(eve.Agent.prototype);
 RPCAgent.prototype.constructor = RPCAgent;
 
-RPCAgent.prototype.add = function(params, from) {
+RPCAgent.prototype.add = function(params, sender) {
   return params.a + params.b;
 };
 
