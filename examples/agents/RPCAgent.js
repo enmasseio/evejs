@@ -7,11 +7,11 @@ function RPCAgent(id, props) {
   this.props = props;
 
   // extend the agent with RPC functionality
-  this.rpc = this.loadModule('rpc', {add: this.rpcFunctions.add});
+  this.rpc = this.loadModule('rpc', {add: this.rpcFunctions.add}); // option 1
   // other ways to load the RPC module:
-  // this.rpc = this.loadModule('rpc', this.rpcFunctions);
-  // this.rpc = this.loadModule('rpc', {minus: this.minus});
-  // this.rpc = this.loadModule('rpc', ['minus']);
+  // this.rpc = this.loadModule('rpc', this.rpcFunctions);      // option 2
+  // this.rpc = this.loadModule('rpc', {minus: this.minus});    // option 3
+  // this.rpc = this.loadModule('rpc', ['minus']);              // option 4
 
 
   // connect to all transports provided by the system
@@ -22,15 +22,22 @@ function RPCAgent(id, props) {
 RPCAgent.prototype = Object.create(eve.Agent.prototype);
 RPCAgent.prototype.constructor = RPCAgent;
 
-RPCAgent.prototype.minus = function(params, sender) {
+// this is used when loading rpc with options 3 and 4
+RPCAgent.prototype.minus = function (params, sender) {
   return params.a - params.b;
-}
+};
 
-RPCAgent.prototype.askToAdd = function(to, params) {
-  var message = {method:"add", params:params};
-  this.rpc.request(to, message).then(function(reply) {
-    console.log("The agent told me that",params.a, "+",params.b,"=",reply);
+// define RPC functions, I prefer to have them seperated.
+RPCAgent.prototype.rpcFunctions = {};
+RPCAgent.prototype.rpcFunctions.add = function (params, sender) {
+  return params.a + params.b;
+};
+
+RPCAgent.prototype.askToAdd = function (to, params) {
+  var message = {method: "add", params: params};
+  this.rpc.request(to, message).then(function (reply) {
+    console.log("The agent told me that", params.a, "+", params.b, "=", reply);
   });
-}
+};
 
 module.exports = RPCAgent;

@@ -19,15 +19,15 @@ RPCAgent.prototype.constructor = RPCAgent;
 
 // create functions available for RPC
 RPCAgent.prototype.rpcFunctions = {};
-RPCAgent.prototype.rpcFunctions.add = function(params, sender) {
+RPCAgent.prototype.rpcFunctions.add = function (params, sender) {
   return params.a + params.b;
-}
+};
 
-RPCAgent.prototype.askToAdd = function(to, params) {
-  var message = {method:"add", params:params};
-  this.request(to, message).then(function(reply) {
-    console.log("The agent told me that",params.a, "+",params.b,"=",reply.result);
+RPCAgent.prototype.askToAdd = function (to, params) {
+  var message = {method: "add", params: params};
+  this.request(to, message).then(function (reply) {
+    console.log("The agent told me that", params.a, "+", params.b, "=", reply);
   });
-}
+};
 
 module.exports = RPCAgent;
