@@ -728,7 +728,7 @@ Where `config` is an optional JSON array structured as:
 ]
 ```
 
-Available types: `"amqp"`, `"distribus"`, `"local"`, and `"pubnub"`.
+Available types: `"amqp"`, `"distribus"`, `"local"`, `"pubnub"` and `"http"`.
 
 Methods:
 
@@ -752,6 +752,38 @@ Methods:
   Register a new type of transport. This transport can then be loaded via
   configuration. When called, the constructor must generate a transport which
   is an instance of `Transport`.
+  
+## Transports
+
+### HTTP
+To use the HTTP transport with the Eve transport manager you define the type and its settings. 
+```js
+eve.system.init({
+  transports: [
+    {
+      type: 'http',
+      port: 3000,
+      url: 'http://127.0.0.1:3000/agents/:id',
+      remoteUrl: 'http://127.0.0.1:3000/agents/:id',
+      localShortcut: false,
+    }
+   ]
+});
+```
+
+Mandatory:
+- `type: 'http'`  
+The type is a mandatory field for the TransportManager to identify the specific transport you want to add. In this case it is 'http'.
+- `url: String`  
+This is the URL of the server. This is where and how incoming messages are received. The ':id' will be replaced with the agent id of the targeted agent.
+
+Optional:
+- `port: Number`
+  The port number the HTTP server should listen on. This is optional **IF** you also define a port number in the `url`, which will then be parsed.
+- `remoteUrl: String` 
+This field is optional. It is be used to automatically create an address. If you have agents "agent1" and "agent2" and you want to send a message from 1 to 2 using ```agent1.send("agent2","hello!")``` an error will be thrown if no remoteUrl is defined. By using the remoteUrl, an address (in this case http://127.0.0.1:3000/agents/agent1) will be generated. This is particularly useful if you're only using HTTP to bridge to one other platform or service.
+- `localShortcut: Boolean`
+This option when true, will check if the recipent of a message exists in the same server as the sender. If this is the case, the message is delivered locally, increasing performance. The default value is `true`.
   
 ## Test
 
