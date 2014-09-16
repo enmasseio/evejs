@@ -74,7 +74,7 @@ describe ('RPC', function () {
 
     return agent2.request("agent1",{params:{a:1,b:3}})
       .then()
-      .catch(function (err) {assert.equal(err, "Error: Method must be supplied.")})
+      .catch(function (err) {assert.equal(err, "Error: Property \"method\" expected")})
   });
 
   it('should catch method not found', function () {
@@ -110,7 +110,7 @@ describe ('RPC', function () {
 
     return agent2.request("agent1","hello")
       .then()
-      .catch(function (err) {assert.equal(err, "Error: Message must be an object.")})
+      .catch(function (err) {assert.equal(err.toString(), "TypeError: Message must be an object")})
   });
 
   it('should catch undefined return value', function () {
@@ -130,10 +130,10 @@ describe ('RPC', function () {
 
     return agent2.request("agent1", {method: "foo"})
       .then(function (reply) {
-        assert.strictEqual(reply, undefined)
+        assert.strictEqual(reply, null)
       })
       .catch(function (err) {
-        console.log(err);
+        console.log(err.toString());
         assert.ok(false, 'Should not throw an error')
       })
   });
@@ -153,7 +153,7 @@ describe ('RPC', function () {
 
     return agent2.request("agent1")
       .then()
-      .catch(function (err) {assert.equal(err, "Error: Message is empty.")})
+      .catch(function (err) {assert.equal(err.toString(), "TypeError: Message must be an object")})
   });
 
   // TODO: test whether the response has the same id as the request.
