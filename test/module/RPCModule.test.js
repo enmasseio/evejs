@@ -15,7 +15,6 @@ describe ('RPC', function () {
     var sender = 'agent2';
     var checkParams = {a:1,b:3};
 
-
     agent1.rpcFunctions = {};
     agent2.rpcFunctions = {};
     agent1.rpcFunctions.add = function (params, from) {
@@ -157,4 +156,5 @@ describe ('RPC', function () {
       .catch(function (err) {assert.equal(err, "Error: Message is empty.")})
   });
 
+  // TODO: test whether the response has the same id as the request.
 });

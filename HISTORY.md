@@ -4,6 +4,7 @@
 ## 2014-10-12, version 0.4.1
 
 - Fixed RPC module not accepting result values `undefined`.
+- Fixed RPC response not having an id equal to the id of the request.
 
 
 ## 2014-10-12, version 0.4.0
