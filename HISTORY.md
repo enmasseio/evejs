@@ -1,6 +1,11 @@
 # history
 
 
+## 2014-10-12, version 0.4.1
+
+- Fixed RPC module not accepting result values `undefined`.
+
+
 ## 2014-10-12, version 0.4.0
 
 - Completely reworked version of evejs, a mix of the former evejs and the 
