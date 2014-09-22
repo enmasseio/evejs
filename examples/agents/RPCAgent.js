@@ -1,17 +1,18 @@
 var eve = require('../../index');
 
-function RPCAgent(id, props) {
+function RPCAgent(id) {
   // execute super constructor
   eve.Agent.call(this, id);
 
-  this.props = props;
+  this.foo = 'bar';
+  this.count = 0;
 
   // extend the agent with RPC functionality
-  this.rpc = this.loadModule('rpc', {add: this.rpcFunctions.add}); // option 1
+  this.rpc = this.loadModule('rpc', this.rpcFunctions);               // option 1
   // alternative ways to load the RPC module:
-  // this.rpc = this.loadModule('rpc', this.rpcFunctions);      // option 2
-  // this.rpc = this.loadModule('rpc', {minus: this.minus});    // option 3
-  // this.rpc = this.loadModule('rpc', ['minus']);              // option 4
+  // this.rpc = this.loadModule('rpc', {add: this.rpcFunctions.add}); // option 2
+  // this.rpc = this.loadModule('rpc', {minus: this.minus});          // option 3
+  // this.rpc = this.loadModule('rpc', ['minus']);                    // option 4
 
   // connect to all transports provided by the system
   this.connect(eve.system.transports.getAll());
@@ -26,7 +27,8 @@ RPCAgent.prototype.minus = function (params, sender) {
   return params.a - params.b;
 };
 
-// define RPC functions, I prefer to have them seperated.
+// define RPC functions, preferably in a separated object to clearly distinct
+// exposed functions from local functions.
 RPCAgent.prototype.rpcFunctions = {};
 RPCAgent.prototype.rpcFunctions.add = function (params, sender) {
   return params.a + params.b;

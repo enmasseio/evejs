@@ -849,7 +849,7 @@ function RPCAgent(id, props) {
   this.props = props;
 
   // load the RPC module
-  this.rpc = this.loadModule('rpc',this.rpcFunctions);
+  this.rpc = this.loadModule('rpc', this.rpcFunctions);
 
   // connect to all transports provided by the system
   this.connect(eve.system.transports.getAll());
@@ -865,7 +865,7 @@ RPCAgent.prototype.rpcFunctions = {};
 // create an RPC function
 RPCAgent.prototype.rpcFunctions.add = function(params, from) {
   return params.a + params.b;
-}
+};
 
 module.exports = RPCAgent;
 ```
@@ -880,9 +880,9 @@ var agent1 = new RPCAgent('agent1');
 var agent2 = new RPCAgent('agent2');
 
 // send a message to agent1
-var message = {method:"add", params:{a:1,b:3}};
-agent2.rpc.request("agent1", message).then(function(reply) {
-    console.log("The agent told me that",params.a, "+",params.b,"=",reply.result);
+var message = {method:'add', params: {a:1, b:3}};
+agent2.rpc.request('agent1', message).then(function(reply) {
+    console.log('The agent told me that', params.a, '+', params.b, '=', reply.result);
   });
 }
 ```
