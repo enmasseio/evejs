@@ -6,6 +6,10 @@ function PatternAgent(id) {
 
   // extend the agent with pattern listening functionality
   this.extend('pattern');
+  // alternatively, the pattern module can be loaded in a separate namespace
+  // instead of extending the agent itself:
+  //   this.pattern = this.loadModule('pattern');
+  //   this.pattern.listen(...)
 
   // listen for messages containing 'hello' (case insensitive)
   this.listen(/hello/i, function (from, message) {

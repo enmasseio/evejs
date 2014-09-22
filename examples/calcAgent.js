@@ -4,7 +4,7 @@ var RequestAgent = require('./agents/RequestAgent');
 var jack = new RequestAgent('jack');
 var calc = new CalcAgent('calc');
 
-// send a message to the calc agent
+// send a request to the calc agent
 jack.request('calc', {fn: 'add', a: 2, b: 4.1})
     .then(function (response) {
       console.log('response:', response);

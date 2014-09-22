@@ -8,11 +8,10 @@ function RPCAgent(id, props) {
 
   // extend the agent with RPC functionality
   this.rpc = this.loadModule('rpc', {add: this.rpcFunctions.add}); // option 1
-  // other ways to load the RPC module:
+  // alternative ways to load the RPC module:
   // this.rpc = this.loadModule('rpc', this.rpcFunctions);      // option 2
   // this.rpc = this.loadModule('rpc', {minus: this.minus});    // option 3
   // this.rpc = this.loadModule('rpc', ['minus']);              // option 4
-
 
   // connect to all transports provided by the system
   this.connect(eve.system.transports.getAll());
@@ -34,9 +33,9 @@ RPCAgent.prototype.rpcFunctions.add = function (params, sender) {
 };
 
 RPCAgent.prototype.askToAdd = function (to, params) {
-  var message = {method: "add", params: params};
+  var message = {method: 'add', params: params};
   this.rpc.request(to, message).then(function (reply) {
-    console.log("The agent told me that", params.a, "+", params.b, "=", reply);
+    console.log('The agent told me that', params.a, '+', params.b, '=', reply);
   });
 };
 

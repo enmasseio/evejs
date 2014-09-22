@@ -21,7 +21,7 @@ var agent2 = new RPCAgent('agent2');
 agent2.askToAdd('http://127.0.0.1:3000/agents/agent1', {a: 1, b: 2});
 
 //// catch error
-agent2.rpc.request("agent4", {method: "add", params: {a: 1, b: 2}})
+agent2.rpc.request('agent4', {method: 'add', params: {a: 1, b: 2}})
   .then(function (reply) {
     console.log(reply);
   })

@@ -6,6 +6,10 @@ function RequestAgent(id) {
 
   // extend the agent with support for requests
   this.extend('request');
+  // alternatively, the request module can be loaded in a separate namespace
+  // instead of extending the agent itself:
+  //   this.request = this.loadModule('request');
+  //   this.request.request(...)
 
   // connect to all transports provided by the system
   this.connect(eve.system.transports.getAll());
