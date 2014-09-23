@@ -19,50 +19,32 @@ The loaded transports can be used by agents to communicate with each other.
 
 To set up a system with eve agents:
 
-- Create an agent class extending `eve.Agent`. A template for a custom agent is:
+- Create an agent class extending `eve.Agent`. A template for an agent is:
 
   ```js
   var eve = require('evejs');
   
   function MyAgent(id) {
+    // execute super constructor
     eve.Agent.call(this, id);
-  
-    // ...
+    
+    // extend the agent with modules (choose from 
+    // 'babble', 'pattern', 'request', and 'rpc')
+    this.extend('request');
+    
+    // connect to some or all transports
+    this.connect(eve.system.transports.getAll());
   }
   
+  // extend the eve.Agent prototype
   MyAgent.prototype = Object.create(eve.Agent.prototype);
   MyAgent.prototype.constructor = MyAgent;
   
   MyAgent.prototype.receive = function (from, message) {
-    // ...
+    // handle incoming messages...
   };
   
   module.exports = MyAgent;
-  ```
-
-- Configure `eve.system`, load transports and other services.
-
-  ```js
-  eve.system.load({
-    transports: [
-      {
-        type: 'distribus'
-      }
-    ]
-  });
-  ```
-
-- Create an agent:
-
-  ```js
-  var agent1 = new MyAgent('agent1');
-  ```
-
-- Connect an agent to one or multiple transports. This is typically done in
-  the agents constructor function:
-  
-  ```js
-  agent1.connect(eve.system.transports.getAll());
   ```
 
 - To send and receive messages, each agent has a method `send(to, message)` and 
@@ -76,6 +58,24 @@ send the message via the transport marked as *default*.
   ```
   
   The *networkId* of a transport can be found at `transport.networkId`.
+
+- Configure `eve.system`, initialize transports and other services.
+
+  ```js
+  eve.system.init({
+    transports: [
+      {
+        type: 'distribus'
+      }
+    ]
+  });
+  ```
+
+- Create an agent:
+
+  ```js
+  var agent1 = new MyAgent('agent1');
+  ```
 
 ### HelloAgent
 
