@@ -5,8 +5,9 @@
 
 - Implemented a WebSocket transport.
 - Added support for `hypertimer`, for discrete event simulations.
-- Added support for a configurable `random` function , for deterministic random 
+- Added support for a configurable `random` function, for deterministic random 
   values.
+- Docs reorganized.
 
 
 ## 2014-10-12, version 0.4.1
