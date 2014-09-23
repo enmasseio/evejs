@@ -321,13 +321,19 @@ eve.system.init({
     {
       type: 'ws',
       id: 'myWebSocket',                        // optional identifier
-      url: 'ws://localhost:3000/agents/:id',    // url with id placeholder
+      url: 'ws://localhost:3000/agents/:id',    // optional url with id placeholder
       localShortcut: true
     }
    ]
 });
 ```
 
+A WebSocket can be used both server side as well as client side (browser).
+When `url` is provided, a WebSocket server is started. and agents can connect to
+this server. When a WebSocket transport has no url, it cannot be as server but
+only as client, connecting to other servers. Once a connection is made between
+two agents, they can both send messages to each other.
+ 
 Available properties:
 
 - `type: 'ws'`  

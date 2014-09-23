@@ -12,6 +12,12 @@ eve.system.init({
 });
 
 // create an agent
-var agent1 = new HelloAgent('agent2');
+var agent2 = new HelloAgent('agent2');
 
-agent1.sayHello('ws://localhost:3000/agents/agent1');
+agent2.sayHello('ws://localhost:3000/agents/agent1');
+
+// Note: it is possible to open a WebSocket connection to an agent without
+// sending a message using the connect function:
+//
+//    agent2.connections[0].connect('ws://localhost:3000/agents/agent1');
+//

@@ -144,6 +144,52 @@ describe('WebSocketTransport', function() {
         });
   });
 
+  it('should open a socket via connect, test list', function () {
+    var url1;
+    var url2;
+    var transport1;
+    var transport2;
+    var conn1;
+    var conn2;
+    var urlAgent1;
+    var urlAgent2;
+
+    return Promise.all([freeport(), freeport()])
+        .then(function (ports) {
+          url1 = 'ws://localhost:' + ports[0] + '/agents/:id';
+          url2 = 'ws://localhost:' + ports[1] + '/agents/:id';
+
+          transport1 = new WebSocketTransport({url: url1});
+          transport2 = new WebSocketTransport({url: url2});
+
+          return Promise.all([transport1.ready, transport2.ready]);
+        })
+        .then(function () {
+          urlAgent1 = url1.replace(':id', 'agent1');
+          urlAgent2 = util.normalizeURL(url2.replace(':id', 'agent2'));
+
+          // connect and send a message
+          conn1 = transport1.connect('agent1', function (from, message) {});
+          assert.equal(conn1.url, urlAgent1);
+
+          conn2 = transport2.connect('agent2', function (from, message) {});
+          assert.equal(conn2.url, urlAgent2);
+
+          return Promise.all([conn1.ready, conn2.ready])
+        })
+        .then(function () {
+          return conn1.connect(urlAgent2);
+        })
+        .then(function () {
+          assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
+          assert.deepEqual(Object.keys(transport2.agents), [urlAgent2]);
+
+          // test list
+          assert.deepEqual(transport1.agents[urlAgent1].list(), [urlAgent2]);
+          assert.deepEqual(transport2.agents[urlAgent2].list(), [urlAgent1]);
+        })
+  });
+
   it('should send a message via an anonymous socket', function () {
     var url1;
     var transport1;
