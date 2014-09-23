@@ -4,7 +4,7 @@
  *
  * https://github.com/enmasseio/babble
  */
-var BabbleAgent = require('./agents/BabbleAgent');
+var BabbleAgent = require('./../agents/BabbleAgent');
 
 // create two agents
 var emma = new BabbleAgent('emma', {age: 27});

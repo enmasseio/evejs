@@ -1,5 +1,5 @@
-var eve = require('../../index');
-var HelloAgent = require('../agents/HelloAgent');
+var eve = require('../../../index');
+var HelloAgent = require('../../agents/HelloAgent');
 
 // configure eve
 eve.system.init({

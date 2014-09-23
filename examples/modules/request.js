@@ -1,4 +1,4 @@
-var RequestAgent = require('./agents/RequestAgent');
+var RequestAgent = require('./../agents/RequestAgent');
 
 // create two agents
 var agent1 = new RequestAgent('agent1');

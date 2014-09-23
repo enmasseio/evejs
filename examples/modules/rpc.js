@@ -1,5 +1,5 @@
-var eve = require('../index');
-var RPCAgent = require('./agents/RPCAgent');
+var eve = require('../../index');
+var RPCAgent = require('./../agents/RPCAgent');
 
 eve.system.init({
   transports: [

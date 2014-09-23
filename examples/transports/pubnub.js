@@ -1,6 +1,6 @@
 var Promise = require('promise');
-var eve = require('../index');
-var HelloAgent = require('./agents/HelloAgent');
+var eve = require('../../index');
+var HelloAgent = require('./../agents/HelloAgent');
 
 // Configure eve, load a pubnub transport
 eve.system.init({

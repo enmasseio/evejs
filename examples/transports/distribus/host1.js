@@ -1,6 +1,6 @@
 var distribus = require('distribus');
-var eve = require('../../index');
-var HelloAgent = require('../agents/HelloAgent');
+var eve = require('../../../index');
+var HelloAgent = require('../../agents/HelloAgent');
 
 // create a host
 var host1 = new distribus.Host();

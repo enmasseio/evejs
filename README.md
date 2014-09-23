@@ -320,7 +320,9 @@ eve.system.init({
   transports: [
     {
       type: 'ws',
-      url: 'ws://localhost:3000/agents/:id'     // url with id placeholder
+      id: 'myWebSocket',                        // optional identifier
+      url: 'ws://localhost:3000/agents/:id',    // url with id placeholder
+      localShortcut: true
     }
    ]
 });
@@ -331,7 +333,7 @@ Available properties:
 - `type: 'ws'`  
   Required. Specifies the type of transport.
 - `id: string`    
-  Optional.
+  Optional identifier for this transport.
 - `url: string`
   Optional. If provided, A WebSocket server is started on given url.
   The url must contain a `:id` placeholder to build urls for individual agents.
