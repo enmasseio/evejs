@@ -1,6 +1,7 @@
 var assert = require('assert');
 var Promise = require('promise');
 var WebSocketTransport = require('../../lib/transport/websocket/WebSocketTransport');
+var util = require('../../lib/util');
 
 /**
  * Get a free local port
@@ -134,6 +135,57 @@ describe('WebSocketTransport', function() {
               resolve();
             });
             assert.equal(conn2.url, urlAgent2);
+
+            Promise.all([conn1.ready, conn2.ready])
+                .then(function () {
+                  conn2.send(urlAgent1, 'hi there');
+                });
+          });
+        });
+  });
+
+  it('should send a message via an anonymous socket', function () {
+    var url1;
+    var url2;
+    var transport1;
+    var transport2;
+
+    return Promise.all([freeport()])
+        .then(function (ports) {
+          url1 = 'ws://localhost:' + ports[0] + '/agents/:id';
+
+          transport1 = new WebSocketTransport({url: url1});
+          transport2 = new WebSocketTransport(); // no url, anonymous
+
+          return Promise.all([transport1.ready, transport2.ready]);
+        })
+        .then(function () {
+          return new Promise(function (resolve, reject) {
+            var urlAgent1 = url1.replace(':id', 'agent1');
+
+            // connect and send a message
+            var conn1 = transport1.connect('agent1', function (from, message) {
+              assert.equal(from, conn2.url);
+              assert.equal(message, 'hi there');
+
+              assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
+              assert.deepEqual(Object.keys(transport2.agents), [conn2.url]);
+
+              // send a message back
+              conn1.send(from, 'hello');
+            });
+            assert.equal(conn1.url, urlAgent1);
+
+            var conn2 = transport2.connect('agent2', function (from, message) {
+              assert.equal(from, urlAgent1);
+              assert.equal(message, 'hello');
+
+              assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
+              assert.deepEqual(Object.keys(transport2.agents), [conn2.url]);
+
+              resolve();
+            });
+            assert.ok(util.isUUID(conn2.url));
 
             Promise.all([conn1.ready, conn2.ready])
                 .then(function () {

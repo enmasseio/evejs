@@ -30,4 +30,10 @@ describe('util', function() {
     assert.deepEqual(util.parseUrl('https://example.com/'),         {protocol: 'https', domain: 'example.com', path: ''});
     assert.deepEqual(util.parseUrl('a://b/c'),                      {protocol: 'a', domain: 'b', path: 'c'});
   });
+
+  it ('should check whether a string is a UUID', function () {
+    assert.equal(util.isUUID('5348bf37-c86e-4fb2-9ed7-67e829031490'), true);
+    assert.equal(util.isUUID('5348bf37-c86e-4fb2-9ed7-67e8290314'), false)
+    assert.equal(util.isUUID('foo'), false)
+  })
 });

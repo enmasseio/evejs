@@ -28,3 +28,5 @@ exports.transport = {
 };
 
 exports.system = require('./lib/system');
+
+exports.util = require('./lib/util');
