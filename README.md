@@ -225,6 +225,7 @@ Available properties:
 Either `host` or `port` can be configured. If none is provided, a local distribus `Host` is created.
 
 #### HTTP
+
 To use the HTTP transport with the Eve transport manager you define the type and its settings. 
 
 ```js
@@ -255,7 +256,7 @@ Mandatory:
 - `remoteUrl: String`  
   Optional. This field is optional. It is be used to automatically create an address. If you have agents "agent1" and "agent2" and you want to send a message from 1 to 2 using `agent1.send("agent2","hello!")` an error will be thrown if no remoteUrl is defined. By using the remoteUrl, an address (in this case http://127.0.0.1:3000/agents/agent1) will be generated. This is particularly useful if you're only using HTTP to bridge to one other platform or service.
 - `localShortcut: Boolean`  
-  Optional. This option when true, will check if the recipent of a message exists in the same server as the sender. If this is the case, the message is delivered locally, increasing performance. The default value is `true`.
+  Optional. This option when true, will check if the recipient of a message exists in the same server as the sender. If this is the case, the message is delivered locally, increasing performance. The default value is `true`.
 
 #### Local
 
@@ -309,6 +310,38 @@ Available properties:
 
 A `publish_key` and `subscribe_key` can be acquired by creating an account at http://pubnub.com.
 
+
+#### WebSocket
+
+To configure a WebSocket transport: 
+
+```js
+eve.system.init({
+  transports: [
+    {
+      type: 'ws',
+      url: 'ws://localhost:3000/agents/:id'     // url with id placeholder
+    }
+   ]
+});
+```
+
+Available properties:
+
+- `type: 'ws'`  
+  Required. Specifies the type of transport.
+- `id: string`    
+  Optional.
+- `url: string`
+  Optional. If provided, A WebSocket server is started on given url.
+  The url must contain a `:id` placeholder to build urls for individual agents.
+  Example: `'ws://localhost:3000/agents/:id'`.
+- `localShortcut: boolean`
+  Optional. If true, messages to local agents are not send via WebSocket but 
+  delivered immediately. Setting `localShortcut` to `false` can be useful for
+  debugging and testing purposes.
+
+
 ## API
 
 The library contains the following prototypes:
@@ -334,6 +367,7 @@ The library contains the following prototypes:
 - `eve.transport.connection.HTTPConnection`
 - `eve.transport.connection.LocalConnection`
 - `eve.transport.connection.PubNubConnection`
+- `eve.transport.connection.WebSocketConnection`
 
 ### Agent
 
@@ -356,8 +390,6 @@ Methods:
   - A string "agentId", the id of the recipient. Will be send
     via the default transport or when there is no default
     transport via the first connected transport.
-  - A string "agentId@transportId" Only usable locally, not
-    for sharing an address with remote agents.
   - A string "protocol://networkId/agentId". This is a sharable
     identifier for an agent.
 

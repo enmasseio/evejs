@@ -1,6 +1,11 @@
 # history
 
 
+## not yet released, version 0.4.2
+
+- Implemented a WebSocket transport.
+
+
 ## 2014-10-12, version 0.4.1
 
 - Fixed RPC module not accepting result values `undefined`.

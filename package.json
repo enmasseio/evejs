@@ -20,9 +20,11 @@
     "distribus": "^0.4.0",
     "node-uuid": "^1.4.1",
     "promise": "^5.0.0",
-    "pubnub": "^3.5.48"
+    "pubnub": "^3.5.48",
+    "ws": "^0.4.32"
   },
   "devDependencies": {
+    "freeport": "^1.0.3",
     "mocha": "latest"
   },
   "scripts": {
