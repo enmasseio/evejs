@@ -22,6 +22,7 @@
     "node-uuid": "^1.4.1",
     "promise": "^5.0.0",
     "pubnub": "^3.5.48",
+    "seed-random": "^2.2.0",
     "ws": "^0.4.32"
   },
   "devDependencies": {
