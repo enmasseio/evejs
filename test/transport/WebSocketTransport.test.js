@@ -100,7 +100,7 @@ describe('WebSocketTransport', function() {
     return Promise.all([freeport(), freeport()])
         .then(function (ports) {
           url1 = 'ws://localhost:' + ports[0] + '/agents/:id';
-          url2 = 'ws://localhost:' + ports[1] + '/agents/:id';
+          url2 = 'ws://localhost:' + ports[1] + '/agents/:id/'; // NOTE: We add a trailing slash here, see if that is neatly handled
 
           transport1 = new WebSocketTransport({url: url1});
           transport2 = new WebSocketTransport({url: url2});
@@ -110,7 +110,7 @@ describe('WebSocketTransport', function() {
         .then(function () {
           return new Promise(function (resolve, reject) {
             var urlAgent1 = url1.replace(':id', 'agent1');
-            var urlAgent2 = url2.replace(':id', 'agent2');
+            var urlAgent2 = util.normalizeURL(url2.replace(':id', 'agent2'));
 
             // connect and send a message
             var conn1 = transport1.connect('agent1', function (from, message) {
@@ -146,7 +146,6 @@ describe('WebSocketTransport', function() {
 
   it('should send a message via an anonymous socket', function () {
     var url1;
-    var url2;
     var transport1;
     var transport2;
 
