@@ -85,7 +85,7 @@ Methods:
   Connect the agent to a transport instance or the id of a transport loaded 
   in `eve.system`. Parameter `transport` can be an Array to connect to multiple
   transports at once. Eve comes with multiple message transport implementations 
-  (see [API](#api). 
+  (see [Transports](transports.md). 
   By default, the agent connects to the transport with it's 
   own id. It is possible to provide an alternative id instead by specifying
   this as second argument.
@@ -170,6 +170,8 @@ Where `config` is an optional JSON array structured as:
 ```
 
 Available types: `"amqp"`, `"distribus"`, `"local"`, `"pubnub"` and `"http"`.
+The configuration for all available transports is described in detail on the
+page [Transports](transports.md).
 
 Methods:
 
