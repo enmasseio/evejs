@@ -1,6 +1,9 @@
 # history
 
 
+## not yet released, version 0.4.3
+
+
 ## 2014-10-23, version 0.4.2
 
 - Implemented a WebSocket transport.
