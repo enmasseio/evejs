@@ -2,6 +2,7 @@ exports.Agent = require('./lib/Agent');
 
 exports.ServiceManager = require('./lib/ServiceManager');
 exports.TransportManager = require('./lib/TransportManager');
+exports.hypertimer = require('hypertimer');
 
 exports.module = {
   BabbleModule: require('./lib/module/BabbleModule'),

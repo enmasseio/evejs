@@ -4,6 +4,7 @@
 ## not yet released, version 0.4.2
 
 - Implemented a WebSocket transport.
+- Added support for `hypertimer`, for discrete event simulations.
 
 
 ## 2014-10-12, version 0.4.1

@@ -20,7 +20,15 @@ describe('ServiceManager', function() {
     assert.equal(services.transports.transports.length, 1);
   });
 
-  // TODO: test load
+  it('should configure the timer', function () {
+    var services = new ServiceManager({
+      timer: {rate: 'discrete'}
+    });
+
+    assert.deepEqual(services.timer.config(), {rate: 'discrete', deterministic: true});
+  });
+
+  // TODO: test init
   // TODO: test clear
 
 });

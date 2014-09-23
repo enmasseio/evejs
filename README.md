@@ -127,7 +127,7 @@ agent2.send('agent1', 'Hello agent1!');
 
 ### Configuration
 
-Evejs has a default [`ServiceManager`](#servicemanager) loaded at `eve.system`. By default, a `LocalTransport` is loaded in the service manager, allowing local agents to communicate with each other without need for additional configuration.
+Evejs has a default [`ServiceManager`](#servicemanager) loaded at `eve.system`. By default, a `LocalTransport` is loaded in the service manager, allowing local agents to communicate with each other without need for additional configuration, and a timer is configured, running in real-time.
 
 The default service manager can be configured like
 
@@ -141,7 +141,10 @@ eve.system.init({
     {
       type: 'distribus',
     }
-  ]
+  ],
+  timer: {
+    rate: 'discrete'
+  }
 });
 
 // create two agents
@@ -159,7 +162,10 @@ The configuration can be saved in a separate configuration file like **config.js
     {
       "type": "local"
     }
-  ]
+  ],
+  timer: {
+    rate: 'discrete'
+  }
 }
 ```
 
@@ -348,6 +354,35 @@ Available properties:
   Optional. If true, messages to local agents are not send via WebSocket but 
   delivered immediately. Setting `localShortcut` to `false` can be useful for
   debugging and testing purposes.
+
+
+### Timer
+
+The Service manager comes with a configurable timer, which can be used to run 
+simulations in discrete time or hyper time. Evejs uses 
+[hypertimer](https://github.com/enmasseio/hypertimer) for this. By default,
+the timer runs in real-time.
+
+To configure the default timer: 
+
+```js
+eve.system.init({
+  timer: {
+    rate: 'discrete',     // a number or 'discrete'
+    deterministic: true,  // true or false.
+  }
+});
+```
+
+The timer has functions `setTimeout`, `setInterval`, `setTrigger`, `setTime`,
+`getTime`, and more. To use the timer:
+
+```js
+var delay = 1000;
+eve.system.timer.setTimeout(function () {
+  console.log('hello world!');
+}, delay)
+```
 
 
 ## API
