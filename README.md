@@ -131,9 +131,9 @@ agent2.send('agent1', 'Hello agent1!');
 
 - [API](https://github.com/enmasseio/evejs/tree/master/docs/api.md)
 - [Configuration](https://github.com/enmasseio/evejs/tree/master/docs/configuration.md)
-- [Transports](https://github.com/enmasseio/evejs/tree/master/docs/modules.md)
-- [Modules](https://github.com/enmasseio/evejs/tree/master/docs/prootocols.md)
-- [Protocols](https://github.com/enmasseio/evejs/tree/master/docs/transports.md)
+- [Transports](https://github.com/enmasseio/evejs/tree/master/docs/transports.md)
+- [Modules](https://github.com/enmasseio/evejs/tree/master/docs/modules.md)
+- [Protocols](https://github.com/enmasseio/evejs/tree/master/docs/protocols.md)
 
 
 ## Examples
