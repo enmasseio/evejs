@@ -38,7 +38,17 @@ describe('WebSocketTransport', function() {
     assert.strictEqual(transport.localShortcut, false);
   });
 
-  // TODO: should throw an error when config url does not contain a placeholder ':id'
+  it('should throw an error when configuring an invalid url', function () {
+    assert.throws(function () {
+      new WebSocketTransport({url: 'foo'});
+    }, /Error: Invalid protocol, "ws:" expected/);
+    assert.throws(function () {
+      new WebSocketTransport({url: 'http://foo.com'});
+    }, /Error: Invalid protocol, "ws:" expected/);
+    assert.throws(function () {
+      new WebSocketTransport({url: 'ws://foo.com'});
+    }, /Error: ":id" placeholder missing in url/);
+  });
 
   it('should send a message via localShortcut', function () {
     var transport = new WebSocketTransport({
