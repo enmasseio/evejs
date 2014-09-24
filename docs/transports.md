@@ -12,7 +12,9 @@ Evejs has the following built-in transports:
 
 ## AMQP
 
-To configure an AMQP transport: 
+[AMQP](http://www.amqp.org/) (Advanced Message Queuing Protocol) is an open standard application layer protocol for message-oriented middleware. The defining features of AMQP are message orientation, queuing, routing (including point-to-point and publish-and-subscribe), reliability and security.
+
+To configure an AMQP transport in evejs: 
 
 ```js
 eve.system.init({
@@ -40,6 +42,8 @@ Available properties:
 
 
 ## Distribus
+
+Distribus is a scalable, distributed message bus for node.js and the browser. One or multiple hosts are connected to each other in a peer-to-peer network. Peers can be connected to any of the hosts in the network, and then send messages to each other by their id.
 
 To configure a Distribus transport: 
 
@@ -71,6 +75,8 @@ Either `host` or `port` can be configured. If none is provided, a local distribu
 
 
 ## HTTP
+
+Sending HTTP requests  is a simple, robust, and scalable way to send messages between agents. The messages are received by a web server, and dispatched to the correct recipient. HTTP can be relatively slow (compared to for example [WebSocket](#websocket)) due to the network latency with every request.
 
 To use the HTTP transport with the Eve transport manager you define the type and its settings. 
 
@@ -107,6 +113,8 @@ Mandatory:
 
 #### Local
 
+The fastest and simplest transport is the local transport. There is a local map with registered recipients, and sent messages are immediately dispatched on the receive method of the recipient. This transport can only be used to send messages between agents running in the same process.
+
 To configure a local transport: 
 
 ```js
@@ -129,6 +137,8 @@ Available properties:
 
 
 ## PubNub
+
+[PubNub](http://www.pubnub.com) offers a scalable publish/subscribe network. 
 
 To configure a PubNub transport: 
 
@@ -160,6 +170,8 @@ A `publish_key` and `subscribe_key` can be acquired by creating an account at ht
 
 
 ## WebSocket
+
+The WebSocket transport allows to open a WebSocket connection between two individual agents. It's a fast but only usable for small amounts of agents, as only a limited amount of WebSockets can be opened at a time. Use [Distibus](#distribus) when WebSocket connection is needed dealing with lots of agents: Distribus opens a single WebSocket between each pair of processes, and sends the messages of all agents via this single socket.
 
 To configure a WebSocket transport: 
 
