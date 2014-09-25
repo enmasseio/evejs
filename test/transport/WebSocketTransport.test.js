@@ -243,7 +243,119 @@ describe('WebSocketTransport', function() {
 
   // TODO: test sending with and without trailing url when sending a message
 
-  // TODO: test auto reconnect (currently not yet implemented)
+  it('should auto-reconnect a broken websocket connection', function () {
+    var url1;
+    var url2;
+    var transport1;
+    var transport2;
+    var urlAgent1;
+    var urlAgent2;
+    var conn1;
+    var conn2;
+
+    return Promise.all([freeport(), freeport()])
+        .then(function (ports) {
+          url1 = 'ws://localhost:' + ports[0] + '/agents/:id';
+          url2 = 'ws://localhost:' + ports[1] + '/agents/:id';
+
+          urlAgent1 = url1.replace(':id', 'agent1');
+          urlAgent2 = url2.replace(':id', 'agent2');
+
+          transport1 = new WebSocketTransport({url: url1});
+          transport2 = new WebSocketTransport({url: url2, reconnectDelay: 500});
+
+          return Promise.all([transport1.ready, transport2.ready]);
+        })
+        .then(function () {
+          return new Promise(function (resolve, reject) {
+
+            // connect and send a message
+            conn1 = transport1.connect('agent1', function (from, message) {
+              assert.equal(from, urlAgent2);
+              assert.equal(message, 'hi there');
+
+              assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
+              assert.deepEqual(Object.keys(transport2.agents), [urlAgent2]);
+
+              resolve();
+            });
+            assert.equal(conn1.url, urlAgent1);
+
+            conn2 = transport2.connect('agent2', function (from, message) {});
+            assert.equal(conn2.url, urlAgent2);
+
+            Promise.all([conn1.ready, conn2.ready])
+                .then(function () {
+                  return conn2.send(urlAgent1, 'hi there');
+                });
+          })
+        })
+
+        .then(function () {
+          // close transport1
+          transport1.close();
+        })
+        .then(function () {
+          return new Promise(function (resolve, reject) {
+            // give the socket some time to really close
+            setTimeout(resolve, 100)
+          });
+        })
+        .then(function () {
+          assert.deepEqual(Object.keys(transport1.agents), []);
+          assert.deepEqual(Object.keys(transport2.agents), [urlAgent2]);
+
+          // sending a message should fail now
+          return conn2.send(urlAgent1, 'hi there')
+        })
+        .then(function() {
+          assert.ok(false, 'huh? Sending message should not succeed');
+        })
+        .catch(function (err) {
+          assert.equal(err.toString(), 'Error: Failed to connect to agent "' + urlAgent1 + '"')
+        })
+
+        // create transport1 again
+        .then(function () {
+          transport1 = new WebSocketTransport({url: url1});
+
+          return transport1.ready;
+        })
+        .then(function () {
+          return new Promise(function (resolve, reject) {
+            // connect and send a message
+            conn1 = transport1.connect('agent1', function (from, message) {
+              assert.equal(from, urlAgent2);
+              assert.equal(message, 'hello');
+
+              assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
+              assert.deepEqual(Object.keys(transport2.agents), [urlAgent2]);
+
+              resolve();
+            });
+            assert.equal(conn1.url, urlAgent1);
+
+            conn1.ready.then(function () {
+              return conn2.send(urlAgent1, 'hello');
+            })
+          });
+        })
+
+        // close down everything
+        .then(function () {
+          transport1.close();
+          transport2.close();
+
+          return new Promise(function (resolve, reject) {
+            // give the socket some time to really close
+            setTimeout(resolve, 100)
+          });
+        })
+        .then(function () {
+          assert.deepEqual(Object.keys(transport1.agents), []);
+          assert.deepEqual(Object.keys(transport2.agents), []);
+        });
+  });
 
   // TODO: test error handling
 

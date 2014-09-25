@@ -3,6 +3,7 @@
 
 ## not yet released, version 0.4.3
 
+- Implemented auto-reconnect for WebSockets.
 - Fixed the `babble` module always sending messages via it's own internal
   messagebus instead of the agents send/receive function.
 - WebSocketTransport accepts any id.
