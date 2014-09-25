@@ -3,6 +3,9 @@
 
 ## not yet released, version 0.4.3
 
+- Fixed the `babble` module always sending messages via it's own internal
+  messagebus instead of the agents send/receive function.
+
 
 ## 2014-10-23, version 0.4.2
 
