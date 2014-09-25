@@ -306,6 +306,19 @@ describe('Agent', function() {
           });
     });
 
+    it('should throw an error when sending a message without transport configured', function () {
+      var agent1 = new Agent('agent1');
+
+      // send messages to agents connected via a different transport
+      return agent1.send('agent2', 'hello')
+          .then(function () {
+            assert.ok(false, 'should not succeed')
+          })
+          .catch(function (err) {
+            assert.equal(err.toString(), 'Error: No transport found');
+          })
+    });
+
   });
 
   // TODO: test loadModule
