@@ -17,14 +17,16 @@ exports.transport = {
   AMQPTransport:      require('./lib/transport/amqp/AMQPTransport'),
   DistribusTransport: require('./lib/transport/distribus/DistribusTransport'),
   HTTPTransport:      require('./lib/transport/http/HTTPTransport'),
-  
+  WebSocketTransport: require('./lib/transport/websocket/WebSocketTransport'),
+
   connection: {
     Connection:          require('./lib/transport/Connection'),
     LocalConnection:     require('./lib/transport/local/LocalConnection'),
     PubNubConnection:    require('./lib/transport/pubnub/PubNubConnection'),
     AMQPConnection:      require('./lib/transport/amqp/AMQPConnection'),
     DistribusConnection: require('./lib/transport/distribus/DistribusConnection'),
-    HTTPConnection:      require('./lib/transport/http/HTTPConnection')
+    HTTPConnection:      require('./lib/transport/http/HTTPConnection'),
+    WebSocketConnection: require('./lib/transport/websocket/WebSocketConnection')
   }
 };
 

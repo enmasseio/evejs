@@ -230,7 +230,8 @@ describe('WebSocketTransport', function() {
 
               resolve();
             });
-            assert.ok(util.isUUID(conn2.url));
+            //assert.ok(util.isUUID(conn2.url));
+            assert.equal(conn2.url, 'agent2');
 
             Promise.all([conn1.ready, conn2.ready])
                 .then(function () {
