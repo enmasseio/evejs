@@ -1,7 +1,6 @@
 var assert = require('assert');
 var Promise = require('promise');
 var Agent = require('../lib/Agent');
-var system = require('../lib/system');
 var TransportManager = require('../lib/TransportManager');
 var LocalTransport = require('../lib/transport/local/LocalTransport');
 var DistribusTransport = require('../lib/transport/distribus/DistribusTransport');
@@ -79,19 +78,13 @@ describe('Agent', function() {
     it('should connect to a transport by id', function () {
       var agent1 = new Agent('agent1');
 
-      system.init({
-        transports: [
-          {
-            id: 't1',
-            type: 'local'
-          },
-          {
-            id: 't2',
-            type: 'distribus'
-          }
-        ]
-      });
-      assert.equal(system.transports.transports.length, 2);
+      var transports = {
+        t1: new LocalTransport({id: 't1'}),
+        t2: new DistribusTransport({id: 't2'})
+      };
+      Agent.getTransportById = function (id) {
+        return transports[id];
+      };
 
       var conn = agent1.connect('t1');
       assert.equal(conn.transport.id, 't1');
@@ -101,19 +94,13 @@ describe('Agent', function() {
       var agent1 = new Agent('agent1');
       var agent2 = new Agent('agent2');
 
-      system.init({
-        transports: [
-          {
-            id: 't1',
-            type: 'local'
-          },
-          {
-            id: 't2',
-            type: 'distribus'
-          }
-        ]
-      });
-      assert.equal(system.transports.transports.length, 2);
+      var transports = {
+        t1: new LocalTransport({id: 't1'}),
+        t2: new DistribusTransport({id: 't2'})
+      };
+      Agent.getTransportById = function (id) {
+        return transports[id];
+      };
 
       var conn = agent1.connect('t1');
       assert.equal(conn.transport.id, 't1');

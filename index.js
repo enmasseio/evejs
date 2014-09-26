@@ -1,9 +1,6 @@
 exports.Agent = require('./lib/Agent');
-
 exports.ServiceManager = require('./lib/ServiceManager');
 exports.TransportManager = require('./lib/TransportManager');
-
-exports.hypertimer = require('hypertimer');
 
 exports.module = {
   BabbleModule: require('./lib/module/BabbleModule'),
@@ -12,15 +9,8 @@ exports.module = {
   RPCModule: require('./lib/module/RPCModule')
 };
 
-// register all modules at the Agent
-exports.Agent.registerModule(exports.module.BabbleModule);
-exports.Agent.registerModule(exports.module.PatternModule);
-exports.Agent.registerModule(exports.module.RequestModule);
-exports.Agent.registerModule(exports.module.RPCModule);
-
 exports.transport = {
   Transport:          require('./lib/transport/Transport'),
-
   AMQPTransport:      require('./lib/transport/amqp/AMQPTransport'),
   DistribusTransport: require('./lib/transport/distribus/DistribusTransport'),
   HTTPTransport:      require('./lib/transport/http/HTTPTransport'),
@@ -30,7 +20,6 @@ exports.transport = {
 
   connection: {
     Connection:          require('./lib/transport/Connection'),
-
     AMQPConnection:      require('./lib/transport/amqp/AMQPConnection'),
     DistribusConnection: require('./lib/transport/distribus/DistribusConnection'),
     HTTPConnection:      require('./lib/transport/http/HTTPConnection'),
@@ -40,6 +29,15 @@ exports.transport = {
   }
 };
 
+exports.hypertimer = require('hypertimer');
+exports.util = require('./lib/util');
+
+// register all modules at the Agent
+exports.Agent.registerModule(exports.module.BabbleModule);
+exports.Agent.registerModule(exports.module.PatternModule);
+exports.Agent.registerModule(exports.module.RequestModule);
+exports.Agent.registerModule(exports.module.RPCModule);
+
 // register all transports at the TransportManager
 exports.TransportManager.registerType(exports.transport.AMQPTransport);
 exports.TransportManager.registerType(exports.transport.DistribusTransport);
@@ -48,6 +46,9 @@ exports.TransportManager.registerType(exports.transport.LocalTransport);
 exports.TransportManager.registerType(exports.transport.PubNubTransport);
 exports.TransportManager.registerType(exports.transport.WebSocketTransport);
 
-exports.system = require('./lib/system');
-
-exports.util = require('./lib/util');
+// load the default ServiceManager, a singleton, initialized with a LocalTransport
+exports.system = new exports.ServiceManager();
+exports.system.transports.add(new exports.transport.LocalTransport());
+exports.Agent.getTransportById = function (id) {
+  return exports.system.transports.get(id);
+};
