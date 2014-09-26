@@ -208,3 +208,7 @@ Available properties:
   Optional. If true, messages to local agents are not send via WebSocket but 
   delivered immediately. Setting `localShortcut` to `false` can be useful for
   debugging and testing purposes.
+- `reconnectDelay: boolean`  
+  Optional. Delay in milliseconds for reconnecting a broken connection. 
+  10000 ms by default. Connections are only automatically reconnected after 
+  there has been an established connection.
