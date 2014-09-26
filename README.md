@@ -143,6 +143,31 @@ Examples are available in the examples folder:
 [https://github.com/enmasseio/evejs/tree/master/examples](https://github.com/enmasseio/evejs/tree/master/examples)
 
 
+## Build
+
+To create a bundled file of `evejs` for use in the browser, use [browserify](http://browserify.org/):
+
+    browserify index.js -o eve.js -s eve
+
+This will generate a file *eve.js* which can be loaded into the browser. This bundle contains all supported modules, transports, and services.
+
+
+## Custom builds
+
+To create a custom bundle containing only the needed modules and transports, create a copy of *index.js* named *custom.js*, and strip all redundant dependencies for it. The most minimalistic version only includes `Agent` and `LocalTransport` and could look like:
+
+```js
+exports.Agent = require('./lib/Agent');
+exports.transport: {
+  LocalTransport: require('./lib/transport/local/LocalTransport')
+}
+```
+
+Create a bundle using [browerify](http://browserify.org/):
+
+    browserify custom.js -o eve.custom.js -s eve
+
+
 ## Test
 
 To test `evejs`, install the project dependencies once:

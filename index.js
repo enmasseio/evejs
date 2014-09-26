@@ -49,6 +49,8 @@ exports.TransportManager.registerType(exports.transport.WebSocketTransport);
 // load the default ServiceManager, a singleton, initialized with a LocalTransport
 exports.system = new exports.ServiceManager();
 exports.system.transports.add(new exports.transport.LocalTransport());
+
+// override Agent.getTransportById in order to support Agent.connect(transportId)
 exports.Agent.getTransportById = function (id) {
   return exports.system.transports.get(id);
 };
