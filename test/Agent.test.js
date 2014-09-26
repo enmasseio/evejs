@@ -2,9 +2,14 @@ var assert = require('assert');
 var Promise = require('promise');
 var Agent = require('../lib/Agent');
 var system = require('../lib/system');
+var TransportManager = require('../lib/TransportManager');
 var LocalTransport = require('../lib/transport/local/LocalTransport');
 var DistribusTransport = require('../lib/transport/distribus/DistribusTransport');
 var WebSocketTransport = require('../lib/transport/websocket/WebSocketTransport');
+
+TransportManager.registerType(LocalTransport);
+TransportManager.registerType(DistribusTransport);
+TransportManager.registerType(WebSocketTransport);
 
 /**
  * Get a free local port

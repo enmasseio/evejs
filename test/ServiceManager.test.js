@@ -1,6 +1,8 @@
 var assert = require('assert');
 var ServiceManager = require('../lib/ServiceManager');
 var TransportManager = require('../lib/TransportManager');
+var LocalTransport = require('../lib/transport/local/LocalTransport');
+TransportManager.registerType(LocalTransport);
 
 describe('ServiceManager', function() {
 

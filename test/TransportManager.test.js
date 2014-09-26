@@ -1,29 +1,41 @@
 var assert = require('assert');
 var TransportManager = require('../lib/TransportManager');
 var Transport = require('../lib/transport/Transport');
-var LocalTransport = require('../lib/transport/local/LocalTransport');
+
+// load and register all transports
+var AMQPTransport = require('../lib/transport/amqp/AMQPTransport');
 var DistribusTransport = require('../lib/transport/distribus/DistribusTransport');
+var LocalTransport = require('../lib/transport/local/LocalTransport');
+var PubNubTransport = require('../lib/transport/pubnub/PubNubTransport');
+var HTTPTransport = require('../lib/transport/http/HTTPTransport');
+var WebSocketTransport = require('../lib/transport/websocket/WebSocketTransport');
+
+TransportManager.registerType(AMQPTransport);
+TransportManager.registerType(DistribusTransport);
+TransportManager.registerType(LocalTransport);
+TransportManager.registerType(HTTPTransport);
+TransportManager.registerType(PubNubTransport);
+TransportManager.registerType(WebSocketTransport);
+
 
 describe('TransportManager', function() {
 
   it('should create a transport manager', function () {
     var manager = new TransportManager();
 
-    assert.deepEqual(Object.keys(manager.types).sort(), ['amqp', 'distribus', 'http', 'local', 'pubnub', 'ws']);
+    assert.deepEqual(Object.keys(TransportManager.types).sort(), ['amqp', 'distribus', 'http', 'local', 'pubnub', 'ws']);
     assert.equal(manager.transports.length, 0);
   });
 
   it('should register a new transport type', function () {
-    var manager = new TransportManager();
-
     function TestTransport () {}
 
     TestTransport.prototype = new Transport();
     TestTransport.prototype.type = 'test';
 
-    manager.registerType(TestTransport);
+    TransportManager.registerType(TestTransport);
 
-    assert.deepEqual(Object.keys(manager.types).sort(), ['amqp', 'distribus', 'http', 'local', 'pubnub', 'test', 'ws'])
+    assert.deepEqual(Object.keys(TransportManager.types).sort(), ['amqp', 'distribus', 'http', 'local', 'pubnub', 'test', 'ws'])
   });
 
   it('should throw an error when registering an already existing transport type', function () {
@@ -37,7 +49,7 @@ describe('TransportManager', function() {
     TestTransport.prototype.type = 'local';
 
     assert.throws(function () {
-      manager.registerType(TestTransport);
+      TransportManager.registerType(TestTransport);
     }, /already exists/);
   });
 

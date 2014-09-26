@@ -10,6 +10,7 @@ The `evejs` library contains the following:
 - `eve.module.BabbleModule`
 - `eve.module.PatternModule`
 - `eve.module.RequestModule`
+- `eve.module.RPCModule`
 - [`eve.transport.Transport`](#transport) (abstract prototype)
 - `eve.transport.AMQPTransport` using the [AMPQ](http://www.amqp.org/) protocol,
   for example via [RabbitMQ](https://www.rabbitmq.com/) servers.
@@ -191,10 +192,13 @@ Methods:
   Available types are: 'amqp',  'distribus', 'local', 'pubnub'.
 - `load(config: Object) : Transport`  
   Load a transport based on JSON configuration. Returns the loaded transport
-- `registerType(constructor: Function)`
-  Register a new type of transport. This transport can then be loaded via
-  configuration. When called, the constructor must generate a transport which
-  is an instance of `Transport`.
+
+Static methods:
+
+- `TransportManager.registerType(constructor: Function)`
+  A static function to register a new type of transport. This transport can then 
+  be loaded via configuration. When called, the constructor must generate a 
+  transport which is an instance of `Transport`.
 
 
 ## Transport
