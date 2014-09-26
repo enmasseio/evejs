@@ -1,5 +1,7 @@
 var assert = require('assert');
 var Agent = require('../../lib/Agent');
+var PatternModule = require('../../lib/module/PatternModule');
+Agent.registerModule(PatternModule);
 
 describe ('Pattern', function () {
 

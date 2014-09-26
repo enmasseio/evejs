@@ -31,12 +31,6 @@ describe('util', function() {
     assert.deepEqual(util.parseUrl('a://b/c'),                      {protocol: 'a', domain: 'b', path: 'c'});
   });
 
-  it ('should check whether a string is a UUID', function () {
-    assert.equal(util.isUUID('5348bf37-c86e-4fb2-9ed7-67e829031490'), true);
-    assert.equal(util.isUUID('5348bf37-c86e-4fb2-9ed7-67e8290314'), false)
-    assert.equal(util.isUUID('foo'), false)
-  });
-
   it ('should normalize an url', function () {
     assert.equal(util.normalizeURL('http://foo.com/bar'), 'http://foo.com/bar');
     assert.equal(util.normalizeURL('http://foo.com/bar/'), 'http://foo.com/bar');

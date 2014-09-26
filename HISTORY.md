@@ -1,6 +1,11 @@
 # history
 
 
+## not yet released, version 0.4.4
+
+- Implemented `Agent.registerModule`.
+
+
 ## 2014-09-26, version 0.4.3
 
 - Implemented auto-reconnect for WebSockets.

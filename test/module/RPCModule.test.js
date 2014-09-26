@@ -1,6 +1,8 @@
 var assert = require('assert');
 var LocalTransport = require('../../lib/transport/local/LocalTransport');
 var Agent = require('../../lib/Agent');
+var RPCModule = require('../../lib/module/RPCModule');
+Agent.registerModule(RPCModule);
 
 describe ('RPC', function () {
   var agent1;

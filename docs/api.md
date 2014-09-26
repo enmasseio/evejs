@@ -96,6 +96,12 @@ Methods:
   `transport` is not provided, the agent will be disconnected from all 
   transports.
 
+Static methods:
+
+- `Agent.registerModule(constructor: Function)`
+  A static function to register a new type of module. This module can then 
+  be loaded via `Agent.extend()` and `Agent.loadModule()`.
+
 
 ## ServiceManager
 

@@ -12,6 +12,12 @@ exports.module = {
   RPCModule: require('./lib/module/RPCModule')
 };
 
+// register all modules at the Agent
+exports.Agent.registerModule(exports.module.BabbleModule);
+exports.Agent.registerModule(exports.module.PatternModule);
+exports.Agent.registerModule(exports.module.RequestModule);
+exports.Agent.registerModule(exports.module.RPCModule);
+
 exports.transport = {
   Transport:          require('./lib/transport/Transport'),
 

@@ -2,6 +2,8 @@ var assert = require('assert');
 var Promise = require('promise');
 var Agent = require('../../lib/Agent');
 var LocalTransport = require('../../lib/transport/local/LocalTransport');
+var RequestModule = require('../../lib/module/RequestModule');
+Agent.registerModule(RequestModule);
 
 describe ('Request', function () {
 
