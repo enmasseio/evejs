@@ -4,6 +4,7 @@
 ## not yet released, version 0.4.4
 
 - Implemented `Agent.registerModule`.
+- Better modular structure, support for custom builds.
 
 
 ## 2014-09-26, version 0.4.3
