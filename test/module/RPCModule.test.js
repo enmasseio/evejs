@@ -1,5 +1,6 @@
 var assert = require('assert');
 var LocalTransport = require('../../lib/transport/local/LocalTransport');
+var Promise = require('promise');
 var Agent = require('../../lib/Agent');
 var RPCModule = require('../../lib/module/RPCModule');
 Agent.registerModule(RPCModule);
@@ -26,6 +27,26 @@ describe ('RPC', function () {
       assert.equal(from, sender);
       assert.deepEqual(params, checkParams);
       return params.a + params.b;
+    };
+
+    agent1.rpcFunctions.addPromise = function (params, from) {
+      return new Promise(function (resolve,reject) {
+        resolve(params.a + params.b);
+      });
+    };
+    agent1.rpcFunctions.addPromiseErr = function (params, from) {
+      return new Promise(function (resolve,reject) {
+        reject("Cannot compute something that easy!");
+      });
+    };
+
+    agent1.rpcFunctions.throwError = function (params, from) {
+      throw new Error("help")
+    };
+
+    agent1.rpcFunctions.shouldGiveError = function (params, from) {
+      var a = abc + def; // UNDEFINED VARIABLES!
+      return a;
     };
     agent1.rpcFunctions.nothing = function () {}; // does not return anything
     agent1.extend("rpc", agent1.rpcFunctions);
@@ -103,6 +124,52 @@ describe ('RPC', function () {
         .catch(function (err) {
           assert.equal(err.toString(), "TypeError: Message must be an object")
         })
+  });
+
+  it('should understand a promise as reply', function () {
+    return agent2.request("agent1",{method:"addPromise",params:{a:1,b:3}})
+      .then(function (reply) {
+        assert.equal(reply, 4);
+      })
+  });
+
+  it('should catch an error when promise as reply and is rejected', function () {
+    return agent2.request("agent1",{method:"addPromiseErr",params:{a:1,b:3}})
+      .catch(function (err) {
+        assert.equal(err, "Error: Cannot compute something that easy!");
+      })
+  });
+
+  it('should propagate error and catch', function () {
+    return agent2.request("agent1",{method:"throwError",params:{a:1,b:3}})
+      .catch(function (err) {
+        assert.equal(err, "Error: help");
+      })
+  });
+
+  it('should give error', function () {
+    return agent2.request("agent1",{method:"shouldGiveError",params:{a:1,b:3}})
+      .then(function (reply) {
+        console.log('REPLY',reply);
+      })
+      .catch(function (err) {
+        assert.equal(err, "ReferenceError: abc is not defined");
+      })
+  });
+
+  it('should give error', function () {
+    //does not crash
+    agent2.request("agent1",{method:"shouldGiveError",params:{a:1,b:3}}).catch(function(err) {
+      console.log("error without return")
+      throw new Error(err);
+    });
+
+
+    // does crash
+    return agent2.request("agent1",{method:"shouldGiveError",params:{a:1,b:3}}).catch(function(err) {
+      console.log("error with return")
+      throw new Error(err);
+    });
   });
 
   // TODO: test whether the response has the same id as the request.
