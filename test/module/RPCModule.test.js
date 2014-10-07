@@ -94,6 +94,13 @@ describe ('RPC', function () {
         })
   });
 
+  it('should catch agent not found', function () {
+    return agent2.request("agent30",{method:"foo",params:{a:1,b:3}})
+      .catch(function (err) {
+        assert.equal(err, "Error: Agent with id agent30 not found")
+      })
+  });
+
   it('should catch method not found', function () {
     return agent2.request("agent1",{method:"foo",params:{a:1,b:3}})
         .catch(function (err) {
@@ -133,6 +140,14 @@ describe ('RPC', function () {
       })
   });
 
+  it('should be possible to interchange then and done', function () {
+    return agent2.request("agent1",{method:"add",params:{a:1,b:3}})
+      .done(function (reply) {
+        assert.equal(reply, 4);
+      })
+  });
+
+
   it('should catch an error when promise as reply and is rejected', function () {
     return agent2.request("agent1",{method:"addPromiseErr",params:{a:1,b:3}})
       .catch(function (err) {
@@ -147,7 +162,7 @@ describe ('RPC', function () {
       })
   });
 
-  it('should give error', function () {
+  it('should give error and catch', function () {
     return agent2.request("agent1",{method:"shouldGiveError",params:{a:1,b:3}})
       .then(function (reply) {
         console.log('REPLY',reply);
@@ -157,19 +172,14 @@ describe ('RPC', function () {
       })
   });
 
-  it('should give error', function () {
-    //does not crash
-    agent2.request("agent1",{method:"shouldGiveError",params:{a:1,b:3}}).catch(function(err) {
-      console.log("error without return")
-      throw new Error(err);
-    });
-
-
-    // does crash
-    return agent2.request("agent1",{method:"shouldGiveError",params:{a:1,b:3}}).catch(function(err) {
-      console.log("error with return")
-      throw new Error(err);
-    });
+  it('should give error and catch', function () {
+    return agent2.request("agent1",{method:"shouldGiveError",params:{a:1,b:3}})
+      .then(function (reply) {
+        console.log('REPLY',reply);
+      })
+      .catch(function (err) {
+        assert.equal(err, "ReferenceError: abc is not defined");
+      })
   });
 
   // TODO: test whether the response has the same id as the request.
