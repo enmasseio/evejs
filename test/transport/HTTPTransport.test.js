@@ -11,7 +11,6 @@ describe('HTTPTransport', function() {
   var agent2;
   var agent3;
   var agent4;
-  var agent5;
   var agent6;
   var transport;
 
@@ -148,7 +147,7 @@ describe('HTTPTransport', function() {
       });
   });
 
-  // TODO request does not propagate errors in sending
+  // TODO request does not propagate errors in sending, check other modules as well
   it.skip('Request - should not be able to deliver this message and catch error', function () {
     transport.httpTimeout = 1000; // 1000 ms to deliver;
     transport.httpResponseTimeout = 200; // 500 ms to respond;
@@ -159,28 +158,6 @@ describe('HTTPTransport', function() {
       });
   });
 
-  // TODO request does not propagate errors in sending
-  it.skip('Request - should catch an error that the agent took too long', function () {
-    transport.httpResponseTimeout = 200; // 200 ms to respond;
-    return agent3.request('http://127.0.0.1:3000/agents/agent4', 'long delay test')
-      .catch(function(err){
-        console.log('got error');
-        assert.equal(err, 'Error: Agent took too long to reply.')
-      });
-  });
-
-
-  // TODO: is this preferable? Maybe not thow error if its not the same line
-  it('RPC - should catch an error that the agent took too long', function () {
-    transport.httpResponseTimeout = 200; // 200 ms to respond;
-    return agent5.rpc.request('http://127.0.0.1:3000/agents/agent6', {method:'add', params:{a:1,b:2}})
-      .catch(function(err){
-        console.log("got error")
-        assert.equal(err, 'Error: Agent took too long to reply.')
-      });
-  });
-
-  // TODO: is this preferable?
   it('RPC - should not be able to deliver this message and catch error', function () {
     transport.httpResponseTimeout = 200; // 200 ms to respond;
     return agent5.rpc.request('http://8.8.8.8:8000/agents/agent6', {method:'add', params:{a:1,b:2}})
