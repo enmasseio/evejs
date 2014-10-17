@@ -11,6 +11,7 @@ describe('HTTPTransport', function() {
   var agent2;
   var agent3;
   var agent4;
+  var agent5;
   var agent6;
   var transport;
 
@@ -31,6 +32,7 @@ describe('HTTPTransport', function() {
     agent4.connect(transport);
     agent5.connect(transport);
     agent6.connect(transport);
+
     agent2.receive = function (from, message) {
       assert.equal(from, 'http://127.0.0.1:3000/agents/agent1');
       if (message == "reply to me!") {
@@ -148,10 +150,11 @@ describe('HTTPTransport', function() {
   });
 
   // TODO request does not propagate errors in sending, check other modules as well
-  it.skip('Request - should not be able to deliver this message and catch error', function () {
+  it('Request - should not be able to deliver this message and catch error', function () {
     transport.httpTimeout = 1000; // 1000 ms to deliver;
     transport.httpResponseTimeout = 200; // 500 ms to respond;
     return agent3.request('http://8.8.8.8:8000/agents/agent4', 'long delay test')
+      .then( function (rep) {assert.ok(false,'test');})
       .catch(function(err){
         console.log('got error');
         assert.equal(err,'Error: Cannot connect to http://8.8.8.8:8000/agents/agent4');
@@ -159,15 +162,10 @@ describe('HTTPTransport', function() {
   });
 
   it('RPC - should not be able to deliver this message and catch error', function () {
-    transport.httpResponseTimeout = 200; // 200 ms to respond;
-    return agent5.rpc.request('http://8.8.8.8:8000/agents/agent6', {method:'add', params:{a:1,b:2}})
+    return agent5.rpc.request('http://8.8.8.8:8000/agents/agent6', {method: 'add', params: {a: 1, b: 2}})
       .catch(function(err){
         console.log("got error")
         assert.equal(err,'Error: Cannot connect to http://8.8.8.8:8000/agents/agent6');
       });
   });
-
-
-
-  // TODO: test HTTPTransport
 });

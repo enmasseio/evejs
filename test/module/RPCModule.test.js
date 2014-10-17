@@ -174,12 +174,10 @@ describe ('RPC', function () {
 
   it('should give error and catch', function () {
     return agent2.request("agent1",{method:"shouldGiveError",params:{a:1,b:3}})
-      .then(function (reply) {
-        console.log('REPLY',reply);
-      })
       .catch(function (err) {
         assert.equal(err, "ReferenceError: abc is not defined");
       })
+    //agent2.request("agent1",{method:"shouldGiveError",params:{a:1,b:3}}).done() crashes, which is good
   });
 
   // TODO: test whether the response has the same id as the request.
