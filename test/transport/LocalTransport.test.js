@@ -1,5 +1,6 @@
 var assert = require('assert');
 var LocalTransport = require('../../lib/transport/local/LocalTransport');
+var Promise = require('promise');
 
 describe('LocalTransport', function() {
 
@@ -30,8 +31,9 @@ describe('LocalTransport', function() {
     var conn2 = transport.connect('agent2', function (from, message) {
     });
 
-    conn2.send('agent1', 'hi there');
+    var res = conn2.send('agent1', 'hi there');
     assert.equal(count, 1);
+    assert(res instanceof Promise); // send should return a promise
 
     // disconnect
     conn1.close();

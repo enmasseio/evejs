@@ -44,8 +44,9 @@ Properties:
 
 Methods:
 
-- `Agent.send(to: string, message: string)`  
-  Send a message to an other agent. Parameter `to` is either:
+- `Agent.send(to: string, message: string) : Promise`  
+  Send a message to an other agent. Returns a promise which resolves when the
+  message has been send. Parameter `to` is either:
   
   - A string "agentId", the id of the recipient. Will be send
     via the default transport or when there is no default
@@ -254,5 +255,5 @@ Methods:
 
 - `Transport.close()`  
   Close the connection.
-- `Transport.send(to: string, message: string)`  
+- `Transport.send(to: string, message: string) : Promise`  
   Send a message via the transport.

@@ -109,7 +109,7 @@ describe('HTTPTransport', function() {
   it('should get error that agent is not found', function () {
     return agent1.send("http://127.0.0.1:3000/agents/agent30", "hello")
       .catch(function(err){
-        console.log('got error')
+        //console.log('got error')
         assert.equal(err, 'Error: Agent: "agent30" does not exist.')
       });
   });
@@ -156,7 +156,7 @@ describe('HTTPTransport', function() {
     return agent3.request('http://8.8.8.8:8000/agents/agent4', 'long delay test')
       .then( function (rep) {assert.ok(false,'test');})
       .catch(function(err){
-        console.log('got error');
+        //console.log('got error');
         assert.equal(err,'Error: Cannot connect to http://8.8.8.8:8000/agents/agent4');
       });
   });
@@ -164,7 +164,7 @@ describe('HTTPTransport', function() {
   it('RPC - should not be able to deliver this message and catch error', function () {
     return agent5.rpc.request('http://8.8.8.8:8000/agents/agent6', {method: 'add', params: {a: 1, b: 2}})
       .catch(function(err){
-        console.log("got error")
+        //console.log("got error")
         assert.equal(err,'Error: Cannot connect to http://8.8.8.8:8000/agents/agent6');
       });
   });

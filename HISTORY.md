@@ -5,6 +5,7 @@
 
 - Implemented `Agent.registerModule`.
 - Better modular structure, support for custom builds.
+- All `.send` methods now return a Promise.
 
 
 ## 2014-09-26, version 0.4.3

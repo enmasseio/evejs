@@ -3,7 +3,9 @@ var Promise = require('promise');
 var Agent = require('../../lib/Agent');
 var LocalTransport = require('../../lib/transport/local/LocalTransport');
 var RequestModule = require('../../lib/module/RequestModule');
+var PatternModule = require('../../lib/module/PatternModule');
 Agent.registerModule(RequestModule);
+Agent.registerModule(PatternModule);
 
 describe ('Request', function () {
 
