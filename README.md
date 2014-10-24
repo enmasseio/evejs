@@ -1,6 +1,10 @@
 # evejs
 
-Simple message based agents. This is the JavaScript version of [Eve](http://eve.almende.com), the web based agent platform.
+Eve is a multipurpose, web-based agent platform. Eve envisions to be an open and dynamic environment where agents can live and act anywhere: in the cloud, on smartphones, on desktops, in browsers, robots, home automation devices, and others. The agents communicate with each other using simple, existing protocols (JSON-RPC) over existing transport layers (HTTP, AMQP, WebSockets, etc.), offering a language and platform agnostic solution.
+
+Currently there are two main implementations of Eve: one in Java and one in JavaScript. This is the JavaScript version of Eve (evejs), running in node.js and on the browser. More on the general concepts and about other implementations can be found on the official website: http://eve.almene.com.
+
+Eve is being developed by [Almende B.V.](http://www.almende.com), a Dutch research company specialized in information and communication technologies. Central to Almende's research is the concept of self-organization. Almende believes that computer systems and technology should support people in performing their professional tasks and organizing their daily lives. This means that ICT should learn to work for and with people, according to their individual wishes and demands.
 
 
 ## Install
