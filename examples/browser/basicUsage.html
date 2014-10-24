@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>evejs - basic usage</title>
+  <script src="../../dist/eve.js"></script>
+</head>
+<body>
+<script>
+  /**
+   * Custom agent prototype
+   * @param {String} id
+   * @constructor
+   * @extend eve.Agent
+   */
+  function HelloAgent(id) {
+    // execute super constructor
+    eve.Agent.call(this, id);
+
+    // connect to all transports configured by the system
+    this.connect(eve.system.transports.getAll());
+  }
+
+  // extend the eve.Agent prototype
+  HelloAgent.prototype = Object.create(eve.Agent.prototype);
+  HelloAgent.prototype.constructor = HelloAgent;
+
+  /**
+   * Send a greeting to an agent
+   * @param {String} to
+   */
+  HelloAgent.prototype.sayHello = function(to) {
+    this.send(to, 'Hello ' + to + '!');
+  };
+
+  /**
+   * Handle incoming greetings. This overloads the default receive,
+   * so we can't use HelloAgent.on(pattern, listener) anymore
+   * @param {String} from     Id of the sender
+   * @param {*} message       Received message, a JSON object (often a string)
+   */
+  HelloAgent.prototype.receive = function(from, message) {
+    document.write(from + ' said: ' + JSON.stringify(message) + '<br>');
+
+    if (message.indexOf('Hello') === 0) {
+      // reply to the greeting
+      this.send(from, 'Hi ' + from + ', nice to meet you!');
+    }
+  };
+
+  // create two agents
+  var agent1 = new HelloAgent('agent1');
+  var agent2 = new HelloAgent('agent2');
+
+  // send a message to agent1
+  agent2.send('agent1', 'Hello agent1!');
+
+</script>
+</body>
+</html>

@@ -2,9 +2,17 @@
 
 Eve is a multipurpose, web-based agent platform. Eve envisions to be an open and dynamic environment where agents can live and act anywhere: in the cloud, on smartphones, on desktops, in browsers, robots, home automation devices, and others. The agents communicate with each other using simple, existing protocols (JSON-RPC) over existing transport layers (HTTP, AMQP, WebSockets, etc.), offering a language and platform agnostic solution.
 
+Eve is being developed by [Almende B.V.](http://www.almende.com), a Dutch research company specialized in information and communication technologies. Central to Almende's research is the concept of self-organization. Almende believes that computer systems and technology should support people in performing their professional tasks and organizing their daily lives. This means that ICT should learn to work for and with people, according to their individual wishes and demands.
+
 Currently there are two main implementations of Eve: one in Java and one in JavaScript. This is the JavaScript version of Eve (evejs), running in node.js and on the browser. More on the general concepts and about other implementations can be found on the official website: http://eve.almene.com.
 
-Eve is being developed by [Almende B.V.](http://www.almende.com), a Dutch research company specialized in information and communication technologies. Central to Almende's research is the concept of self-organization. Almende believes that computer systems and technology should support people in performing their professional tasks and organizing their daily lives. This means that ICT should learn to work for and with people, according to their individual wishes and demands.
+The `evejs` library features:
+
+- A simple, message based `Agent` class.
+- Extension modules offering powerful communication patterns: Babble, Pattern, Request, and RPC.
+- Support for many communication transports: AMQP, Distibus, HTTP, Local, PubNub, and WebSocket.
+- Simulation tooling: discrete event simulation and deterministic random number generation.
+- Extensive documentation and examples.
 
 
 ## Install
@@ -13,6 +21,31 @@ Install the module via npm:
 
     npm install evejs
 
+## Load
+
+Load `evejs` in a node.js application:
+
+```js
+var eve = require('evejs');
+
+// ... use eve ...
+```
+
+Load `evejs` in the browser:
+
+```html
+<!DOCTYPE HTML>
+<html>
+<head>
+  <script src="./dist/eve.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+  // ... use eve ...
+  </script>
+</body>
+</html>
+```
 
 ## Use
 

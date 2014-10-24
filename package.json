@@ -1,6 +1,6 @@
 {
   "name": "evejs",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Simple message based agents.",
   "author": "Jos de Jong <wjosdejong@gmail.com> (https://github.com/josdejong)",
   "keywords": [
@@ -27,7 +27,11 @@
   },
   "devDependencies": {
     "freeport": "^1.0.3",
-    "mocha": "latest"
+    "gulp": "^3.8.9",
+    "gulp-util": "^3.0.1",
+    "mocha": "latest",
+    "uglify-js": "^2.4.15",
+    "webpack": "^1.4.8"
   },
   "scripts": {
     "test": "mocha test --recursive --reporter spec"
