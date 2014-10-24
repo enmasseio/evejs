@@ -34,6 +34,9 @@
     "webpack": "^1.4.8"
   },
   "scripts": {
+    "build": "gulp",
+    "watch": "gulp watch",
+    "watch-bundle": "gulp watch-bundle",
     "test": "mocha test --recursive --reporter spec"
   },
   "main": "./index.js"

@@ -22,6 +22,8 @@ var webpackConfig = {
     filename: FILE
   },
   externals: [
+    // TODO: exclude all non-relevant libraries from the browser bundle
+    'amqp'
   ],
   cache: true
 };
@@ -37,6 +39,7 @@ var uglifyConfig = {
 var compiler = webpack(webpackConfig);
 
 gulp.task('bundle', function (cb) {
+  // TODO: add a header (banner) on top of the file
   compiler.run(function (err, stats) {
     if (err) {
       gutil.log(err);
@@ -61,7 +64,12 @@ gulp.task('minify', ['bundle'], function () {
 // The default task (called when you run `gulp`)
 gulp.task('default', ['bundle', 'minify']);
 
-// The watch task (to automatically rebuild when the source code changes)
+// Watch task to automatically bundle and minify on change of code
 gulp.task('watch', ['bundle', 'minify'], function () {
   gulp.watch(['index.js', 'lib/**/*.js'], ['bundle', 'minify']);
+});
+
+// Watch task to automatically bundle on change of code
+gulp.task('watch-bundle', ['bundle'], function () {
+  gulp.watch(['index.js', 'lib/**/*.js'], ['bundle']);
 });
