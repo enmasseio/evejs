@@ -383,6 +383,7 @@ describe('WebSocketTransport', function() {
     var url2;
     var transport1;
     var transport2;
+    var counter = 0;
 
     return Promise.all([freeport(), freeport()])
       .then(function (ports) {
@@ -406,8 +407,8 @@ describe('WebSocketTransport', function() {
 
             assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
             assert.deepEqual(Object.keys(transport2.agents), [urlAgent2]);
-
             // send a message back
+            counter++;
             conn1.send(from, 'hello').done();
           });
           assert.equal(conn1.url, urlAgent1);
@@ -415,7 +416,7 @@ describe('WebSocketTransport', function() {
           var conn2 = transport2.connect('agent2', function (from, message) {
             assert.equal(from, urlAgent1);
             assert.equal(message, 'hello');
-
+            assert.equal(counter, 4);
             assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
             assert.deepEqual(Object.keys(transport2.agents), [urlAgent2]);
 
@@ -427,6 +428,9 @@ describe('WebSocketTransport', function() {
             .then(function () {
               conn2.send(urlAgent1, 'hi there').done();
               conn2.send(urlAgent1, 'hi there').done();
+              conn2.send(urlAgent1, 'hi there').done();
+              conn2.send(urlAgent1, 'hi there').done();
+
             });
         });
       });
