@@ -1,0 +1,36 @@
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../dist/eve.js"></script>
+
+</head>
+<body>
+<script language="JavaScript">
+    // to run this, also have webHttp.js running in node.
+
+    function testAgent(id) {
+        eve.Agent.call(this, id);
+        this.rpc = this.loadModule('rpc', {});
+        this.connect(eve.system.transports.getAll());
+    }
+    testAgent.prototype = Object.create(eve.Agent.prototype);
+    testAgent.prototype.constructor = testAgent;
+
+    eve.system.init({
+        transports: [
+            {
+                type: 'http'
+            }
+        ]
+    });
+
+    var agent2 = new testAgent("agent2");
+    agent2.rpc.request('http://127.0.0.1:3000/agents/agent1', {method:'add',params:{a:1,b:4}})
+        .done(function (reply) {
+            console.log(reply);
+        });
+</script>
+</body>
+</html>

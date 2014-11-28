@@ -41,9 +41,4 @@ HelloAgent.prototype.receive = function(from, message) {
   }
 };
 
-// Test prototype inheritance:
-// console.log(agent1 instanceof HelloAgent); // true
-// console.log(agent1 instanceof eve.Agent);  // true
-// console.log(agent1.constructor.name);      // 'HelloAgent'
-
 module.exports = HelloAgent;
