@@ -70,6 +70,6 @@ gulp.task('watch', ['bundle', 'minify'], function () {
 });
 
 // Watch task to automatically bundle on change of code
-gulp.task('watch-bundle', ['bundle'], function () {
+gulp.task('watch-dev', ['bundle'], function () {
   gulp.watch(['index.js', 'lib/**/*.js'], ['bundle']);
 });
