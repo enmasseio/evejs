@@ -70,18 +70,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  AMQPTransport:      __webpack_require__(99),
 	  DistribusTransport: __webpack_require__(103),
 	  HTTPTransport:      __webpack_require__(148),
-	  LocalTransport:     __webpack_require__(149),
-	  PubNubTransport:    __webpack_require__(151),
-	  WebSocketTransport: __webpack_require__(157),
+	  LocalTransport:     __webpack_require__(150),
+	  PubNubTransport:    __webpack_require__(152),
+	  WebSocketTransport: __webpack_require__(158),
 
 	  connection: {
 	    Connection:          __webpack_require__(101),
 	    AMQPConnection:      __webpack_require__(100),
 	    DistribusConnection: __webpack_require__(147),
-	    HTTPConnection:      __webpack_require__(159),
-	    LocalConnection:     __webpack_require__(150),
-	    PubNubConnection:    __webpack_require__(152),
-	    WebSocketConnection: __webpack_require__(158)
+	    HTTPConnection:      __webpack_require__(149),
+	    LocalConnection:     __webpack_require__(151),
+	    PubNubConnection:    __webpack_require__(153),
+	    WebSocketConnection: __webpack_require__(159)
 	  }
 	};
 
@@ -15458,8 +15458,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (request !== undefined) {
 	      // if an error is defined, reject promise
 	      if (message.error != undefined) { // null or undefined
-	        // FIXME: returned error should be an object {code: number, message: string}
-	        request.reject(new Error(message.error));
+	        if (typeof message == 'object') {
+	          request.reject(message.error);
+	        }
+	        else {
+	          request.reject(new Error(message.error));
+	        }
 	      }
 	      else {
 	        request.resolve(message.result);
@@ -22121,7 +22125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var http = __webpack_require__(57);
 	var Promise = __webpack_require__(2);
 	var Transport = __webpack_require__(98);
-	var HTTPConnection = __webpack_require__(159);
+	var HTTPConnection = __webpack_require__(149);
 	var uuid = __webpack_require__(9);
 
 	/**
@@ -22479,8 +22483,73 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var Promise = __webpack_require__(2);
+	var Connection = __webpack_require__(101);
+
+	/**
+	 * A HTTP connection.
+	 * @param {HTTPTransport} transport
+	 * @param {string | number} id
+	 * @param {function} receive
+	 * @constructor
+	 */
+	function HTTPConnection(transport, id, receive) {
+	  this.transport = transport;
+	  this.id = id;
+
+	  // register the agents receive function
+	  if (this.id in this.transport.agents) {
+	    throw new Error('Agent with id ' + id + ' already exists');
+	  }
+	  this.transport.agents[this.id] = receive;
+
+	  // ready state
+	  this.ready = Promise.resolve(this);
+	}
+
+	/**
+	 * Send a message to an agent.
+	 * @param {string} to
+	 * @param {*} message
+	 */
+	HTTPConnection.prototype.send = function (to, message) {
+	  var fromURL = this.transport.url.replace(':id', this.id);
+
+	  var isURL = to.indexOf('://') !== -1;
+	  var toURL;
+	  if (isURL) {
+	    toURL = to;
+	  }
+	  else {
+	    if (this.transport.remoteUrl !== undefined) {
+	      toURL = this.transport.remoteUrl.replace(':id', to);
+	    }
+	    else {
+	      console.log('ERROR: no remote URL specified. Cannot send over HTTP.', to);
+	    }
+	  }
+
+	  return this.transport.send(fromURL, toURL, message);
+	};
+
+	/**
+	 * Close the connection
+	 */
+	HTTPConnection.prototype.close = function () {
+	  delete this.transport.agents[this.id];
+	};
+
+	module.exports = HTTPConnection;
+
+
+/***/ },
+/* 150 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var Transport = __webpack_require__(98);
-	var LocalConnection = __webpack_require__(150);
+	var LocalConnection = __webpack_require__(151);
 
 	/**
 	 * Create a local transport.
@@ -22521,7 +22590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 150 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22579,13 +22648,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 151 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var Transport = __webpack_require__(98);
-	var PubNubConnection = __webpack_require__(152);
+	var PubNubConnection = __webpack_require__(153);
 
 	/**
 	 * Use pubnub as transport
@@ -22638,7 +22707,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  else {
 	    // node.js
-	    return __webpack_require__(153);
+	    return __webpack_require__(154);
 	  }
 	}
 
@@ -22646,7 +22715,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 152 */
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22715,7 +22784,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 153 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {// Version: 3.7.0
@@ -24494,7 +24563,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var NOW                 = 1
 	,   http                = __webpack_require__(57)
 	,   https               = __webpack_require__(83)
-	,   keepAliveAgent      = new (keepAliveIsEmbedded() ? http.Agent : __webpack_require__(154))({
+	,   keepAliveAgent      = new (keepAliveIsEmbedded() ? http.Agent : __webpack_require__(155))({
 	                            keepAlive: true,
 	                            keepAliveMsecs: 300000,
 	                            maxSockets: 5
@@ -24723,13 +24792,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24).Buffer))
 
 /***/ },
-/* 154 */
+/* 155 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(155);
+	module.exports = __webpack_require__(156);
 
 /***/ },
-/* 155 */
+/* 156 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**!
@@ -24766,7 +24835,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var OriginalAgent = http.Agent;
 
 	if (process.version.indexOf('v0.8.') === 0 || process.version.indexOf('v0.10.') === 0) {
-	  OriginalAgent = __webpack_require__(156).Agent;
+	  OriginalAgent = __webpack_require__(157).Agent;
 	  debug('%s use _http_agent', process.version);
 	}
 
@@ -24930,7 +24999,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 156 */
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -25263,7 +25332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ },
-/* 157 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25275,7 +25344,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var util = __webpack_require__(10);
 	var Transport = __webpack_require__(98);
-	var WebSocketConnection = __webpack_require__(158);
+	var WebSocketConnection = __webpack_require__(159);
 
 	/**
 	 * Create a web socket transport.
@@ -25439,7 +25508,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 158 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25684,71 +25753,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = WebSocketConnection;
-
-
-/***/ },
-/* 159 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var Promise = __webpack_require__(2);
-	var Connection = __webpack_require__(101);
-
-	/**
-	 * A HTTP connection.
-	 * @param {HTTPTransport} transport
-	 * @param {string | number} id
-	 * @param {function} receive
-	 * @constructor
-	 */
-	function HTTPConnection(transport, id, receive) {
-	  this.transport = transport;
-	  this.id = id;
-
-	  // register the agents receive function
-	  if (this.id in this.transport.agents) {
-	    throw new Error('Agent with id ' + id + ' already exists');
-	  }
-	  this.transport.agents[this.id] = receive;
-
-	  // ready state
-	  this.ready = Promise.resolve(this);
-	}
-
-	/**
-	 * Send a message to an agent.
-	 * @param {string} to
-	 * @param {*} message
-	 */
-	HTTPConnection.prototype.send = function (to, message) {
-	  var fromURL = this.transport.url.replace(':id', this.id);
-
-	  var isURL = to.indexOf('://') !== -1;
-	  var toURL;
-	  if (isURL) {
-	    toURL = to;
-	  }
-	  else {
-	    if (this.transport.remoteUrl !== undefined) {
-	      toURL = this.transport.remoteUrl.replace(':id', to);
-	    }
-	    else {
-	      console.log('ERROR: no remote URL specified. Cannot send over HTTP.', to);
-	    }
-	  }
-
-	  return this.transport.send(fromURL, toURL, message);
-	};
-
-	/**
-	 * Close the connection
-	 */
-	HTTPConnection.prototype.close = function () {
-	  delete this.transport.agents[this.id];
-	};
-
-	module.exports = HTTPConnection;
 
 
 /***/ },

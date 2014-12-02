@@ -36,7 +36,7 @@
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",
-    "watch-bundle": "gulp watch-bundle",
+    "watch-dev": "gulp watch-dev",
     "test": "mocha test --recursive --reporter spec"
   },
   "main": "./index.js"
