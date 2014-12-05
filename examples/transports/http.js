@@ -15,14 +15,14 @@ eve.system.init({
 });
 
 // create two agents
-var agent1 = new HelloAgent('agent1');
-var agent2 = new HelloAgent('agent2');
+var agent1 = new HelloAgent('agent-1');
+var agent2 = new HelloAgent('agent-2');
 
 // send a message to agent1
-agent2.sayHello('http://127.0.0.1:3000/agents/agent1');
+agent2.sayHello('http://127.0.0.1:3000/agents/agent-1');
 
 // alternative:
-agent2.sayHello('agent1'); // this works because of the remoteUrl of the transport.
+agent2.sayHello('agent-1'); // this works because of the remoteUrl of the transport.
 
 // catch error
 agent2.send("agent3", "Hello").catch(function (err) {

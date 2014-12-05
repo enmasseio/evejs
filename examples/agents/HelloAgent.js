@@ -23,7 +23,7 @@ HelloAgent.prototype.constructor = HelloAgent;
  * @param {String} to
  */
 HelloAgent.prototype.sayHello = function(to) {
-  this.send(to, 'Hello ' + to + '!');
+  this.send(to, 'Hello ' + to + '!').done();
 };
 
 /**

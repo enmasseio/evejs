@@ -104,7 +104,7 @@ describe ('RPC', function () {
   it('should catch method not found', function () {
     return agent2.request("agent1",{method:"foo",params:{a:1,b:3}})
         .catch(function (err) {
-          assert.equal(err, "Error: Cannot find function: foo")
+          assert.equal(err, "Cannot find function: foo")
         })
   });
 
@@ -151,7 +151,7 @@ describe ('RPC', function () {
   it('should catch an error when promise as reply and is rejected', function () {
     return agent2.request("agent1",{method:"addPromiseErr",params:{a:1,b:3}})
       .catch(function (err) {
-        assert.equal(err, "Error: Cannot compute something that easy!");
+        assert.equal(err, "Cannot compute something that easy!");
       })
   });
 

@@ -8,14 +8,12 @@ var DistribusTransport = require('../lib/transport/distribus/DistribusTransport'
 var LocalTransport = require('../lib/transport/local/LocalTransport');
 var PubNubTransport = require('../lib/transport/pubnub/PubNubTransport');
 var HTTPTransport = require('../lib/transport/http/HTTPTransport');
-var HTTPWebTransport = require('../lib/transport/http/HTTPWebTransport');
 var WebSocketTransport = require('../lib/transport/websocket/WebSocketTransport');
 
 TransportManager.registerType(AMQPTransport);
 TransportManager.registerType(DistribusTransport);
 TransportManager.registerType(LocalTransport);
 TransportManager.registerType(HTTPTransport);
-TransportManager.registerType(HTTPWebTransport);
 TransportManager.registerType(PubNubTransport);
 TransportManager.registerType(WebSocketTransport);
 
