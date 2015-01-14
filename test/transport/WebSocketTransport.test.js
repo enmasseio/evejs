@@ -378,4 +378,62 @@ describe('WebSocketTransport', function() {
         });
   });
 
+  it('should correctly handle multiple messages', function () {
+    var url1;
+    var url2;
+    var transport1;
+    var transport2;
+    var counter = 0;
+
+    return Promise.all([freeport(), freeport()])
+      .then(function (ports) {
+        url1 = 'ws://localhost:' + ports[0] + '/agents/:id';
+        url2 = 'ws://localhost:' + ports[1] + '/agents/:id/';
+
+        transport1 = new WebSocketTransport({url: url1});
+        transport2 = new WebSocketTransport({url: url2});
+
+        return Promise.all([transport1.ready, transport2.ready]);
+      })
+      .then(function () {
+        return new Promise(function (resolve, reject) {
+          var urlAgent1 = url1.replace(':id', 'agent1');
+          var urlAgent2 = util.normalizeURL(url2.replace(':id', 'agent2'));
+
+          // connect and send a message
+          var conn1 = transport1.connect('agent1', function (from, message) {
+            assert.equal(from, urlAgent2);
+            assert.equal(message, 'hi there');
+
+            assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
+            assert.deepEqual(Object.keys(transport2.agents), [urlAgent2]);
+            // send a message back
+            counter++;
+            conn1.send(from, 'hello').done();
+          });
+          assert.equal(conn1.url, urlAgent1);
+
+          var conn2 = transport2.connect('agent2', function (from, message) {
+            assert.equal(from, urlAgent1);
+            assert.equal(message, 'hello');
+            assert.equal(counter, 4);
+            assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
+            assert.deepEqual(Object.keys(transport2.agents), [urlAgent2]);
+
+            resolve();
+          });
+          assert.equal(conn2.url, urlAgent2);
+
+          Promise.all([conn1.ready, conn2.ready])
+            .then(function () {
+              conn2.send(urlAgent1, 'hi there').done();
+              conn2.send(urlAgent1, 'hi there').done();
+              conn2.send(urlAgent1, 'hi there').done();
+              conn2.send(urlAgent1, 'hi there').done();
+
+            });
+        });
+      });
+  });
+
 });

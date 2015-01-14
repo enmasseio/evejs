@@ -23,7 +23,7 @@ HelloAgent.prototype.constructor = HelloAgent;
  * @param {String} to
  */
 HelloAgent.prototype.sayHello = function(to) {
-  this.send(to, 'Hello ' + to + '!');
+  this.send(to, 'Hello ' + to + '!').done();
 };
 
 /**
@@ -40,10 +40,5 @@ HelloAgent.prototype.receive = function(from, message) {
     this.send(from, 'Hi ' + from + ', nice to meet you!');
   }
 };
-
-// Test prototype inheritance:
-// console.log(agent1 instanceof HelloAgent); // true
-// console.log(agent1 instanceof eve.Agent);  // true
-// console.log(agent1.constructor.name);      // 'HelloAgent'
 
 module.exports = HelloAgent;
