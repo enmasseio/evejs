@@ -1,5 +1,10 @@
 # history
 
+## not yet released, version 0.4.5
+
+- Fixed LocalConnection throwing an error instead of invoking Promise.reject
+  when agent not found. Thanks @ianmuninio.
+
 
 ## 2014-10-24, version 0.4.4
 
