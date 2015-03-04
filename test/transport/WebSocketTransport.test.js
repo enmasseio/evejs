@@ -416,11 +416,11 @@ describe('WebSocketTransport', function() {
           var conn2 = transport2.connect('agent2', function (from, message) {
             assert.equal(from, urlAgent1);
             assert.equal(message, 'hello');
-            assert.equal(counter, 4);
             assert.deepEqual(Object.keys(transport1.agents), [urlAgent1]);
             assert.deepEqual(Object.keys(transport2.agents), [urlAgent2]);
-
-            resolve();
+            if (counter == 4) {
+              resolve();
+            }
           });
           assert.equal(conn2.url, urlAgent2);
 
@@ -430,7 +430,6 @@ describe('WebSocketTransport', function() {
               conn2.send(urlAgent1, 'hi there').done();
               conn2.send(urlAgent1, 'hi there').done();
               conn2.send(urlAgent1, 'hi there').done();
-
             });
         });
       });

@@ -1,6 +1,6 @@
 {
   "name": "evejs",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Simple message based agents.",
   "author": "Jos de Jong <wjosdejong@gmail.com> (https://github.com/josdejong)",
   "keywords": [
@@ -23,7 +23,7 @@
     "pubnub": "^3.5.48",
     "seed-random": "^2.2.0",
     "uuid-v4": "^0.1.0",
-    "ws": "^0.4.32"
+    "ws": "^0.7.1"
   },
   "devDependencies": {
     "freeport": "^1.0.3",
