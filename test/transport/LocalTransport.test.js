@@ -37,9 +37,17 @@ describe('LocalTransport', function() {
 
     // disconnect
     conn1.close();
-    assert.throws (function () {
-      conn2.send('agent1', 'hi there');
-    }, /Error: Agent with id agent1 not found/);
+    return new Promise(function (resolve, reject) {
+      conn2.send('agent1', 'hi there').catch(function (err) {
+        try {
+          assert.equal(err.message,'Agent with id agent1 not found');
+          resolve();
+        }
+        catch (err) {
+          reject(err);
+        }
+      });
+    });
   });
 
 });

@@ -1,9 +1,16 @@
 # history
 
-## not yet released, version 0.4.5
+## 2014-10-24, version 0.4.6
+
+- Made sure all tests work again.
+
+## 2014-10-24, version 0.4.5
 
 - Fixed LocalConnection throwing an error instead of invoking Promise.reject
   when agent not found. Thanks @ianmuninio.
+- Allowed HTTPS to use the HTTP protocol.
+- Increased HTTP request max size to 30MB.
+- Updated to new ws version 0.7.1.
 
 
 ## 2014-10-24, version 0.4.4
