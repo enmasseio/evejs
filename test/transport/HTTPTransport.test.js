@@ -168,4 +168,8 @@ describe('HTTPTransport', function() {
         assert.equal(err,'Error: Cannot connect to http://8.8.8.8:8000/agents/agent6');
       });
   });
+
+  after(function() {
+    transport.close();
+  })
 });

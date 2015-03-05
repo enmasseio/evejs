@@ -52,4 +52,9 @@ describe('Multitransport on the same port', function() {
       agent1.send('ws://127.0.0.1:3000/agents/agent2', 'reply to me!');
     });
   });
+
+  after(function() {
+    httpTransport.close();
+    wsTransport.close();
+  })
 });
