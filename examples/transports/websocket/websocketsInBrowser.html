@@ -1,0 +1,46 @@
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../../dist/eve.js"></script>
+
+</head>
+<body>
+<script language="JavaScript">
+    // to run this, also have host1.js running in node.
+
+    function testAgent(id) {
+        eve.Agent.call(this, id);
+        this.connect(eve.system.transports.getAll());
+
+    }
+
+    testAgent.prototype = Object.create(eve.Agent.prototype);
+    testAgent.prototype.constructor = testAgent;
+
+    testAgent.prototype.receive = function(from,message) {
+        console.log(from, message)
+    }
+
+    testAgent.prototype.sayHello = function(to) {
+        this.send(to, 'Hello ' + to + '!').done();
+    };
+
+
+    eve.system.init({
+        transports: [
+            {
+                type: 'ws',
+                url: 'ws://agents/:id'
+            }
+        ]
+    });
+
+    var REMOTE_URL = "ws://localhost:3000/agents/agent1"
+    var agent2 = new testAgent("agent2");
+
+    agent2.sayHello(REMOTE_URL);
+</script>
+</body>
+</html>

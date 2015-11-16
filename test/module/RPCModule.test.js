@@ -57,6 +57,7 @@ describe ('RPC', function () {
     var agent3 = new Agent('agent3');
     var agent4 = new Agent('agent4');
 
+
     var transport = new LocalTransport();
     agent3.connect(transport);
     agent4.connect(transport);

@@ -1,0 +1,39 @@
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../../dist/eve.js"></script>
+
+</head>
+<body>
+<script language="JavaScript">
+    // to run this, also have webHttp.js running in node.
+
+    function testAgent(id) {
+        eve.Agent.call(this, id);
+        this.connect(eve.system.transports.getAll());
+
+    }
+    testAgent.prototype = Object.create(eve.Agent.prototype);
+    testAgent.prototype.constructor = testAgent;
+
+    testAgent.prototype.receive = function(from,message) {
+        console.log(from, message)
+    }
+
+    eve.system.init({
+        transports: [
+            {
+                type: 'local'
+            }
+        ]
+    });
+
+    var agent1 = new testAgent("agent1");
+    var agent2 = new testAgent("agent2");
+
+    agent2.send('agent1','hello world!');
+</script>
+</body>
+</html>
