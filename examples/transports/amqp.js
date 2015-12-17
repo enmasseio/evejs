@@ -10,7 +10,7 @@ eve.system.init({
   transports: [
     {
       type: 'amqp',
-      host: 'dev.rabbitmq.com'
+      host: 'localhost'
     }
   ]
 });
