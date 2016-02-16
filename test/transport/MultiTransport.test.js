@@ -56,4 +56,9 @@ describe('MultiTransport on the same port', function() {
           });
         });
   });
+
+  after(function() {
+    httpTransport.close();
+    wsTransport.close();
+  })
 });
