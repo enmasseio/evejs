@@ -9,13 +9,13 @@ eve.system.init({
     }
   ],
   timer: {
-    rate: 'discrete',
+    paced: false,
     deterministic: true
   }
 });
 
 // set initial time for the simulation
-eve.system.timer.setTime(new Date('2014-01-01T12:00:00Z'));
+eve.system.timer.config({time: new Date('2014-01-01T12:00:00Z')});
 
 var agent1 = new DelayedAgent('agent1');
 var agent2 = new DelayedAgent('agent2');

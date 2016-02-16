@@ -18,7 +18,7 @@ eve.system.init({
     }
   ],
   timer: {
-    rate: 'discrete'
+    paced: false
   }
 });
 
@@ -39,7 +39,7 @@ Configuration can be saved in a separate configuration file like **config.json**
     }
   ],
   "timer": {
-    "rate": "discrete"
+    "paced": false
   }
 }
 ```
@@ -89,14 +89,14 @@ To configure the default timer:
 ```js
 eve.system.init({
   timer: {
-    rate: 'discrete',     // a number or 'discrete'
-    deterministic: true,  // true or false.
+    paced: false,
+    deterministic: true,
   }
 });
 ```
 
-The timer has functions `setTimeout`, `setInterval`, `setTrigger`, `setTime`,
-`getTime`, and more. To use the timer:
+The timer has functions `setTimeout`, `setInterval`, `setTrigger`, `getTime`,
+and more. To use the timer:
 
 ```js
 var delay = 1000;
