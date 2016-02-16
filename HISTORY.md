@@ -1,13 +1,15 @@
 # history
 
-## not yet released, version 0.4.7
+## 2016-02-16, version 0.5.0
 
+- Replaced `amqp` library with `amqplib` (the right one).
 - Upgraded all dependencies.
 
 
 ## 2014-10-24, version 0.4.6
 
 - Made sure all tests work again.
+
 
 ## 2014-10-24, version 0.4.5
 
