@@ -24,10 +24,17 @@ describe('ServiceManager', function() {
 
   it('should configure the timer', function () {
     var services = new ServiceManager({
-      timer: {rate: 'discrete'}
+      timer: {paced: true}
     });
 
-    assert.deepEqual(services.timer.config(), {rate: 'discrete', deterministic: true});
+    assert.deepEqual(services.timer.config(), {
+      deterministic: true,
+      master: null,
+      paced: true,
+      port: null,
+      rate: 1,
+      time: null
+    });
   });
 
   it('should configure the random function', function () {

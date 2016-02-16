@@ -1,5 +1,10 @@
 # history
 
+## not yet released, version 0.4.7
+
+- Upgraded all dependencies.
+
+
 ## 2014-10-24, version 0.4.6
 
 - Made sure all tests work again.
