@@ -21,10 +21,17 @@ var webpackConfig = {
     path: DIST,
     filename: FILE
   },
+
+  // TODO: exclude all non-relevant libraries from the browser bundle
   externals: [
-    // TODO: exclude all non-relevant libraries from the browser bundle
-    'amqp'
+      'ws',
+      'http',
+      'distribus'
   ],
+  plugins: [
+    new webpack.IgnorePlugin(/amqplib/)
+  ],
+
   cache: true
 };
 
