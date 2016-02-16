@@ -38,12 +38,12 @@ describe('HTTPTransport', function() {
       if (message == "reply to me!") {
         this.send(from, "hello back!");
       }
-    }
+    };
 
     agent1.receive = function(from, message) {
       assert.equal(message, 'hello back!')
       assert.equal(from, 'http://127.0.0.1:3000/agents/agent2');
-    }
+    };
 
     agent4.receive = function (from, message) {
       if (message == 'test') {
@@ -77,6 +77,10 @@ describe('HTTPTransport', function() {
 
     agent5.rpc = agent3.loadModule("rpc", agent5.rpcFunctions);
     agent6.rpc = agent4.loadModule("rpc", agent6.rpcFunctions);
+  });
+
+  after(function () {
+    return transport.close();
   });
 
   it('should create an HTTPTransport with default settings', function () {
