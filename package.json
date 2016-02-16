@@ -14,7 +14,7 @@
     "url": "git://github.com/enmasseio/evejs.git"
   },
   "dependencies": {
-    "amqp": "0.2.4",
+    "amqplib": "0.4.1",
     "async": "1.5.2",
     "babble": "0.11.0",
     "distribus": "0.4.0",
