@@ -23,11 +23,10 @@ var webpackConfig = {
   },
 
   // TODO: exclude all non-relevant libraries from the browser bundle
-  externals: [
-      'ws',
-      'http',
-      'distribus'
-  ],
+  node: {
+    fs: "empty",
+    tls: "empty"
+  },
   plugins: [
     new webpack.IgnorePlugin(/amqplib/)
   ],

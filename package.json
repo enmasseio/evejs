@@ -23,7 +23,7 @@
     "pubnub": "3.9.2",
     "seed-random": "2.2.0",
     "uuid-v4": "0.1.0",
-    "ws": "1.0.1"
+    "ws": "1.1.0"
   },
   "devDependencies": {
     "freeport": "1.0.5",
