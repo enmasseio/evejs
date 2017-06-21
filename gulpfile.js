@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var webpack = require('webpack');
 var uglify = require('uglify-js');
+var babel = require('gulp-babel');
 
 var ENTRY       = './index.js';
 var FILE        = 'eve.js';
@@ -42,8 +43,16 @@ var uglifyConfig = {
 };
 
 // create a single instance of the compiler to allow caching
-var compiler = webpack(webpackConfig);
 
+gulp.task('babel', ['bundle'], function (){
+  return gulp.src(EVE_JS)
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(gulp.dest('dist'));
+});
+
+var compiler = webpack(webpackConfig);
 gulp.task('bundle', function (cb) {
   // TODO: add a header (banner) on top of the file
   compiler.run(function (err, stats) {
@@ -57,7 +66,7 @@ gulp.task('bundle', function (cb) {
   });
 });
 
-gulp.task('minify', ['bundle'], function () {
+gulp.task('minify', ['babel'], function () {
   var result = uglify.minify([EVE_JS], uglifyConfig);
 
   fs.writeFileSync(EVE_MIN_JS, result.code);
@@ -68,14 +77,14 @@ gulp.task('minify', ['bundle'], function () {
 });
 
 // The default task (called when you run `gulp`)
-gulp.task('default', ['bundle', 'minify']);
+gulp.task('default', ['bundle', 'babel', 'minify']);
 
 // Watch task to automatically bundle and minify on change of code
-gulp.task('watch', ['bundle', 'minify'], function () {
-  gulp.watch(['index.js', 'lib/**/*.js'], ['bundle', 'minify']);
+gulp.task('watch', ['bundle', 'babel','minify'], function () {
+  gulp.watch(['index.js', 'lib/**/*.js'], ['bundle', 'babel', 'minify']);
 });
 
 // Watch task to automatically bundle on change of code
-gulp.task('watch-dev', ['bundle'], function () {
-  gulp.watch(['index.js', 'lib/**/*.js'], ['bundle']);
+gulp.task('watch-dev', ['bundle','babel'], function () {
+  gulp.watch(['index.js', 'lib/**/*.js'], ['bundle', 'babel']);
 });
