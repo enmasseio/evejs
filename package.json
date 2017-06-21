@@ -14,27 +14,25 @@
     "url": "git://github.com/enmasseio/evejs.git"
   },
   "dependencies": {
-    "amqplib": "0.4.1",
+    "amqplib": "0.5.1",
     "async": "1.5.2",
     "babble": "0.11.0",
     "distribus": "0.4.0",
     "hypertimer": "2.1.3",
-    "promise": "7.1.1",
-    "pubnub": "3.9.2",
+    "promise": "8.0.0",
+    "pubnub": "4.12.0",
     "seed-random": "2.2.0",
     "uuid-v4": "0.1.0",
-    "ws": "1.1.0",
+    "ws": "3.0.0",
     "dbus-native": "0.2.1"
   },
   "devDependencies": {
     "freeport": "1.0.5",
     "gulp": "3.9.1",
-    "gulp-util": "3.0.7",
-    "gulp-babel": "6.1.2",
-    "babel-preset-es2015": "6.24.1",
-    "mocha": "2.4.5",
-    "uglify-js": "2.6.1",
-    "webpack": "1.12.13"
+    "gulp-util": "3.0.8",
+    "mocha": "3.4.2",
+    "uglify-es": "3.0.18",
+    "webpack": "3.0.0"
   },
   "scripts": {
     "build": "gulp",
