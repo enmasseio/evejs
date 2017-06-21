@@ -41,6 +41,8 @@ RPCAgent.prototype.askToAdd = function (to, params) {
   var message = {method: 'add', params: params};
   this.rpc.request(to, message).then(function (reply) {
     console.log('The agent told me that', params.a, '+', params.b, '=', reply);
+  },function(error){
+    console.log('Agent call failed:',error);
   });
 };
 
