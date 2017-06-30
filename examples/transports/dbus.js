@@ -7,7 +7,8 @@ eve.system.init({
       type: 'dbus',
       url: 'dbus:com.almende.eve/agent/:id',
       localShortcut: false,
-      default: true
+      default: true,
+      systembus: false
     }
   ]
 });
