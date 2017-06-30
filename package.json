@@ -27,17 +27,29 @@
     "dbus-native": "0.2.1"
   },
   "devDependencies": {
-    "freeport": "1.0.5",
     "gulp": "3.9.1",
-    "gulp-util": "3.0.8",
+    "gulp-util":"3.0.8",
+    "gulp-clean":"0.3.2",
+    "gulp-rename":"1.2.2",
+    "gulp-babel":"6.1.2",
+    "babel-preset-es2015":"6.24.1",
+    "babel-core":"6.24.1",
+    "babelify":"7.3.0",
+    "browserify":"14.4.0",
+    "vinyl-source-stream":"1.1.0",
+    "vinyl-buffer":"1.0.0",
+    "gulp-uglify":"3.0.0",
+    "gulp-sourcemaps":"2.6.0",
+    "gulp-livereload":"3.8.1",
     "mocha": "3.4.2",
-    "uglify-es": "3.0.18",
-    "webpack": "3.0.0"
+    "webpack": "3.0.0",
+    "webpack-stream": "3.2.0",
+    "json-loader":"0.5.4",
+    "ignore-loader":"0.1.2"
   },
   "scripts": {
-    "build": "gulp",
-    "watch": "gulp watch",
-    "watch-dev": "gulp watch-dev",
+    "build": "gulp compress",
+    "watch": "gulp",
     "test": "mocha test --recursive --reporter spec"
   },
   "main": "./index.js"
