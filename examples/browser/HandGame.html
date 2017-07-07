@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HandGame</title>
+    <script src="../../dist/eve.js"></script>
+    <script src="../agents/HandGameAgent.js"></script>
+</head>
+<body>
+    <h1>Players</h1>
+    <p id="player1">Player1: <span id="handP1"></span></p>
+    <p id="player2">Player2: <span id="handP2"></span></p>
+    <p>winner: <span id="winner"></span> </p>
+    <button type="button" onclick="play()">Play again!</button>
+
+    <script>
+        /* -------------------------------------------------------------------
+        Before you run this page on your browser:
+            - You have to set up the player2 on the java side, I mean
+            the "eve_handGame_demo" example! On that folder just run:
+                $ mvn install
+                $ java -jar target/HandGameServer-1.0-SNAPSHOT.jar eve.yaml
+            Now you should have the player2 running!
+
+        Now you are ready to open this page on the browser!
+         ------------------------------------------------------------------- */
+
+        // configure eve
+        eve.system.init({
+          transports: [
+            {
+              type: 'ws'
+            }
+          ]
+        });
+
+        // Create agent
+        var player1 = new HandGameAgent("player1");
+        // play a single match
+        play();
+
+        // function to play a single match between player1 and player2
+        function play(){
+          // get hand of the player 1
+          var hand1 = player1.rpcFunctions.getHand();
+
+          //parameters to send to request a hand of the player2
+          var to = 'ws://localhost:8082/agents/player2';
+          var rpcMessage = {"jsonrpc":"2.0", "id":1, "method":"getHand", "params":{}};
+
+          player1.rpc.request(to, rpcMessage).then(function(message){
+            console.log("Reply: " + JSON.stringify(message));
+
+            // Get player2 hand
+            var hand2 = message;
+
+            // Show hands of the players
+            document.getElementById("handP1").innerHTML = hand1;
+            document.getElementById("handP2").innerHTML = hand2;
+
+            // Compare hands to check who is the winner
+            var winner = player1.compareHands(hand1, hand2);
+
+            // Show winner
+            if(winner == 0){
+              document.getElementById("winner").innerHTML = "Draw";
+            }else{
+              document.getElementById("winner").innerHTML = "player" + winner;
+            }
+          });
+        }
+
+
+
+    </script>
+</body>
+</html>
