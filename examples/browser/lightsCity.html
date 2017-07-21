@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Company" content="Almende BV">
+    <meta name="author" content="Luis F. M. Cunha">
+    <title>Lights on the street</title>
+
+    <script src="../../dist/eve.js"></script>
+    <script src="../agents/lightsCity/Car.js"></script>
+    <script src="../agents/lightsCity/Pole.js"></script>
+
+</head>
+<body>
+<svg id="city" width="1800" height="900" style='stroke-width: 0px; background-color: lightgray;'
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <rect id="carBrowser0" x="55"   y="55"  width="10" height="10"  style="fill:brown;  stroke-width:1; stroke:rgb(0,0,0)" />
+    <rect id="carBrowser1" x="350"  y="50"  width="10" height="10"  style="fill:red;    stroke-width:1; stroke:rgb(0,0,0)" />
+    <rect id="carBrowser2" x="55"   y="455" width="10" height="10"  style="fill:green;  stroke-width:1; stroke:rgb(0,0,0)" />
+    <rect id="carBrowser3" x="1130" y="800" width="10" height="10"  style="fill:white;  stroke-width:1; stroke:rgb(0,0,0)" />
+
+
+</svg>
+
+<script>
+    /*
+     Before you open this in your browser:
+     - You should start the Java server example "eve_lightsCity_demo" by:
+     - Go to the example folder:
+     cd (PATH)/eve-java/demos/eve_lightsCity_demo
+     - Use maven to install
+     mvn install
+     - Run example
+     java -jar target/lightscity-1.0-SNAPSHOT.jar eve.yaml
+
+     Now you should be ready to open this page in your browser and see to example running
+     */
+
+
+    // Global variables
+    var counterSetProperties = 0;
+
+    // 50 pixeis to separate poles
+    var polesInfo = [
+      // left side
+      {cx: 30, cy: 30},
+      {cx: 30, cy: 80},
+      {cx: 30, cy: 130},
+      {cx: 30, cy: 180},
+      {cx: 30, cy: 230},
+      {cx: 30, cy: 280},
+      {cx: 30, cy: 330},
+      {cx: 30, cy: 380},
+      {cx: 30, cy: 430},
+      {cx: 30, cy: 480},
+      {cx: 30, cy: 530},
+      {cx: 30, cy: 580},
+      {cx: 30, cy: 630},
+      {cx: 30, cy: 680},
+      {cx: 30, cy: 730},
+      {cx: 30, cy: 780},
+      {cx: 30, cy: 830},
+      {cx: 30, cy: 880},
+
+      // bottom
+      {cx: 80, cy: 880},
+      {cx: 130, cy: 880},
+      {cx: 180, cy: 880},
+      {cx: 230, cy: 880},
+      {cx: 280, cy: 880},
+      {cx: 330, cy: 880},
+      {cx: 380, cy: 880},
+      {cx: 430, cy: 880},
+      {cx: 480, cy: 880},
+      {cx: 530, cy: 880},
+      {cx: 580, cy: 880},
+      {cx: 630, cy: 880},
+      {cx: 680, cy: 880},
+      {cx: 730, cy: 880},
+      {cx: 780, cy: 880},
+      {cx: 830, cy: 880},
+      {cx: 880, cy: 880},
+      {cx: 930, cy: 880},
+      {cx: 980, cy: 880},
+      {cx: 1030, cy: 880},
+      {cx: 1080, cy: 880},
+      {cx: 1130, cy: 880},
+
+      // right
+
+      {cx: 1130, cy: 780},
+      {cx: 1130, cy: 730},
+      {cx: 1130, cy: 680},
+      {cx: 1130, cy: 630},
+      {cx: 1130, cy: 580},
+      {cx: 1130, cy: 530},
+      {cx: 1130, cy: 480},
+      {cx: 1130, cy: 430},
+      {cx: 1130, cy: 380},
+      {cx: 1130, cy: 330},
+      {cx: 1130, cy: 280},
+      {cx: 1130, cy: 230},
+      {cx: 1130, cy: 180},
+      {cx: 1130, cy: 130},
+      {cx: 1130, cy: 80},
+      {cx: 1130, cy: 30},
+
+      // top
+
+      {cx: 1080, cy: 30},
+      {cx: 1030, cy: 30},
+      {cx: 980, cy: 30},
+      {cx: 930, cy: 30},
+      {cx: 880, cy: 30},
+      {cx: 830, cy: 30},
+      {cx: 780, cy: 30},
+      {cx: 730, cy: 30},
+      {cx: 680, cy: 30},
+      {cx: 630, cy: 30},
+      {cx: 580, cy: 30},
+      {cx: 530, cy: 30},
+      {cx: 480, cy: 30},
+      {cx: 430, cy: 30},
+      {cx: 380, cy: 30},
+      {cx: 330, cy: 30},
+      {cx: 280, cy: 30},
+      {cx: 230, cy: 30},
+      {cx: 180, cy: 30},
+      {cx: 130, cy: 30},
+      {cx: 80, cy: 30},
+
+      // first square
+      {cx: 130, cy: 130},
+      {cx: 130, cy: 180},
+      {cx: 130, cy: 230},
+      {cx: 130, cy: 280},
+      {cx: 130, cy: 330},
+      {cx: 130, cy: 380},
+
+      {cx: 180, cy: 380},
+      {cx: 230, cy: 380},
+      {cx: 280, cy: 380},
+      {cx: 330, cy: 380},
+
+      {cx: 330, cy: 330},
+      {cx: 330, cy: 280},
+      {cx: 330, cy: 230},
+      {cx: 330, cy: 180},
+      {cx: 330, cy: 130},
+
+      {cx: 280, cy: 130},
+      {cx: 230, cy: 130},
+      {cx: 180, cy: 130},
+
+
+      // second square
+      {cx: 130, cy: 480},
+      {cx: 130, cy: 530},
+      {cx: 130, cy: 580},
+      {cx: 130, cy: 630},
+      {cx: 130, cy: 680},
+      {cx: 130, cy: 730},
+      {cx: 130, cy: 780},
+
+      {cx: 180, cy: 780},
+      {cx: 230, cy: 780},
+      {cx: 280, cy: 780},
+      {cx: 330, cy: 780},
+
+      {cx: 330, cy: 730},
+      {cx: 330, cy: 680},
+      {cx: 330, cy: 630},
+      {cx: 330, cy: 580},
+      {cx: 330, cy: 530},
+      {cx: 330, cy: 480},
+
+      {cx: 280, cy: 480},
+      {cx: 230, cy: 480},
+      {cx: 180, cy: 480},
+
+      // 3th square
+      {cx: 430, cy: 480},
+      {cx: 430, cy: 530},
+      {cx: 430, cy: 580},
+      {cx: 430, cy: 630},
+      {cx: 430, cy: 680},
+      {cx: 430, cy: 730},
+      {cx: 430, cy: 780},
+
+      {cx: 480, cy: 780},
+      {cx: 530, cy: 780},
+      {cx: 580, cy: 780},
+
+      {cx: 580, cy: 730},
+      {cx: 580, cy: 680},
+      {cx: 580, cy: 630},
+      {cx: 580, cy: 580},
+      {cx: 580, cy: 530},
+      {cx: 580, cy: 480},
+
+      {cx: 530, cy: 480},
+      {cx: 480, cy: 480},
+
+      // 4th square
+      {cx: 430, cy: 130},
+      {cx: 430, cy: 180},
+      {cx: 430, cy: 230},
+      {cx: 430, cy: 280},
+      {cx: 430, cy: 330},
+      {cx: 430, cy: 380},
+
+      {cx: 480, cy: 380},
+      {cx: 530, cy: 380},
+      {cx: 580, cy: 380},
+
+      {cx: 580, cy: 330},
+      {cx: 580, cy: 280},
+      {cx: 580, cy: 230},
+      {cx: 580, cy: 180},
+      {cx: 580, cy: 130},
+
+      {cx: 530, cy: 130},
+      {cx: 480, cy: 130},
+
+      // 5th square
+      {cx: 680, cy: 130},
+      {cx: 680, cy: 180},
+      {cx: 680, cy: 230},
+      {cx: 680, cy: 280},
+      {cx: 680, cy: 330},
+      {cx: 680, cy: 380},
+
+      {cx: 730, cy: 380},
+      {cx: 780, cy: 380},
+      {cx: 830, cy: 380},
+      {cx: 880, cy: 380},
+      {cx: 930, cy: 380},
+      {cx: 980, cy: 380},
+      {cx: 1030, cy: 380},
+
+      {cx: 1030, cy: 330},
+      {cx: 1030, cy: 280},
+      {cx: 1030, cy: 230},
+      {cx: 1030, cy: 180},
+      {cx: 1030, cy: 130},
+
+
+      {cx: 980, cy: 130},
+      {cx: 930, cy: 130},
+      {cx: 880, cy: 130},
+      {cx: 830, cy: 130},
+      {cx: 780, cy: 130},
+      {cx: 730, cy: 130},
+
+      // 6th square
+      {cx: 680, cy: 480},
+      {cx: 680, cy: 530},
+      {cx: 680, cy: 580},
+      {cx: 680, cy: 630},
+      {cx: 680, cy: 680},
+      {cx: 680, cy: 730},
+      {cx: 680, cy: 780},
+
+      {cx: 730, cy: 780},
+      {cx: 780, cy: 780},
+      {cx: 830, cy: 780},
+      {cx: 880, cy: 780},
+      {cx: 930, cy: 780},
+      {cx: 980, cy: 780},
+      {cx: 1030, cy: 780},
+
+      {cx: 1030, cy: 730},
+      {cx: 1030, cy: 680},
+      {cx: 1030, cy: 630},
+      {cx: 1030, cy: 580},
+      {cx: 1030, cy: 530},
+      {cx: 1030, cy: 480},
+
+      {cx: 980, cy: 480},
+      {cx: 930, cy: 480},
+      {cx: 880, cy: 480},
+      {cx: 830, cy: 480},
+      {cx: 780, cy: 480},
+      {cx: 730, cy: 480}
+
+      ];
+
+    // numerate poles
+    for(var i = 0 ; i < polesInfo.length; i++){
+      polesInfo[i].id = i;
+    }
+
+    var params;
+    var wsPath = "ws://localhost:8084/agents/";
+    var httpPathToServer = "http://localhost:8084/caragents/";
+
+    // configure eve
+    eve.system.init({
+      transports: [
+        {
+          type: 'ws'
+        }
+      ]
+    });
+
+    // create cars
+    var cars = [];
+    var numOfCars = 4;
+    var counterCars = 0;
+    for( var i = 0; i < numOfCars; i++){
+
+      var car = new Car("carBrowser" + i);
+      cars.push(car);
+
+      //open a connection with car on the server to start
+      var to = wsPath + "carServer" + i;
+      var rpcMessage = {"jsonrpc":"2.0", "id":1, "method":"openConnectionAndStart", "params":{}};
+      car.rpc.request(to, rpcMessage).then(function(message) {
+        console.log("counterCars: " + counterCars);
+        counterCars++;
+        if(counterCars >= numOfCars){
+          setCarProperties();
+          startCars();
+        }
+      });
+    }
+
+    // create Pole agents
+    var poles=[];
+    var counterConnection = 0;
+
+
+    for(var i = 0; i < polesInfo.length; i++){
+
+      var poleName = "poleBrowser" + polesInfo[i].id;
+      var polePosition = {"cx":polesInfo[i].cx, "cy":polesInfo[i].cy};
+
+      createPoleRepresentation(poleName, polesInfo, i);
+
+      // create pole agent
+      var pole = new Pole(poleName, polePosition);
+      poles.push(pole);
+
+      //open a connection with pole on the server
+      to = wsPath + "pole" + i;
+      rpcMessage = {"jsonrpc":"2.0", "id":1, "method":"openConnectionAndStart", "params":{}};
+      (poles[i]).rpc.request(to, rpcMessage).done(function(message) {
+
+        counterConnection++;
+        if(counterConnection >= polesInfo.length) {
+          console.log("counterConnection: " + counterConnection);
+          setPoleProperties();
+        }
+      });
+
+    }
+
+
+
+
+
+    // -------- functions ---------
+    function createPoleRepresentation(poleName, polesInfo, i){
+      var svgns = "http://www.w3.org/2000/svg";
+      var svg = document.getElementById("city");
+
+      var poleAux = document.createElementNS(svgns, "circle");
+      poleAux.setAttributeNS(null, 'id', poleName);
+      poleAux.setAttributeNS(null, 'cx', polesInfo[i].cx);
+      poleAux.setAttributeNS(null, 'cy', polesInfo[i].cy);
+      poleAux.setAttributeNS(null, 'r', 10);
+      poleAux.setAttributeNS(null, 'class', "lights");
+      poleAux.setAttributeNS(null, 'stroke', "green");
+      poleAux.setAttributeNS(null, 'stroke-width', 2);
+      poleAux.setAttributeNS(null, 'fill', "yellow");
+      //poleAux.setAttributeNS(null, 'style', 'stroke="green" stroke-width="4" fill="yellow"' );
+      svg.appendChild(poleAux);
+
+      var text = document.createElementNS(svgns, "text");
+      text.setAttributeNS(null, 'x', polesInfo[i].cx);
+      text.setAttributeNS(null, 'y', polesInfo[i].cy);
+      text.setAttributeNS(null, 'fill', "#000000");
+      text.innerHTML = polesInfo[i].id;
+      svg.appendChild(text);
+    }
+
+    function setPoleProperties() {
+
+      console.log("setPoleProperties function opened!");
+      var allPolesToStart = [];
+
+      //allPolesToStart = allPolesToStart.concat( property3PolesForward() );
+      allPolesToStart = allPolesToStart.concat( property4PolesForward() );
+      allPolesToStart = allPolesToStart.concat( property4PolesForwardInverse() );
+      allPolesToStart = allPolesToStart.concat( property3PolesForwardInverse() );
+      allPolesToStart = allPolesToStart.concat( property2PolesForwardInverse() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions10() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions21() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions22() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions13() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions02() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions01() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions11() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions12() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions23() );
+      allPolesToStart = allPolesToStart.concat( propertyInterceptions00() );
+
+      // send message to all poles
+      for(var i = 0; i < allPolesToStart.length; i++){
+
+        // send message
+        rpcMessage = {"jsonrpc":"2.0", "id":1, "method":"setPoleProperties", "params": allPolesToStart[i].params};
+        (poles[allPolesToStart[i].poleNumber]).rpc.request(allPolesToStart[i].to, rpcMessage).then(function(message) {
+
+          counterSetProperties++;
+          console.log("counterSetProperties: " + counterSetProperties);
+          if(counterSetProperties >= allPolesToStart.length){
+            startPoles(allPolesToStart);
+          }
+
+        });
+      }
+
+
+    /*
+      var startPole = 0, endPole = 74;
+
+      var counterSetProperties = 0;
+      // set Neighbors in the server
+      for(var i = startPole; i < endPole; i++) {
+
+        // send to
+        to = wsPath + "pole" + i;
+
+        params = {
+          "poleNumber": i,
+          "polePositionX":(poles[i]).polePosition.cx,
+          "polePositionY":(poles[i]).polePosition.cy
+        };
+
+        var name3 = "pole" + (i+1);
+        var name4 = "pole" + (i+2);
+        var name5 = "pole" + (i+3);
+        var name6 = "pole" + (i+4);
+
+        aux2 = {};
+        aux2[name3] = 70; // 70%
+        aux2[name4] = 70; // 40%
+        aux2[name5] = 40; // 20%
+        aux2[name6] = 20; // 20%
+        params["polesToAffect"] = aux2;
+        // send message
+        rpcMessage = {"jsonrpc":"2.0", "id":1, "method":"setPoleProperties", "params": params};
+        (poles[i]).rpc.request(to, rpcMessage).then(function(message) {
+          console.log("" + poles[i].id + " replied: " + JSON.stringify(message));
+          counterSetProperties++;
+          if(counterSetProperties >= (endPole -startPole)){
+            startPoles(startPole, endPole);
+          }
+
+        });
+
+      }
+     */
+    }
+
+
+
+    function propertyInterceptions00(){
+
+      var propertiesArray = [];
+
+      // interception Pole23
+      var poleNumber = 73;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole74": 70,
+            "pole75": 70,
+            "pole76":  40,
+            "pole0":  20
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole24
+      poleNumber = 74;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole75": 70,
+            "pole76": 70,
+            "pole0":  40,
+            "pole1":  20
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole25
+      poleNumber = 75;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole76":  70,
+            "pole0": 70,
+            "pole1": 40,
+            "pole2":  20
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole121
+      poleNumber = 76;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole0": 70,
+            "pole1": 70,
+            "pole2": 40,
+            "pole3": 20
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      poleNumber = 77;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole94": 70,
+            "pole93": 70,
+            "pole92": 40,
+            "pole91": 20
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 78;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole77": 70,
+            "pole94": 70,
+            "pole93": 40,
+            "pole92": 20
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+/*
+      // interception Pole6
+      poleNumber = 79;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole78": 70,
+            "pole77": 70,
+            "pole94": 40,
+            "pole93": 20
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+*/
+      return propertiesArray;
+    }
+
+    function propertyInterceptions23(){
+
+      var propertiesArray = [];
+
+      // interception Pole23
+      var poleNumber = 186;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole37": 100,
+            "pole38": 100,
+            "pole39":  100,
+            "pole40":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole24
+      poleNumber = 37;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole186": 100,
+            "pole38": 100,
+            "pole39":  100,
+            "pole40":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole25
+      poleNumber = 38;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole37": 100,
+            "pole186": 100,
+            "pole39":  100,
+            "pole40":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole121
+      poleNumber = 39;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole37": 100,
+            "pole38": 100,
+            "pole186":  100,
+            "pole40":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      poleNumber = 40;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole37": 100,
+            "pole38": 100,
+            "pole39":  100,
+            "pole186":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 187;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole37": 100,
+            "pole38": 100,
+            "pole39":  100,
+            "pole40":  100,
+            "pole186": 100,
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 36;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole37": 100,
+            "pole38": 100,
+            "pole39":  100,
+            "pole40":  100,
+            "pole186": 100,
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      return propertiesArray;
+    }
+
+    function propertyInterceptions12(){
+
+      var propertiesArray = [];
+
+      // interception Pole23
+      var poleNumber = 141;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole130": 100,
+            "pole173": 100,
+            "pole154":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole24
+      poleNumber = 130;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole173": 100,
+            "pole154": 100,
+            "pole141":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole25
+      poleNumber = 154;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole141": 100,
+            "pole130": 100,
+            "pole173":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole121
+      poleNumber = 173;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole141": 100,
+            "pole130": 100,
+            "pole154":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      poleNumber = 131;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole141": 100,
+            "pole130": 100,
+            "pole173":  100,
+            "pole154": 100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 174;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole141": 100,
+            "pole130": 100,
+            "pole173":  100,
+            "pole154": 100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 155;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole141": 100,
+            "pole130": 100,
+            "pole173":  100,
+            "pole154": 100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 142;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole141": 100,
+            "pole130": 100,
+            "pole173":  100,
+            "pole154": 100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+      //-------------------
+
+      return propertiesArray;
+    }
+
+    function propertyInterceptions11(){
+
+      var propertiesArray = [];
+
+      // interception Pole23
+      var poleNumber = 86;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole111": 100,
+            "pole115": 100,
+            "pole138":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole24
+      poleNumber = 111;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole86": 100,
+            "pole138": 100,
+            "pole115":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole25
+      poleNumber = 115;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole111": 100,
+            "pole86": 100,
+            "pole138":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole121
+      poleNumber = 138;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole111": 100,
+            "pole86": 100,
+            "pole115":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      poleNumber = 139;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole111": 100,
+            "pole86": 100,
+            "pole115":  100,
+            "pole138": 100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 87;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole111": 100,
+            "pole86": 100,
+            "pole115":  100,
+            "pole138": 100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 112;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole111": 100,
+            "pole86": 100,
+            "pole115":  100,
+            "pole138": 100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 116;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole111": 100,
+            "pole86": 100,
+            "pole115":  100,
+            "pole138": 100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+      //-------------------
+
+      return propertiesArray;
+    }
+
+    function propertyInterceptions01(){
+
+      var propertiesArray = [];
+
+      // interception Pole23
+      var poleNumber = 69;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole70": 100,
+            "pole71": 100,
+            "pole91":  100,
+            "pole133":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole24
+      poleNumber = 70;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole69": 100,
+            "pole71": 100,
+            "pole91":  100,
+            "pole133":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole25
+      poleNumber = 71;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole69": 100,
+            "pole70": 100,
+            "pole91":  100,
+            "pole133":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole121
+      poleNumber = 91;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole69": 100,
+            "pole70": 100,
+            "pole71":  100,
+            "pole133":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      poleNumber = 133;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole69": 100,
+            "pole70": 100,
+            "pole71":  100,
+            "pole91":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 68;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole69": 100,
+            "pole70": 100,
+            "pole71":  100,
+            "pole91":  100,
+            "pole133":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 92;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole69": 100,
+            "pole70": 100,
+            "pole71":  100,
+            "pole91":  100,
+            "pole133":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 134;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole69": 100,
+            "pole70": 100,
+            "pole71":  100,
+            "pole91":  100,
+            "pole133":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+      //-------------------
+
+      return propertiesArray;
+    }
+
+    function propertyInterceptions02(){
+
+      var propertiesArray = [];
+
+      // interception Pole23
+      var poleNumber = 64;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole65": 100,
+            "pole66": 100,
+            "pole146":  100,
+            "pole149":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole24
+      poleNumber = 65;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole64": 100,
+            "pole66": 100,
+            "pole146":  100,
+            "pole149":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole25
+      poleNumber = 66;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole64": 100,
+            "pole65": 100,
+            "pole146":  100,
+            "pole149":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole121
+      poleNumber = 146;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole64": 100,
+            "pole65": 100,
+            "pole66":  100,
+            "pole149":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      poleNumber = 149;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole64": 100,
+            "pole65": 100,
+            "pole66":  100,
+            "pole146":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 63;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole64": 100,
+            "pole65": 100,
+            "pole66":  100,
+            "pole146":  100,
+            "pole149":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 147;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole64": 100,
+            "pole65": 100,
+            "pole66":  100,
+            "pole146":  100,
+            "pole149":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 150;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole64": 100,
+            "pole65": 100,
+            "pole66":  100,
+            "pole146":  100,
+            "pole149":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+      //-------------------
+
+      return propertiesArray;
+    }
+
+    function propertyInterceptions13(){
+
+      var propertiesArray = [];
+
+      // interception Pole23
+      var poleNumber = 46;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole47": 100,
+            "pole48": 100,
+            "pole161":  100,
+            "pole192":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole24
+      poleNumber = 47;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole46": 100,
+            "pole48": 100,
+            "pole161":  100,
+            "pole192":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole25
+      poleNumber = 48;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole46": 100,
+            "pole47": 100,
+            "pole161":  100,
+            "pole192":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole121
+      poleNumber = 161;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole46": 100,
+            "pole47": 100,
+            "pole48":  100,
+            "pole192":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      poleNumber = 192;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole46": 100,
+            "pole47": 100,
+            "pole48":  100,
+            "pole161":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 45;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole46": 100,
+            "pole47": 100,
+            "pole48":  100,
+            "pole161":  100,
+            "pole192":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 162;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole46": 100,
+            "pole47": 100,
+            "pole48":  100,
+            "pole161":  100,
+            "pole192":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 193;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole46": 100,
+            "pole47": 100,
+            "pole48":  100,
+            "pole161":  100,
+            "pole192":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+      //-------------------
+
+      return propertiesArray;
+    }
+
+    function propertyInterceptions22(){
+
+      var propertiesArray = [];
+
+      // interception Pole23
+      var poleNumber = 28;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole29": 100,
+            "pole230": 100,
+            "pole179":  100,
+            "pole124":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole24
+      poleNumber = 29;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole28": 100,
+            "pole30": 100,
+            "pole179":  100,
+            "pole124":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole25
+      poleNumber = 30;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole28": 100,
+            "pole29": 100,
+            "pole179":  100,
+            "pole124":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole121
+      poleNumber = 179;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole28": 100,
+            "pole29": 100,
+            "pole30":  100,
+            "pole124":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      poleNumber = 124;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole28": 100,
+            "pole29": 100,
+            "pole30":  100,
+            "pole179":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 27;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole28": 100,
+            "pole29": 100,
+            "pole30":  100,
+            "pole179":  100,
+            "pole124":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 180;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole179": 100,
+            "pole124": 100,
+            "pole28":  100,
+            "pole29":  100,
+            "pole30":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      poleNumber = 125;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole124": 100,
+            "pole28": 100,
+            "pole29":  100,
+            "pole30":  100,
+            "pole179":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+      //-------------------
+
+      return propertiesArray;
+    }
+
+    function propertyInterceptions21(){
+
+      var propertiesArray = [];
+
+      // interception Pole23
+      var poleNumber = 23;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole24": 100,
+            "pole25": 100,
+            "pole121":  100,
+            "pole105":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole24
+      poleNumber = 24;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole23": 100,
+            "pole25": 100,
+            "pole121":  100,
+            "pole105":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole25
+      poleNumber = 25;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole23": 100,
+            "pole24": 100,
+            "pole121":  100,
+            "pole105":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole121
+      poleNumber = 121;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole23": 100,
+            "pole24": 100,
+            "pole25":  100,
+            "pole105":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      var poleNumber = 105;
+      var to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole23": 100,
+            "pole24": 100,
+            "pole25":  100,
+            "pole121":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      var poleNumber = 22;
+      var to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole23": 100,
+            "pole24": 100,
+            "pole25":  100,
+            "pole121":  100,
+            "pole105":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      var poleNumber = 122;
+      var to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole121": 100,
+            "pole105": 100,
+            "pole23":  100,
+            "pole24":  100,
+            "pole25":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      var poleNumber = 106;
+      var to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole105": 100,
+            "pole23": 100,
+            "pole24":  100,
+            "pole25":  100,
+            "pole121":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+      //-------------------
+
+      return propertiesArray;
+    }
+
+    function propertyInterceptions10(){
+
+      var propertiesArray = [];
+
+      // interception Pole7
+      var poleNumber = 7;
+      var to = wsPath + "pole" + poleNumber;
+      var entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole82": 100,
+            "pole95": 100,
+            "pole8":  100,
+            "pole9":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole82
+      poleNumber = 82;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole7": 100,
+            "pole8": 100,
+            "pole9":  100,
+            "pole95":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole95
+      poleNumber = 95;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole82": 100,
+            "pole8": 100,
+            "pole9":  100,
+            "pole7":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole9
+      poleNumber = 9;
+      to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole7": 100,
+            "pole8": 100,
+            "pole82":  100,
+            "pole95":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole8
+      var poleNumber = 8;
+      var to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole7": 100,
+            "pole82": 100,
+            "pole9":  100,
+            "pole95":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      var poleNumber = 6;
+      var to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole7": 100,
+            "pole82": 100,
+            "pole9":  100,
+            "pole8":  100,
+            "pole95":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      var poleNumber = 83;
+      var to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole7": 100,
+            "pole82": 100,
+            "pole9":  100,
+            "pole8":  100,
+            "pole95":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+
+      // interception Pole6
+      var poleNumber = 96;
+      var to = wsPath + "pole" + poleNumber;
+      entryPole = {
+        "poleNumber": poleNumber,
+        "to": to,
+        "params": {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy,
+          "polesToAffect": {
+            "pole7": 100,
+            "pole82": 100,
+            "pole9":  100,
+            "pole8":  100,
+            "pole95":  100
+          }
+        }
+      };
+      propertiesArray.push(entryPole);
+      //-------------------
+
+      return propertiesArray;
+    }
+
+    function property2PolesForwardInverse(){
+
+      var aux;
+      var name1, name2, name3, name4;
+      var poleNumber;
+      var to, params;
+      var entryPole = {};
+
+      var propertiesArray = [];
+
+      // create array with pole number to apply rule
+      var fullArray = [];
+
+      // island 1
+      fullArray = fullArray.concat( rangeArray(79,79) ); // left
+      fullArray = fullArray.concat( rangeArray(84,84) ); // bottom
+      fullArray = fullArray.concat( rangeArray(88,88) ); // right
+      fullArray = fullArray.concat( rangeArray(93,93) ); // top
+
+      // island 2
+      fullArray = fullArray.concat( rangeArray(135,135) ); // left
+      fullArray = fullArray.concat( rangeArray(140,140) ); // bottom
+      fullArray = fullArray.concat( rangeArray(143,143) ); // right
+      fullArray = fullArray.concat( rangeArray(148,148) ); // top
+
+      // island 3
+      fullArray = fullArray.concat( rangeArray(151,151) );
+      fullArray = fullArray.concat( rangeArray(156,156) ); // bottom
+      fullArray = fullArray.concat( rangeArray(163,163) ); // right
+      fullArray = fullArray.concat( rangeArray(168,168) ); // top
+
+      // island 4
+      fullArray = fullArray.concat( rangeArray(97,97) );
+      fullArray = fullArray.concat( rangeArray(103,103) ); // bottom
+      fullArray = fullArray.concat( rangeArray(107,107) ); // right
+      fullArray = fullArray.concat( rangeArray(113,113) ); // top
+
+      // island 5
+      fullArray = fullArray.concat( rangeArray(117,117) );
+      fullArray = fullArray.concat( rangeArray(123,123) ); // bottom
+      fullArray = fullArray.concat( rangeArray(126,126) ); // right
+      fullArray = fullArray.concat( rangeArray(132,132) ); // top
+
+      // island 6
+      fullArray = fullArray.concat( rangeArray(175,175) );
+      fullArray = fullArray.concat( rangeArray(181,181) ); // bottom
+      fullArray = fullArray.concat( rangeArray(188,188) ); // right
+      fullArray = fullArray.concat( rangeArray(194,194) ); // top
+
+      // external ring
+
+
+      for(var i = 0; i < fullArray.length; i++){
+        poleNumber = fullArray[i];
+        // send to
+        to = wsPath + "pole" + poleNumber;
+        params = {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy
+        };
+
+        name1 = "pole" + (poleNumber-1);
+        name2 = "pole" + (poleNumber-2);
+
+        aux = {};
+        aux[name1] = 70; // 70%
+        aux[name2] = 70; // 40%
+
+        params["polesToAffect"] = aux;
+
+        entryPole = {
+          "poleNumber": poleNumber,
+          "params": params,
+          "to": to
+        }
+
+        propertiesArray.push(entryPole);
+      }
+
+      return propertiesArray;
+    }
+
+    function property3PolesForwardInverse(){
+
+      var aux;
+      var name1, name2, name3, name4;
+      var poleNumber;
+      var to, params;
+      var entryPole = {};
+
+      var propertiesArray = [];
+
+      // create array with pole number to apply rule
+      var fullArray = [];
+
+      // island 1
+      fullArray = fullArray.concat( rangeArray(80,80) ); // left
+      fullArray = fullArray.concat( rangeArray(85,85) ); // bottom
+      fullArray = fullArray.concat( rangeArray(89,89) ); // right
+      fullArray = fullArray.concat( rangeArray(94,94) ); // top
+
+      // island 2
+      fullArray = fullArray.concat( rangeArray(136,136) ); // left
+      //fullArray = fullArray.concat( rangeArray(140,140) ); // bottom
+      fullArray = fullArray.concat( rangeArray(144,144) ); // right
+      //fullArray = fullArray.concat( rangeArray(82,79) ); // top
+
+      // island 3
+      fullArray = fullArray.concat( rangeArray(152,152) );
+      fullArray = fullArray.concat( rangeArray(157,157) ); // bottom
+      fullArray = fullArray.concat( rangeArray(164,164) ); // right
+      fullArray = fullArray.concat( rangeArray(169,169) ); // top
+
+      // island 4
+      fullArray = fullArray.concat( rangeArray(98,98) );
+      fullArray = fullArray.concat( rangeArray(104,104) ); // bottom
+      fullArray = fullArray.concat( rangeArray(108,108) ); // right
+      fullArray = fullArray.concat( rangeArray(114,114) ); // top
+
+      // island 5
+      fullArray = fullArray.concat( rangeArray(118,118) );
+      //fullArray = fullArray.concat( rangeArray(123,123) ); // bottom
+      fullArray = fullArray.concat( rangeArray(127,127) ); // right
+      //fullArray = fullArray.concat( rangeArray(82,79) ); // top
+
+      // island 6
+      fullArray = fullArray.concat( rangeArray(176,176) );
+      fullArray = fullArray.concat( rangeArray(182,182) ); // bottom
+      fullArray = fullArray.concat( rangeArray(189,189) ); // right
+      fullArray = fullArray.concat( rangeArray(195,195) ); // top
+
+      // external ring
+
+
+      for(var i = 0; i < fullArray.length; i++){
+        poleNumber = fullArray[i];
+        // send to
+        to = wsPath + "pole" + poleNumber;
+        params = {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy
+        };
+
+        name1 = "pole" + (poleNumber-1);
+        name2 = "pole" + (poleNumber-2);
+        name3 = "pole" + (poleNumber-3);
+        //name4 = "pole" + (poleNumber-4);
+
+        aux = {};
+        aux[name1] = 70; // 70%
+        aux[name2] = 70; // 40%
+        aux[name3] = 40; // 20%
+
+        params["polesToAffect"] = aux;
+
+        entryPole = {
+          "poleNumber": poleNumber,
+          "params": params,
+          "to": to
+        }
+
+        propertiesArray.push(entryPole);
+      }
+
+      return propertiesArray;
+    }
+
+    function property4PolesForwardInverse(){
+
+      var aux;
+      var name1, name2, name3, name4;
+      var poleNumber;
+      var to, params;
+      var entryPole = {};
+
+      var propertiesArray = [];
+
+      // create array with pole number to apply rule
+      var fullArray = [];
+
+      // island 1
+      fullArray = fullArray.concat( rangeArray(81,81) ); // left
+      //fullArray = fullArray.concat( rangeArray(85,84) ); // bottom
+      fullArray = fullArray.concat( rangeArray(90,90) ); // right
+      //fullArray = fullArray.concat( rangeArray(82,79) ); // top
+
+      // island 2
+      fullArray = fullArray.concat( rangeArray(137,137) ); // left
+      //fullArray = fullArray.concat( rangeArray(140,140) ); // bottom
+      fullArray = fullArray.concat( rangeArray(145,145) ); // right
+      //fullArray = fullArray.concat( rangeArray(82,79) ); // top
+
+      // island 3
+      fullArray = fullArray.concat( rangeArray(153,153) );
+      fullArray = fullArray.concat( rangeArray(160,158) ); // bottom
+      fullArray = fullArray.concat( rangeArray(165,165) ); // right
+      fullArray = fullArray.concat( rangeArray(172,170) ); // top
+      fullArray = fullArray.concat( rangeArray(167,166) ); // top
+
+      // island 4
+      fullArray = fullArray.concat( rangeArray(100,99) );
+      fullArray = fullArray.concat( rangeArray(101,102) ); // bottom
+      fullArray = fullArray.concat( rangeArray(110,109) ); // right
+      //fullArray = fullArray.concat( rangeArray(82,79) ); // top
+
+      // island 5
+      fullArray = fullArray.concat( rangeArray(120,119) );
+      //fullArray = fullArray.concat( rangeArray(123,123) ); // bottom
+      fullArray = fullArray.concat( rangeArray(129,128) ); // right
+      //fullArray = fullArray.concat( rangeArray(82,79) ); // top
+
+      // island 6
+      fullArray = fullArray.concat( rangeArray(178,177) );
+      fullArray = fullArray.concat( rangeArray(185,183) ); // bottom
+      fullArray = fullArray.concat( rangeArray(191,190) ); // right
+      fullArray = fullArray.concat( rangeArray(198,196) ); // top
+
+      for(var i = 0; i < fullArray.length; i++){
+        poleNumber = fullArray[i];
+        // send to
+        to = wsPath + "pole" + poleNumber;
+        params = {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy
+        };
+
+        name1 = "pole" + (poleNumber-1);
+        name2 = "pole" + (poleNumber-2);
+        name3 = "pole" + (poleNumber-3);
+        name4 = "pole" + (poleNumber-4);
+
+        aux = {};
+        aux[name1] = 70; // 70%
+        aux[name2] = 70; // 40%
+        aux[name3] = 40; // 20%
+        aux[name4] = 20; // 20%
+        params["polesToAffect"] = aux;
+
+        entryPole = {
+          "poleNumber": poleNumber,
+          "params": params,
+          "to": to
+        }
+
+        propertiesArray.push(entryPole);
+      }
+
+      return propertiesArray;
+    }
+
+    // external ring of poles
+    function property4PolesForward(){
+
+      var aux;
+      var name1, name2, name3, name4;
+      var poleNumber;
+      var to, params;
+      var entryPole = {};
+
+      var propertiesArray = [];
+
+      // create array with pole number to apply rule
+      var fullArray = [];
+
+      fullArray = fullArray.concat( rangeArray(0,5) );
+      fullArray = fullArray.concat( rangeArray(10,21) );
+      fullArray = fullArray.concat( rangeArray(26,26) );
+      fullArray = fullArray.concat( rangeArray(31,35) );
+      fullArray = fullArray.concat( rangeArray(41,44) );
+      fullArray = fullArray.concat( rangeArray(49,62) );
+      fullArray = fullArray.concat( rangeArray(67,67) );
+      fullArray = fullArray.concat( rangeArray(72,72) );
+
+      for(var i = 0; i < fullArray.length; i++){
+        poleNumber = fullArray[i];
+        // send to
+        to = wsPath + "pole" + poleNumber;
+        params = {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy
+        };
+
+        name1 = "pole" + (poleNumber+1);
+        name2 = "pole" + (poleNumber+2);
+        name3 = "pole" + (poleNumber+3);
+        name4 = "pole" + (poleNumber+4);
+
+        aux = {};
+        aux[name1] = 70; // 70%
+        aux[name2] = 70; // 40%
+        aux[name3] = 40; // 20%
+        aux[name4] = 20; // 20%
+        params["polesToAffect"] = aux;
+
+        entryPole = {
+          "poleNumber": poleNumber,
+          "params": params,
+          "to": to
+        }
+
+        propertiesArray.push(entryPole);
+      }
+
+      return propertiesArray;
+    }
+
+    // external ring of poles
+    function property3PolesForward(){
+
+      var aux;
+      var name1, name2, name3, name4;
+      var poleNumber;
+      var to, params;
+      var entryPole = {};
+
+      var propertiesArray = [];
+
+      // create array with pole number to apply rule
+      var fullArray = [];
+
+      fullArray = fullArray.concat( rangeArray(73,73) );
+
+
+      for(var i = 0; i < fullArray.length; i++){
+        poleNumber = fullArray[i];
+        // send to
+        to = wsPath + "pole" + poleNumber;
+        params = {
+          "poleNumber": poleNumber,
+          "polePositionX":(poles[poleNumber]).polePosition.cx,
+          "polePositionY":(poles[poleNumber]).polePosition.cy
+        };
+
+        name1 = "pole" + (poleNumber+1);
+        name2 = "pole" + (poleNumber+2);
+        name3 = "pole" + (poleNumber+3);
+        name4 = "pole" + (poleNumber+4);
+
+        aux = {};
+        aux[name1] = 70; // 70%
+        aux[name2] = 70; // 40%
+        aux[name3] = 40; // 20%
+        aux[name4] = 20; // 20%
+        params["polesToAffect"] = aux;
+
+        entryPole = {
+          "poleNumber": poleNumber,
+          "params": params,
+          "to": to
+        }
+
+        propertiesArray.push(entryPole);
+      }
+
+      return propertiesArray;
+    }
+
+
+    function startPoles(allPolesToStart){
+      console.log("startPoles function started!");
+      // start poles detection
+      for(i = 0; i < allPolesToStart.length; i++){
+        var poleNumber = allPolesToStart[i].poleNumber;
+        to = wsPath + "pole" + poleNumber;
+        rpcMessage = {"jsonrpc":"2.0", "id":1, "method":"start", "params": {}};
+        (poles[poleNumber]).rpc.request(to, rpcMessage).then(function(message) {
+          console.log("Replied: " + JSON.stringify(message));
+        });
+      }
+    }
+
+    function setCarProperties(){
+      console.log("setCarProperties function called!");
+      // start poles detection
+      for(i = 0; i < 4; i++){
+        to = wsPath + "carServer" + i;
+        params={
+          "carNumber": i,
+          "route": i,
+          "carPositionX": 55 + i * 350,
+          "carPositionY": 50
+        };
+        rpcMessage = {"jsonrpc":"2.0", "id":1, "method":"setCarProperties", "params": params};
+        (cars[i]).rpc.request(to, rpcMessage).then(function(message) {
+          console.log("Replied: " + JSON.stringify(message));
+        });
+      }
+    }
+
+    function startCars() {
+      console.log("startCars function called!");
+      // start poles detection
+      for(i = 0; i < 4; i++){
+        to = wsPath + "carServer" + i;
+        rpcMessage = {"jsonrpc":"2.0", "id":1, "method":"start", "params": {}};
+        (cars[i]).rpc.request(to, rpcMessage).then(function(message) {
+          console.log("Replied: " + JSON.stringify(message));
+        });
+      }
+    }
+
+    // returns a array
+    function rangeArray(from, to){
+
+      var array = [];
+      if(to > from){
+        for(i = 0; i < (to - from +1); i++){
+          array[i] = from + i;
+        }
+      }else if(to < from){
+        for(i = 0; i < (from - to +1); i++){
+          array[i] = from - i;
+        }
+      }else{
+        array[0] = from;
+      }
+
+      return array;
+    }
+
+</script>
+</body>
+</html>
