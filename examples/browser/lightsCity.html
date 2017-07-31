@@ -294,7 +294,7 @@
 
     var params;
     var wsPath = "ws://localhost:8084/agents/";
-    var httpPathToServer = "http://localhost:8084/caragents/";
+    var httpPathToServer = "http://localhost:8084/agents/";
 
     // configure eve
     eve.system.init({
@@ -2493,11 +2493,14 @@
       // start poles detection
       for(i = 0; i < 4; i++){
         to = wsPath + "carServer" + i;
+
+        const startArray = [[55,55],[355,55],[55,405],[1055,105]];
+
         params={
           "carNumber": i,
           "route": i,
-          "carPositionX": 55 + i * 350,
-          "carPositionY": 50
+          "carPositionX": startArray[i][0],
+          "carPositionY": startArray[i][1]
         };
         rpcMessage = {"jsonrpc":"2.0", "id":1, "method":"setCarProperties", "params": params};
         (cars[i]).rpc.request(to, rpcMessage).then(function(message) {
