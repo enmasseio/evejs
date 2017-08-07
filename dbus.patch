@@ -1,0 +1,12 @@
+diff -wur node_modules/dbus-native/lib/handshake.js node_modules_mod/dbus-native/lib/handshake.js
+--- node_modules/dbus-native/lib/handshake.js	2017-06-05 16:18:25.000000000 +0200
++++ node_modules_mod/dbus-native/lib/handshake.js	2017-08-07 12:36:04.578230487 +0200
+@@ -28,7 +28,7 @@
+     if (err)
+       return cb(err);
+     //if (stat.mode & 066)
+-    if (stat.mode & 022)
++    if (stat.mode & o022)
+       return cb(new Error('User keyrings directory is writeable by other users. Aborting authentication'));
+     if (process.hasOwnProperty('getuid') && stat.uid != process.getuid())
+       return cb(new Error('Keyrings directory is not owned by the current user. Aborting authentication!'));
