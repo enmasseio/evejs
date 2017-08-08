@@ -1,6 +1,6 @@
 {
   "name": "evejs",
-  "version": "0.6.0",
+  "version": "0.6.0-SNAPSHOT",
   "description": "Simple message based agents.",
   "author": "Jos de Jong <wjosdejong@gmail.com> (https://github.com/josdejong)",
   "keywords": [
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "amqplib": "0.5.1",
-    "distribus": "0.5.0",
+    "distribus": "0.5.0-SNAPSHOT",
     "async": "1.5.2",
     "babble": "0.11.0",
     "hypertimer": "2.1.3",
