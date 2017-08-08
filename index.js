@@ -12,7 +12,7 @@ exports.module = {
 exports.transport = {
   Transport:          require('./lib/transport/Transport'),
   AMQPTransport:      require('./lib/transport/amqp/AMQPTransport'),
-//  DistribusTransport: require('./lib/transport/distribus/DistribusTransport'),
+  DistribusTransport: require('./lib/transport/distribus/DistribusTransport'),
   HTTPTransport:      require('./lib/transport/http/HTTPTransport'),
   LocalTransport:     require('./lib/transport/local/LocalTransport'),
   PubNubTransport:    require('./lib/transport/pubnub/PubNubTransport'),
@@ -22,7 +22,7 @@ exports.transport = {
   connection: {
     Connection:          require('./lib/transport/Connection'),
     AMQPConnection:      require('./lib/transport/amqp/AMQPConnection'),
-//    DistribusConnection: require('./lib/transport/distribus/DistribusConnection'),
+    DistribusConnection: require('./lib/transport/distribus/DistribusConnection'),
     HTTPConnection:      require('./lib/transport/http/HTTPConnection'),
     LocalConnection:     require('./lib/transport/local/LocalConnection'),
     PubNubConnection:    require('./lib/transport/pubnub/PubNubConnection'),
@@ -42,7 +42,7 @@ exports.Agent.registerModule(exports.module.RPCModule);
 
 // register all transports at the TransportManager
 exports.TransportManager.registerType(exports.transport.AMQPTransport);
-//exports.TransportManager.registerType(exports.transport.DistribusTransport);
+exports.TransportManager.registerType(exports.transport.DistribusTransport);
 exports.TransportManager.registerType(exports.transport.HTTPTransport);
 exports.TransportManager.registerType(exports.transport.LocalTransport);
 exports.TransportManager.registerType(exports.transport.PubNubTransport);
