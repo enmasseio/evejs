@@ -1,0 +1,42 @@
+body {
+    color: #4D4D4D;
+    max-width: 720px;
+    padding: 0 20px 100px 20px;
+}
+body, td, th, pre {
+    font-family: arial, sans serif;
+    font-size: 11pt;
+}
+h2 {
+    color: #F0209B;
+}
+td, th {
+    text-align: left;
+    vertical-align: top;
+    padding: 5px 10px;
+}
+table {
+    width: 100%;
+    background-color: #F5F5F5;
+    border: 1px solid #E5E5E5;
+    border-radius: 3px;
+}
+select {
+    width: 250px;
+}
+textarea {
+    height: 120px;
+    min-width: 400px;
+}
+textarea, input[type=text] {
+    width: 100%;
+    background-color: white;
+    border: 1px solid lightgray;
+}
+textarea:focus, input[type=text]:focus {
+    border: 1px solid gray;
+}
+div.error {
+    color: red;
+    margin: 10px 0;
+}
