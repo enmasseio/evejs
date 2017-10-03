@@ -1,0 +1,10 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.7.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - hypertimer > debug:
+        patched: '2017-10-03T06:23:04.694Z'
+    - hypertimer > body-parser > debug:
+        patched: '2017-10-03T06:23:04.694Z'
