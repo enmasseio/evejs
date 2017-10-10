@@ -37,7 +37,7 @@ HelloAgent.prototype.receive = function(from, message) {
 
   if (message.indexOf('Hello') === 0) {
     // reply to the greeting
-    this.send(from, 'Hi ' + from + ', nice to meet you!');
+    this.send(from, 'Hi ' + from + ', nice to meet you!').done();
   }
 };
 

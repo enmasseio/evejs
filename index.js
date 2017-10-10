@@ -17,6 +17,7 @@ exports.transport = {
   LocalTransport:     require('./lib/transport/local/LocalTransport'),
   PubNubTransport:    require('./lib/transport/pubnub/PubNubTransport'),
   DBusTransport:      require('./lib/transport/dbus/DBusTransport'),
+  NanoMsgTransport:   require('./lib/transport/nanomsg/NanoMsgTransport'),
   WebSocketTransport: require('./lib/transport/websocket/WebSocketTransport'),
 
   connection: {
@@ -27,6 +28,7 @@ exports.transport = {
     LocalConnection:     require('./lib/transport/local/LocalConnection'),
     PubNubConnection:    require('./lib/transport/pubnub/PubNubConnection'),
     DBusConnection:      require('./lib/transport/dbus/DBusConnection'),
+    NanoMsgConnection:   require('./lib/transport/nanomsg/NanoMsgConnection'),
     WebSocketConnection: require('./lib/transport/websocket/WebSocketConnection')
   }
 };
@@ -47,6 +49,7 @@ exports.TransportManager.registerType(exports.transport.HTTPTransport);
 exports.TransportManager.registerType(exports.transport.LocalTransport);
 exports.TransportManager.registerType(exports.transport.PubNubTransport);
 exports.TransportManager.registerType(exports.transport.DBusTransport);
+exports.TransportManager.registerType(exports.transport.NanoMsgTransport);
 exports.TransportManager.registerType(exports.transport.WebSocketTransport);
 
 // load the default ServiceManager, a singleton, initialized with a LocalTransport
