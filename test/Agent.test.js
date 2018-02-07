@@ -50,7 +50,7 @@ describe('Agent', function() {
       agent2.connect(transport);
 
       agent1.receive = function (from, message) {
-        assert.equal(from, 'agent2');
+        assert.equal(from, 'local:agent2');
         assert.equal(message, 'hello');
         done();
       };
@@ -67,7 +67,7 @@ describe('Agent', function() {
       agent2.connect(transport);
 
       agent1.receive = function (from, message) {
-        assert.equal(from, 'agent2');
+        assert.equal(from, 'local:agent2');
         assert.equal(message, 'hello');
         done();
       };
@@ -170,7 +170,7 @@ describe('Agent', function() {
       var count = 0;
 
       function log(from, message) {
-        assert.equal(from, 'agent2');
+        assert.equal(from, 'local:agent2');
         assert.equal(message, 'hello');
 
         count++;
@@ -205,7 +205,7 @@ describe('Agent', function() {
       var count2b = 0;
 
       agent2a.receive = function (from, message) {
-        assert.equal(from, 'agent1');
+        assert.equal(from, 'local:agent1');
         assert.equal(message, 'hello');
 
         count2a++;
@@ -215,7 +215,7 @@ describe('Agent', function() {
       };
 
       agent2b.receive = function (from, message) {
-        assert.equal(from, 'agent1');
+        assert.equal(from, 'local:agent1');
         assert.equal(message, 'hello');
 
         count2b++;
@@ -242,7 +242,7 @@ describe('Agent', function() {
       agent3.connect(transport2);
 
       agent3.receive = function (from, message) {
-        assert.equal(from, 'agent2');
+        assert.equal(from, 'local:agent2');
         assert.equal(message, 'hello');
         done();
       };

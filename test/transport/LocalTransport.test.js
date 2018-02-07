@@ -23,7 +23,7 @@ describe('LocalTransport', function() {
 
     // connect and send a message
     var conn1 = transport.connect('agent1', function (from, message) {
-      assert.equal(from, 'agent2');
+      assert.equal(from, 'local:agent2');
       assert.equal(message, 'hi there');
       count++;
     });

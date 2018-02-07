@@ -16,7 +16,7 @@ describe ('Request', function () {
     var agent2 = new Agent('agent2').extend('request');
 
     agent1.receive = function (from, message) {
-      assert.equal(from, 'agent2');
+      assert.equal(from, 'local:agent2');
       assert.equal(message, 'test');
       return message + message;
     };
@@ -39,7 +39,7 @@ describe ('Request', function () {
     agent2.request = agent2.loadModule('request');
 
     agent1.receive = function (from, message) {
-      assert.equal(from, 'agent2');
+      assert.equal(from, 'local:agent2');
       assert.equal(message, 'test');
       return message + message;
     };
@@ -76,7 +76,7 @@ describe ('Request', function () {
     var agent2 = new Agent('agent2').extend('request');
 
     agent1.receive = function (from, message) {
-      assert.equal(from, 'agent2');
+      assert.equal(from, 'local:agent2');
       assert.equal(message, 'test');
       return new Promise(function (resolve, reject) {
         setTimeout(function () {

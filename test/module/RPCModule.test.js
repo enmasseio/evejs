@@ -17,7 +17,7 @@ describe ('RPC', function () {
     agent1.connect(transport);
     agent2.connect(transport);
 
-    var sender = 'agent2';
+    var sender = 'local:agent2';
     var checkParams = {a:1,b:3};
 
 
@@ -62,7 +62,7 @@ describe ('RPC', function () {
     agent3.connect(transport);
     agent4.connect(transport);
 
-    var sender = 'agent4';
+    var sender = 'local:agent4';
     var checkParams = {a:1,b:3};
 
     agent3.rpcFunctions = {};
